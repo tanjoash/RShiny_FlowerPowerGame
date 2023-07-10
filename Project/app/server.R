@@ -1,12 +1,19 @@
 ## Server logic ##
 server <- function(input, output, session){
-  vals <- reactiveValues(a = 1)
   
-  output$testing <- renderUI({
-    h3(vals$a)
+  ## First page logic ##
+  source("logic/instructionsManager.R")
+    
+  # Observe button that starts game
+  shinyjs::onclick("startGame", updateTabsetPanel(session, "flowerPages", "SecondPage"))
+  shinyjs::onclick("resetGame", updateTabsetPanel(session, "flowerPages", "StartingPage"))
+  
+  # Observe button that opens instructions modal
+  observeEvent(input$instructions, {
+    showModal(instructionsModal())
   })
   
-  observeEvent(input$plus, {
-    vals$a <- vals$a + 1
+  observeEvent(input$resetGame, {
+    updateTabsetPanel(session, "flowerPages", "StartingPage")
   })
 }
