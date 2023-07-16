@@ -1,7 +1,8 @@
 ### Main App ###
 
 ## Initiate Libraries ##
-library(shiny)
-library(shinyjs)
+source("usePackages.R")
+pkgnames <- c("shiny","shinyjs","DBI","jsonlite")
+loadPkgs(pkgnames)
 
 shinyAppDir("app")
