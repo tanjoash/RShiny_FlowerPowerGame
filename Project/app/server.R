@@ -5,7 +5,6 @@ server <- function(input, output, session){
   source("logic/instructionsManager.R")
     
   # Observe button that starts game
-  shinyjs::onclick("startGame", updateTabsetPanel(session, "flowerPages", "SecondPage"))
   shinyjs::onclick("resetGame", updateTabsetPanel(session, "flowerPages", "StartingPage"))
   
   # Observe button that opens instructions modal
@@ -13,7 +12,13 @@ server <- function(input, output, session){
     showModal(instructionsModal())
   })
   
-  observeEvent(input$resetGame, {
-    updateTabsetPanel(session, "flowerPages", "StartingPage")
+  observeEvent(input$playButton, {
+    # if (!is.null(input$playername) && input$playername != "") {
+      updateTabsetPanel(session, "flowerPages", "SecondPage")
+    # } else {
+    #   showModal(nameError())
+    # }
   })
+  
+  shinyjs::onclick("dayButton", showModal(calendarModal()))
 }

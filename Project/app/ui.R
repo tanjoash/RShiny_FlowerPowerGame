@@ -9,9 +9,14 @@ ui <- shinyUI(fillPage(
     type = "hidden",
     tabPanelBody(
       "StartingPage",
-      img(id="menu", src="assets/menu.jpg"),
-      img(id="startGame", src="assets/button.jpg"),
-      actionButton("instructions", "Instructions")
+      img(id="startScreen", src="assets/startScreen.png"),
+      img(id="gameLogo", src="assets/gameLogo.png"),
+      actionButton("instructions", "Instructions"),
+      actionButton("playButton", "Play"),
+      textInput("playerName", "Name:"),
+      textInput("seedNumber", "Seed:"),
+      tags$p("Name:", class = "name-text-class"),
+      tags$p("Seed:", class = "seed-text-class")
     ),
     tabPanelBody(
       "SecondPage",
