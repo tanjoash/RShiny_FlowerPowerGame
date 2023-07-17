@@ -1,6 +1,7 @@
 ## Execute demand generation and upload demand to DBeaver ##
 #source("logic/setAWSPassword.R")
 source("logic/demandQueries.R")
+source("logic/nameSeedQueries.R")
 
 ## connect to database ##
 getAWSConnection <- function(){
@@ -21,5 +22,11 @@ uploadDemand <- function(d1,d2,d3,d4,d5,d6){
   uploadB4(conn,d4)
   uploadB5(conn,d5)
   uploadB6(conn,d6)
+  dbDisconnect(conn)
+}
+
+uploadNameSeed <- function(playerName, seedNumber) {
+  conn <- getAWSConnection()
+  initialiseNameSeed <- function(conn, playerName, seedNumber)
   dbDisconnect(conn)
 }

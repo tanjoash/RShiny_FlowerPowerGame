@@ -16,6 +16,7 @@ server <- function(input, output, session){
   
   # Get Seed
   observeEvent(input$playButton, {
+    
     #if (!is.null(input$playername) && input$playername != "") {
       regexNumber <- "^[0-9]+$"
       if (grepl(regexNumber, input$seedNumber)) { 
@@ -31,6 +32,8 @@ server <- function(input, output, session){
     #} else {
     # showModal(nameError())
     #}
+    
+    uploadNameSeed(input$playerName, input$seedNumber)
   })
   
   shinyjs::onclick("dayButton", showModal(calendarModal()))
