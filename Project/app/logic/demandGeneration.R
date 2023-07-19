@@ -176,9 +176,7 @@ setSeed <- function(playerName, seed = sample(1:100000, 1)){
     b6 <- append(b6, b6_val)
   }
   
-  print(playerName)
-  
- uploadDemand(b1,b2,b3,b4,b5,b6, playerName, seed)
+  uploadDemand(b1,b2,b3,b4,b5,b6, playerName, seed)
 }
 
 

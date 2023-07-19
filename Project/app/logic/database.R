@@ -2,6 +2,7 @@
 #source("logic/setAWSPassword.R")
 source("logic/demandQueries.R")
 source("logic/nameSeedQueries.R")
+source("logic/initialiseDay0.R")
 
 ## connect to database ##
 getAWSConnection <- function(){
@@ -16,6 +17,7 @@ getAWSConnection <- function(){
 
 uploadDemand <- function(d1,d2,d3,d4,d5,d6, playerName, seed){
   conn <- getAWSConnection()
+  initialiseTable(conn)
   uploadB1(conn,d1)
   uploadB2(conn,d2)
   uploadB3(conn,d3)
