@@ -14,7 +14,7 @@ getAWSConnection <- function(){
   conn
 }
 
-uploadDemand <- function(d1,d2,d3,d4,d5,d6){
+uploadDemand <- function(d1,d2,d3,d4,d5,d6, playerName, seed){
   conn <- getAWSConnection()
   uploadB1(conn,d1)
   uploadB2(conn,d2)
@@ -22,11 +22,6 @@ uploadDemand <- function(d1,d2,d3,d4,d5,d6){
   uploadB4(conn,d4)
   uploadB5(conn,d5)
   uploadB6(conn,d6)
-  dbDisconnect(conn)
-}
-
-uploadNameSeed <- function(playerName, seedNumber) {
-  conn <- getAWSConnection()
-  initialiseNameSeed <- function(conn, playerName, seedNumber)
+  initialiseNameSeed(conn, playerName, seed)
   dbDisconnect(conn)
 }

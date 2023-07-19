@@ -9,7 +9,7 @@ b6 <- list()
 source("logic/database.R")
 
 ## user input seed ##
-setSeed <- function(seed = sample(1:100000, 1)){
+setSeed <- function(playerName, seed = sample(1:100000, 1)){
   ## set seed ##
   set.seed(seed)
   
@@ -176,7 +176,9 @@ setSeed <- function(seed = sample(1:100000, 1)){
     b6 <- append(b6, b6_val)
   }
   
- uploadDemand(b1,b2,b3,b4,b5,b6)
+  print(playerName)
+  
+ uploadDemand(b1,b2,b3,b4,b5,b6, playerName, seed)
 }
 
 

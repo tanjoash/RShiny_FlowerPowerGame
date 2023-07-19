@@ -20,10 +20,10 @@ server <- function(input, output, session){
     #if (!is.null(input$playername) && input$playername != "") {
       regexNumber <- "^[0-9]+$"
       if (grepl(regexNumber, input$seedNumber)) { 
-        setSeed(as.integer(input$seedNumber))
+        setSeed(input$playerName, as.integer(input$seedNumber))
         updateTabsetPanel(session, "flowerPages", "SecondPage")
       } else if (!is.null(input$seedNumber)) {
-        setSeed()
+        setSeed(input$playerName)
         updateTabsetPanel(session, "flowerPages", "SecondPage")
       } else {
         # DO SOMETHING IF NOT MET
@@ -32,8 +32,7 @@ server <- function(input, output, session){
     #} else {
     # showModal(nameError())
     #}
-    
-    uploadNameSeed(input$playerName, input$seedNumber)
+      
   })
   
   shinyjs::onclick("dayButton", showModal(calendarModal()))
