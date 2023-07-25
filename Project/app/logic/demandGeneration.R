@@ -158,21 +158,39 @@ setSeed <- function(playerName, seed = sample(1:100000, 1)){
   
   for (x in days) {
     b1_val <- normal(b1_demand(x))
+    if (b1_val < 0){
+      b1_val <- 0
+    }
     b1 <- append(b1, b1_val)
     
     b2_val <- normal(b2_demand(x))
+    if (b2_val < 0){
+      b2_val <- 0
+    }
     b2 <- append(b2, b2_val)
     
     b3_val <- normal(b3_demand(x))
+    if (b3_val < 0){
+      b3_val <- 0
+    }
     b3 <- append(b3, b3_val)
     
     b4_val <- normal(b4_demand(x))
+    if (b4_val < 0){
+      b4_val <- 0
+    }
     b4 <- append(b4, b4_val)
     
     b5_val <- normal(b5_demand(x))
+    if (b5_val < 0){
+      b5_val <- 0
+    }
     b5 <- append(b5, b5_val)
     
     b6_val <- normal(b6_demand(x))
+    if (b6_val < 0){
+      b6_val <- 0
+    }
     b6 <- append(b6, b6_val)
   }
   
