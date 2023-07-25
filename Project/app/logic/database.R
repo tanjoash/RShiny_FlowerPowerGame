@@ -3,7 +3,7 @@
 source("logic/demandQueries.R")
 source("logic/nameSeedQueries.R")
 source("logic/initialiseDay0.R")
-source("logic/getDemandQueries.R")
+source("logic/uploadValues.R")
 
 ## connect to database ##
 getAWSConnection <- function(){
@@ -36,5 +36,14 @@ getDemandEachDay <- function(day, playerid){
   result <- retrieve(conn, day, playerid)
   dbDisconnect(conn)
   result
+}
+
+
+uploadValues <- function(day, cashBal, cost, revenue, playerid){
+  conn <- getAWSConnection()
+  uploadCashBal(conn, day, cashBal, playerid)
+  uploadCost(conn, day, cost, playerid)
+  uploadRevenue(conn, day, revenue, playerid)
+  dbDisconnect(conn)
 }
 

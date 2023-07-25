@@ -11,8 +11,7 @@ server <- function(input, output, session){
   
   # Observe button that opens instructions modal
   observeEvent(input$instructions, {
-    demand <- getDemandEachDay()
-    print(demand)
+    showModal(instructionsModal())
   })
   
   # Get Seed
