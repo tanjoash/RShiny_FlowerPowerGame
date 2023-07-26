@@ -38,6 +38,15 @@ getDemandEachDay <- function(day, playerid){
   result
 }
 
+# idk if still need this cuz its stored in local - can delete
+endDayCalculations <- function(day, cashBal, revenue, cost){
+  conn <- getAWSconnection()
+  calculateCost(conn, day, cost, flowersBought)
+  calculateRevenue(conn, day, revenue, bouquetsSold)
+  calculateCashBal(conn, day, cashBal, cost, revenue)
+  dbDisconnect(conn)
+  #then upload the cost, revenue, cashbal
+}
 
 uploadValues <- function(day, cashBal, cost, revenue, playerid){
   conn <- getAWSConnection()
