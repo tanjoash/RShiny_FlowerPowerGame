@@ -2,33 +2,58 @@
 # revenue = sale of bouquets
 # cashbal = cashbal - cost + revenue
 
-# need to create:
-# 1. dataframe called flowersBought with titles day, F1, F2, F3
-# 2. dataframe called flowersInventory with titles day, F1, F2, F3
-# 2. dataframe called manpower with titles day, quantity, capacity
-# 4. dataframe called bouquetsSold with titles day, B1, B2, B3, B4, B5, B6
-# 5. dataframe called bouquetsInventory with titles day, B1, B2, B3, B4, B5, B6 (final bouquetsInventory = initial bouquetsInventory - bouquetsSold for that day)
+# databases: 
+# eodOrdered
+# flowersInventory
+# bouquetsInventory
+# ordersFulfilled
+# ordersUnfulfilled 
 
-getPreviousDay(conn){
-  currentDay <- dbGetQuery(conn, "SELECT MAX(day) FROM FlowerPower")$day
-  return(currentDay)
-} 
+currentDemand <- getDemandEachDay(day, playerid)
 
-calculateCost(day, flowersBought, manpower){
-  costFlower <- flowersBought$F1[flowersBought$day == day]*1 + flowersBought$F2[flowersBought$day == day]*0.5 + flowersBought$F3[flowersBought$day == day]*0.1
-  coatManpower <- manpower$quantity[manpower$day == day]
-  costTotal <- costFlower + coatManpower
+getCashBal <- function(conn, day, playerid){
+  querytemplate <- "SELECT day?number AS cashbal FROM CashBal WHERE finalcashbalid = ?playerid"
+  query <- sqlInterpolate(conn, querytemplate, number=day, playerid=playerid)
+  cashbal <- dbGetQuery(conn, query)$cashbal
+}
+
+# the code below assumes that the ordered flowers and manpower is stored as F1, F2, F3, manpower. update as needed
+updateEodOrdered <- function(day, eodOrdered, F1, F2, F3, manpower){
+  row_index <- which(eodOrdered$day == day+1)
+  eodOrdered[row_index, "F1"] <- F1
+  eodOrdered[row_index, "F2"] <- F2
+  eodOrdered[row_index, "F3"] <- F3
+  eodOrdered[row_index, "manpower"] <- manpower
+}
+
+updateFlowersInvStart <- function(day, flowersInventory, eodOrdered){
+  row_index <- which(eodOrdered$day == day+1)
+  flowersInventory[row_index, "F1"] <- flowersInventory[row_index, "F1"]
+  flowersInventory[row_index, "F1"] <- eodOrdered[row_index, "F1"]
+  flowersInventory[row_index, "F2"] <- eodOrdered[row_index, "F2"]
+  flowersInventory[row_index, "F3"] <- eodOrdered[row_index, "F3"]
+}
+
+calculateCost(day, eodOrdered){
+  costFlower <- eodOrdered$F1[eodOrdered$day == day]*1 + eodOrdered$F2[eodOrdered$day == day]*0.5 + eodOrdered$F3[eodOrdered$day == day]*0.1
+  costManpower <- eodOrdered$quantity[eodOrdered$day == day]
+  costTotal <- costFlower + costManpower
   return(costTotal)
 }
-calculateRevenue(day, bouquetsSold){
-  revenue <- bouquetsSold$B1[bouquetsSold$day == day]*10 +  bouquetsSold$B2[bouquetsSold$day == day]*5 + bouquetsSold$B3[bouquetsSold$day == day]*2 + bouquetsSold$B4[bouquetsSold$day == day]*7 + bouquetsSold$B5[bouquetsSold$day == day]*4 + bouquetsSold$B6[bouquetsSold$day == day]*7
+
+updateOrdersFulfilled <- function(){
+  
+}
+
+calculateRevenue(day, ordersFulfilled){
+  revenue <- ordersFulfilled$B1[ordersFulfilled$day == day]*10 +  ordersFulfilled$B2[ordersFulfilled$day == day]*5 + ordersFulfilled$B3[ordersFulfilled$day == day]*2 + ordersFulfilled$B4[ordersFulfilled$day == day]*7 + ordersFulfilled$B5[ordersFulfilled$day == day]*4 + ordersFulfilled$B6[ordersFulfilled$day == day]*7
   return(revenue)
 }
 
 calculateCashBal(conn, day, cashBal, cost, revenue){
-  cashBal <- retrieve(conn, cashBal) #idk how retrieve the cashbal here
+  oldcashBal <- getOldCashBal(day)
   revenue <- calculateRevenue(day, bouquetsSold)
   cost <- calculateCost(day, flowersBought, manpower)
-  finalCashBal <- cashBal - cost + revenue
-  return(finalCashBal)
+  newCashBal <- oldcashBal - cost + revenue
+  return(newCashBal)
 }
