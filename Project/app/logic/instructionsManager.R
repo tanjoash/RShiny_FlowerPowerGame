@@ -15,7 +15,38 @@ calendarModal <- function() {
     size = "l",
     div(
       id = "calendar-modal",
-      tags$img(src = "assets/calendar prompt font changed.png")
+      tags$img(src = "assets/calendar prompt font changed.png"),
+      actionButton("May_1", ""),
+      actionButton("May_2", ""),
+      actionButton("May_3", ""),
+      actionButton("May_4", ""),
+      actionButton("May_5", ""),
+      actionButton("May_6", ""),
+      actionButton("May_7", ""),
+      actionButton("May_8", ""),
+      actionButton("May_9", ""),
+      actionButton("May_10", ""),
+      actionButton("May_11", ""),
+      actionButton("May_12", ""),
+      actionButton("May_13", ""),
+      actionButton("mothersday", ""),
+      actionButton("May_15", ""),
+      actionButton("May_16", ""),
+      actionButton("May_17", ""),
+      actionButton("May_18", ""),
+      actionButton("May_19", ""),
+      actionButton("wuerling", ""),
+      actionButton("May_21", ""),
+      actionButton("May_22", ""),
+      actionButton("May_23", ""),
+      actionButton("May_24", ""),
+      actionButton("May_25", ""),
+      actionButton("May_26", ""),
+      actionButton("May_27", ""),
+      actionButton("May_28", ""),
+      actionButton("May_29", ""),
+      actionButton("May_30", ""),
+      actionButton("May_31", ""),
     )
   )
 }
@@ -26,7 +57,99 @@ inventoryModal <- function(){
     div(
       id = "inventory-modal",
       tags$img(src = "assets/photo_2023-07-19_12-39-09.jpg"),
-      tags$div(dataTableOutput("BLeftTable"), id = "B_inv_table")
+      
+      ##inventory number output
+      textOutput("B1Left"),
+      textOutput("B2Left"),
+      textOutput("B3Left"),
+      textOutput("B4Left"),
+      textOutput("B5Left"),
+      textOutput("B6Left"),
+      textOutput("B1Exp"),
+      textOutput("B2Exp"),
+      textOutput("B3Exp"),
+      textOutput("B4Exp"),
+      textOutput("B5Exp"),
+      textOutput("B6Exp"),
+      textOutput("roseLeft"),
+      textOutput("babyLeft"),
+      textOutput("carnLeft"),
+      textOutput("roseExp"),
+      textOutput("babyExp"),
+      textOutput("carnExp"),
+    )
+  )
+}
+startgameModal <- function() {   
+  modalDialog(     
+    title = "Start Game Modal",     
+    div(       
+      id = "start-game-modal",       
+      img(src = "assets/Start-day prompt.png"),
+      
+      ## user selection for number of flowers for the day
+      textInput("B1choice", NULL , value = ""),       
+      textInput("B2choice", NULL, value = ""),       
+      textInput("B3choice", NULL, value = ""),       
+      textInput("B4choice", NULL, value = ""),       
+      textInput("B5choice", NULL, value = ""),       
+      textInput("B6choice", NULL, value = ""),
+      
+      ##demand forecast number output 
+      textOutput("B1demandforecast_start"),
+      textOutput("B2demandforecast_start"),
+      textOutput("B3demandforecast_start"),
+      textOutput("B4demandforecast_start"),
+      textOutput("B5demandforecast_start"),
+      textOutput("B6demandforecast_start"),
+      
+      ##inventory number output 
+      textOutput("B1Left_start"),
+      textOutput("B2Left_start"),
+      textOutput("B3Left_start"),
+      textOutput("B4Left_start"),
+      textOutput("B5Left_start"),
+      textOutput("B6Left_start"),
+      textOutput("B1Exp_start"),
+      textOutput("B2Exp_start"),
+      textOutput("B3Exp_start"),
+      textOutput("B4Exp_start"),
+      textOutput("B5Exp_start"),
+      textOutput("B6Exp_start"),
+      textOutput("roseLeft_start"),
+      textOutput("babyLeft_start"),
+      textOutput("carnLeft_start"),
+      textOutput("roseExp_start"),
+      textOutput("babyExp_start"),
+      textOutput("carnExp_start"),
+      
+      
+      # tags$div(dataTableOutput("forecast_demandTable"), id = "Forecast_D_table")
+      )   
+    )
+}
+
+enddayModal <- function(){
+  modalDialog(
+    id ="end-day-modal",
+    size = "l",
+    div(
+      img(src = "assets/Summary_&_End_Day_Prompt.png"),
+      textOutput("fulfilledOutput"),
+      textOutput("flowersLeft_sum"),
+      textOutput("flowersExp_sum"),
+      textOutput("dailyRevenue"),
+      textOutput("dailyCost"),
+      textOutput("dailyProfit"),
+      tableOutput("BouqLeftOutput"),
+      tableOutput("BouqExpOutput"),
+      tableOutput("flowExpOutput"),
+      tableOutput("flowLeftOutput"),
+      textInput("r_order", ""),
+      textInput("c_order", ""),
+      textInput("b_order", ""),
+      textInput("staff_hire", ""),
+      textInput("staff_fire", ""),
     )
   )
 }

@@ -13,8 +13,8 @@ ui <- shinyUI(fillPage(
       img(id="gameLogo", src="assets/gameLogo.png"),
       actionButton("instructions", "Instructions"),
       actionButton("playButton", "Play"),
-      textInput("playerName", "Name:"),
-      textInput("seedNumber", "Seed:"),
+      textInput("playerName", ""),
+      textInput("seedNumber", ""),
       tags$p("Name:", class = "name-text-class"),
       tags$p("Seed:", class = "seed-text-class")
     ),
@@ -25,7 +25,8 @@ ui <- shinyUI(fillPage(
       img(id="orderButton", src="assets/orderButton.png"),
       img(id="inventoryButton", src="assets/inventoryButton.png"),
       img(id="dayButton", src="assets/dayButton.png"),
-      img(id="resetGame", src="assets/button.jpg")
+      img(id="resetGame", src="assets/button.jpg"),
+      img(id="endDay", src="assets/End of day button.png")
       )
   )
 ))
