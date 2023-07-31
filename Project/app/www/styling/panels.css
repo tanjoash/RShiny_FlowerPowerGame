@@ -134,9 +134,7 @@
   max-width: 100%;
   height: auto;
 }
-#modal .modal-header .close {
-  display: none;
-}
+
 /* Inventory for start-game-modal */
 #B1Left_start,
 #B2Left_start,
