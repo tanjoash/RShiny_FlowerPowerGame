@@ -73,9 +73,9 @@ updateBouquetsMade <- function(day, bouquetsInventory, B1, B2, B3, B4, B5, B6){
 
 updateFlowersUsed <- function(day, flowersInventory, B1, B2, B3, B4, B5, B6){
   row_index <- day+1
-  used_F1 <- B1*5 + B4*3 + B6*2
-  used_F1 <- B2*5 + B5*3 + B6*2
-  used_F1 <- B3*10 + B4*5 + B5*5 + B6*5
+  used_F1 <- B1*3 + B2*3 + B4*5
+  used_F1 <- B1*3 + B3*3 + B5*5
+  used_F1 <- B2*5 + B3*5 + B6*10
   
   # take from expiring first
   used_from_F1e <- min(used_F1, flowersInventory[row_index, "F1e"])
@@ -152,7 +152,7 @@ updateOrdersFulfilled <- function(day, currentDemand, bouquetsInventory, ordersF
 
 # this revenue has to be stored in db - not done
 calculateRevenue(day, ordersFulfilled){
-  revenue <- ordersFulfilled$B1[ordersFulfilled$day == day]*10 +  ordersFulfilled$B2[ordersFulfilled$day == day]*5 + ordersFulfilled$B3[ordersFulfilled$day == day]*2 + ordersFulfilled$B4[ordersFulfilled$day == day]*7 + ordersFulfilled$B5[ordersFulfilled$day == day]*4 + ordersFulfilled$B6[ordersFulfilled$day == day]*7
+  revenue <- ordersFulfilled$B1[ordersFulfilled$day == day]*9 +  ordersFulfilled$B2[ordersFulfilled$day == day]*7 + ordersFulfilled$B3[ordersFulfilled$day == day]*4 + ordersFulfilled$B4[ordersFulfilled$day == day]*10 + ordersFulfilled$B5[ordersFulfilled$day == day]*5 + ordersFulfilled$B6[ordersFulfilled$day == day]*2
   return(revenue)
 }
 
