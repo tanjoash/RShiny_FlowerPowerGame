@@ -4,7 +4,23 @@ server <- function(input, output, session){
   ## First page logic ##
   source("logic/instructionsManager.R")
   source("logic/demandGeneration.R")
-    
+  
+  #placeholder list
+  bouquet_left <- c(0, 10, 4, 7, 8, 9)
+  flowers_left <- c(34, 45, 27, "")
+  bouquet_exp <- c(01, 04, 11, 12, 09, 03)
+  flowers_exp <- c(7, 15, 2, "")
+  demand_forecast <- c(1,2,3,4,5,6)
+  nextdaydemand <- c(1,2,3,4,5,6)
+  actual_demand <- (c(6,5,4,3,2,1))
+  bouquets_made <- c(8,7,6,5,4,3)
+  total_orders <- 15
+  orders_fulfilled <- 10
+  daily_revenue <- 1000
+  daily_costs <- 500
+  daily_profit <- daily_revenue - daily_costs
+  
+  
   # Observe button that starts game
   shinyjs::onclick("resetGame", updateTabsetPanel(session, "flowerPages", "StartingPage"))
 
@@ -67,25 +83,51 @@ server <- function(input, output, session){
       
   })
   
-  shinyjs::onclick("dayButton", showModal(calendarModal()))
+  shinyjs::onclick("dayButton", showModal(cal_menuModal()))
   shinyjs::onclick("inventoryButton", showModal(inventoryModal()))
   shinyjs::onclick("endDay", showModal(enddayModal()))
+  shinyjs::onclick("orderButton", showModal(order_fulfilmentModal()))
+  shinyjs::onclick("scoreButton", showModal(score_leaderboardModal()))
   
-  #placeholder list
-  bouquet_left <- c(0, 10, 4, 7, 8, 9)
-  flowers_left <- c(34, 45, 27, "")
-  bouquet_exp <- c(01, 04, 11, 12, 09, 03)
-  flowers_exp <- c(7, 15, 2, "")
-  demand_forecast <- c(1,2,3,4,5,6)
-  total_orders <- 15
-  orders_fulfilled <- 10
-  daily_revenue <- 1000
-  daily_costs <- 500
-  daily_profit <- daily_revenue - daily_costs
+  observeEvent(input$startday_btn, {
+    # Get the values from the textInputs (DOESNT WORK :( )
+    values$makeB1 <- ifelse(input$B1choice == "", 0, input$B1choice)
+    values$makeB2 <- ifelse(input$B2choice == "", 0, input$B2choice)
+    values$makeB3 <- ifelse(input$B3choice == "", 0, input$B3choice)
+    values$makeB4 <- ifelse(input$B4choice == "", 0, input$B4choice)
+    values$makeB5 <- ifelse(input$B5choice == "", 0, input$B5choice)
+    values$makeB6 <- ifelse(input$B6choice == "", 0, input$B6choice)
+    
+    # Close the modal after saving
+    removeModal()
+  })
   
-  #button for calendar modal
-  # shinyjs::onclick("May_1", showModal())
+  #calendar menu prompt
+  shinyjs::onclick("month_fc", showModal(month_fcModal()))
+  shinyjs::onclick("next_fc", showModal(next_fcModal()))
+  shinyjs::onclick("cal_button", showModal(calendarModal()))
   
+  output$nextday_B1 <- renderText({
+    paste("Bouquet 1:", nextdaydemand[1])
+  })
+  output$nextday_B2 <- renderText({
+    paste("Bouquet 2:", nextdaydemand[2])
+  })
+  output$nextday_B3 <- renderText({
+    paste("Bouquet 3:", nextdaydemand[3])
+  })
+  output$nextday_B4 <- renderText({
+    paste("Bouquet 4:", nextdaydemand[4])
+  })
+  output$nextday_B5 <- renderText({
+    paste("Bouquet 5:", nextdaydemand[5])
+  })
+  output$nextday_B6 <- renderText({
+    paste("Bouquet 6:", nextdaydemand[6])
+  })
+  output$nextday_modal_title <- renderText({
+    paste("Tomorrow's Demand")
+  })
   ### Number output for Inventory Modal ###
   #output text for the diff values
   output$B1Left <- renderText({
@@ -167,6 +209,7 @@ server <- function(input, output, session){
     paste(flower_prefix, ":", c(flowers_left)), 
     nrow = 2, byrow = TRUE
   )
+  
   # Render the table output
   output$BouqLeftOutput <- renderTable({
     matrix_bleft
@@ -190,4 +233,36 @@ server <- function(input, output, session){
   output$dailyProfit <- renderText({
     paste("$", daily_profit)
   })
+  
+  ### Number Output for Order Fulfilment Modal ###      
+  output$order_fulfilmentTitle <- renderText({paste("Order Fulfilment")})   
+  output$bouquet1fulfilled <- renderText({
+    paste("Bouquet 1:",bouquets_made[1], "/", actual_demand[1])
+    })   
+  output$bouquet2fulfilled <- renderText({
+    paste("Bouquet 2:",bouquets_made[2], "/", actual_demand[2])
+    })   
+  output$bouquet3fulfilled <- renderText({
+    paste("Bouquet 3:",bouquets_made[3], "/", actual_demand[3])
+    })   
+  output$bouquet4fulfilled <- renderText({
+    paste("Bouquet 4:",bouquets_made[4], "/", actual_demand[4])
+    })   
+  output$bouquet5fulfilled <- renderText({
+    paste("Bouquet 5:",bouquets_made[5], "/", actual_demand[5])
+    })   
+  output$bouquet6fulfilled <- renderText({
+    paste("Bouquet 6:",bouquets_made[6], "/", actual_demand[6])
+    })
+  
+  ## Table Output for Leaderboard    
+  player_name <- c("Penis0", "Penis1", "Penis2", "Penis3", "Penis4", "Penis5")   
+  player_score <- c("0", "1", "2", "3", "4", "5")      
+  # Create matrix for leaderboard    
+  matrix_leaderboard <- matrix(     
+    paste(player_name, ":", c(player_score)),     
+    nrow = 2, byrow = TRUE)      
+  # Render Leaderboard Table   
+  output$scoreLeaderboard <- renderTable({
+    matrix_leaderboard}, include.rownames = FALSE, include.colnames = FALSE)
 }

@@ -24,7 +24,7 @@
 #scoreButton {
   position:absolute;
   left: 1%;
-  top: 5px;
+  top: 4px;
   width: 15%;
   height: auto;
   cursor: pointer;
@@ -34,23 +34,23 @@
   position: absolute;
   left: 17%;
   top: 10px;
-  width: 14%;
+  width: 11%;
   height: auto;
   cursor: pointer;
 }
 
 #inventoryButton {
   position: absolute;
-  left: 32%;
+  left: 28%;
   top: 10px;
-  width: 13%;
+  width: 11.5%;
   height: auto;
   cursor: pointer;
 }
 
 #dayButton {
   position: absolute;
-  right: 2%;
+  right: 1%;
   top: 10px;
   width: 11%;
   height: auto;
@@ -59,18 +59,18 @@
 
 #resetGame {
   height: auto;
-  width: 20%;
+  width: 9.5%;
   position: absolute;
   z-index: 1;
-  bottom: 0;
-  left: 0;
+  bottom: 20px;
+  left: 1%;
   cursor: pointer;
 }
 #endDay {
   position: absolute;
   right: 1%;
-  bottom: 80px;
-  width: 13%;
+  bottom: 20px;
+  width: 15%;
   height: auto;
   cursor: pointer;
 }
@@ -134,7 +134,9 @@
   max-width: 100%;
   height: auto;
 }
-
+#modal .modal-header .close {
+  display: none;
+}
 /* Inventory for start-game-modal */
 #B1Left_start,
 #B2Left_start,
@@ -307,40 +309,39 @@
 #B6choice{
   position: absolute;
   z-index: 2;
-  background: solid;
-  background-color: blue;
-  height: 27px;
-  width: 15px;
-  font-size: 16px;
+  height: 30px;
+  width: 5%;
+  padding-left: 2px;
+  padding-right: 2px;
 }
 
 #B1choice {
-  top: 205px;
-  left: 35%;
+  top: 202px;
+  left: 35.25%;
 }
 
 #B2choice {
-  top: 205px;
-  left: 53.5%;
+  top: 202px;
+  left: 53.75%;
 }
 
 #B3choice {
-  top: 205px;
+  top: 202px;
   left: 72%;
 }
 
 #B4choice {
-  top: 258px;
-  left: 35%;
+  top: 255px;
+  left: 35.25%;
 }
 
 #B5choice {
-  top: 258px;
-  left: 53.5%;
+  top: 255px;
+  left: 53.75%;
 }
 
 #B6choice {
-  top: 258px;
+  top: 255px;
   left: 72%;
 
 }
@@ -350,86 +351,55 @@
 /*/* End of Start Game Modal */
 
 /* Start of Calendar Modal */ 
+#cal-menu-modal {
+  position: relative;
+}
+#cal-menu-modal img {
+  max-width: 100%;
+  height: auto;
+}
+#cal_button, #month_fc, #next_fc {
+  position: absolute;
+  z-index: 3;
+  width 10%;
+  font-weight: bold;
+  color: black;
+  font-size: 20px;
+  background-color: rgb(226, 128, 106);
+  border: 2px solid black ;
+}
+#cal_button {
+  top: 115px;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+#month_fc {
+  top: 165px;
+  left: 10%;
+}
+#next_fc {
+  top: 165px;
+  right: 10%;
+}
+#next-fc-modal {
+  background-color: rgb(250, 242, 243); 
+  border: 2px solid black;
+  padding: 15px;
+}
+#nextday_modal_title {   
+  font-size: 30px;   
+  top: 5px; 
+}  
+#nextday_B1, #nextday_B2, #nextday_B3, #nextday_B4, #nextday_B5, #nextday_B6 {
+  font-size: 20px;
+}
+
 #calendar-modal {
   position:relative
 }
 #calendar-modal img {
   max-width: 100%;
   height: auto;
-}
-#May_1,
-#May_2,
-#May_3,
-#May_4,
-#May_5,
-#May_6,
-#May_7,
-#May_8,
-#May_9,
-#May_10,
-#May_11,
-#May_12,
-#May_13,
-#mothersday,
-#May_15,
-#May_16,
-#May_17,
-#May_18,
-#May_19,
-#wuerling,
-#May_21,
-#May_22,
-#May_23,
-#May_24,
-#May_25,
-#May_26,
-#May_27,
-#May_28,
-#May_29,
-#May_30,
-#May_31 {
-  position: absolute;
-  z-index: 3;
-  height: 55.5px;
-  width: 10%;
-  background: transparent;
-  border: none;
-}
-#May_1, #May_2, #May_3, #May_4, #May_5, #May_6 {
-  top: 132px
-}
-#May_7, #May_8, #May_9, #May_10, #May_11, #May_12, #May_13 {
-  top: 197px
-}
-#mothersday, #May_15, #May_16, #May_17, #May_18, #May_19, #wuerling {
-  top: 262px
-}
-#May_21, #May_22, #May_23, #May_24, #May_25, #May_26, #May_27 {
-  top: 327px
-}
-#May_28, #May_29, #May_30, #May_31 {
-  top: 392px
-}
-#May_1, #May_8, #May_15, #May_22, #May_29 {
-  left: 16.5%;
-}
-#May_2, #May_9, #May_16, #May_23, #May_30 {
-  left: 31%;
-}
-#May_3, #May_10, #May_17, #May_24, #May_31 {
-  left: 45%;
-}
-#May_4, #May_11, #May_18, #May_25 {
-  left: 59.25%;
-}
-#May_5, #May_12, #May_19, #May_26 {
-  left: 73.25%;
-}
-#May_6, #May_13, #wuerling, #May_27 {
-  right: 2.5%
-}
-#May_7, #mothersday, #May_21, #May_28 {
-  left: 2.5%
 }
 /* End of Calendar Modal*/ 
 
@@ -645,8 +615,10 @@
   position: absolute;
   width:5%;
   height: auto;
-  z-index: 3;
+  z-index: 5;
   right: 38%;
+  padding-left: 2px;
+  padding-right: 2px;
 }
 #r_order {
   top: 73px
@@ -664,3 +636,50 @@
   top: 262px
 }
 /* End of end-day-modal */
+
+/* Start of order-fulfilment-modal */   
+#order-fulfilment-modal {   
+  background-color: rgb(250, 242, 243); 
+  border:2px solid black;
+  padding: 15px
+}  
+#order_fulfilmentTitle {   
+  font-size: 30px;   
+  top: 5px; 
+}  
+#bouquet1fulfilled, #bouquet2fulfilled, #bouquet3fulfilled, #bouquet4fulfilled, #bouquet5fulfilled, #bouquet6fulfilled{   
+  font-size: 20px; 
+}  
+#bouquet1fulfilled {   
+  top: 5px; 
+}  
+#bouquet2fulfilled {   
+  top: 30px; 
+}  
+#bouquet3fulfilled {   
+  top: 55px; 
+}  
+#bouquet4fulfilled {   
+  top: 70px; 
+}  
+#bouquet5fulfilled {   
+  top: 95px; 
+}  
+#bouquet6fulfilled {   
+  top: 120px; 
+}   
+/* End of of order-fulfilment-modal */
+/* Start of score-leaderboard-modal*/  
+#score-leaderboard-modal {    
+  background-color: rgb(250, 242, 243); 
+}  
+#score_leaderboardTitle {   
+  font-size: 30px;   top: 5px; 
+}  
+#scoreLeaderboard table {   
+  background: transparent;   
+  border: none;   
+  border-collapse: collapse;   
+  font-size: 10px; 
+}    
+/* End of score-leaderboard-modal */

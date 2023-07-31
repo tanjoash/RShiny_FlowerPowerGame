@@ -10,43 +10,78 @@ nameError <- function(){
     "Player name is empty!"
   )
 }
+
+cal_menuModal <- function() {
+  modalDialog(
+    size = "l",
+    div(
+      id = "cal-menu-modal",
+      img(src = "assets/Forecast Demand wo button.png"),
+      actionButton("month_fc", "Monthly Forecast"),
+      actionButton("cal_button", "Calendar"),
+      actionButton("next_fc", "Next Day Forecast"),
+    )
+  )
+}
+
+month_fcModal <- function(){
+  modalDialog(
+    id = "month-fc-modal",
+    # img(src = "insert graph here")
+  )
+}
+next_fcModal <- function(){
+  modalDialog(
+    div(
+      id = "next-fc-modal",
+      textOutput("nextday_modal_title"),
+      textOutput("nextday_B1"),
+      textOutput("nextday_B2"),
+      textOutput("nextday_B3"),
+      textOutput("nextday_B4"),
+      textOutput("nextday_B5"),
+      textOutput("nextday_B6")
+    )
+  )
+}
+
 calendarModal <- function() {
   modalDialog(
     size = "l",
     div(
       id = "calendar-modal",
       tags$img(src = "assets/calendar prompt font changed.png"),
-      actionButton("May_1", ""),
-      actionButton("May_2", ""),
-      actionButton("May_3", ""),
-      actionButton("May_4", ""),
-      actionButton("May_5", ""),
-      actionButton("May_6", ""),
-      actionButton("May_7", ""),
-      actionButton("May_8", ""),
-      actionButton("May_9", ""),
-      actionButton("May_10", ""),
-      actionButton("May_11", ""),
-      actionButton("May_12", ""),
-      actionButton("May_13", ""),
-      actionButton("mothersday", ""),
-      actionButton("May_15", ""),
-      actionButton("May_16", ""),
-      actionButton("May_17", ""),
-      actionButton("May_18", ""),
-      actionButton("May_19", ""),
-      actionButton("wuerling", ""),
-      actionButton("May_21", ""),
-      actionButton("May_22", ""),
-      actionButton("May_23", ""),
-      actionButton("May_24", ""),
-      actionButton("May_25", ""),
-      actionButton("May_26", ""),
-      actionButton("May_27", ""),
-      actionButton("May_28", ""),
-      actionButton("May_29", ""),
-      actionButton("May_30", ""),
-      actionButton("May_31", ""),
+      # actionButton("May_1", ""),
+      # actionButton("May_2", ""),
+      # actionButton("May_3", ""),
+      # actionButton("May_4", ""),
+      # actionButton("May_5", ""),
+      # actionButton("May_6", ""),
+      # actionButton("May_7", ""),
+      # actionButton("May_8", ""),
+      # actionButton("May_9", ""),
+      # actionButton("May_10", ""),
+      # actionButton("May_11", ""),
+      # actionButton("May_12", ""),
+      # actionButton("May_13", ""),
+      # actionButton("mothersday", ""),
+      # actionButton("May_15", ""),
+      # actionButton("May_16", ""),
+      # actionButton("May_17", ""),
+      # actionButton("May_18", ""),
+      # actionButton("May_19", ""),
+      # actionButton("wuerling", ""),
+      # actionButton("May_21", ""),
+      # actionButton("May_22", ""),
+      # actionButton("May_23", ""),
+      # actionButton("May_24", ""),
+      # actionButton("May_25", ""),
+      # actionButton("May_26", ""),
+      # actionButton("May_27", ""),
+      # actionButton("May_28", ""),
+      # actionButton("May_29", ""),
+      # actionButton("May_30", ""),
+      # actionButton("May_31", ""),
     )
   )
 }
@@ -123,18 +158,26 @@ startgameModal <- function() {
       textOutput("babyExp_start"),
       textOutput("carnExp_start"),
       
+      #Button to proceed with the game and assign values to variables
+      actionButton("startday_btn", "Start Day !"),
       
       # tags$div(dataTableOutput("forecast_demandTable"), id = "Forecast_D_table")
-      )   
+      ),
+    options = list(onshow = HTML('
+        $("#modal .modal-header .close").on("click", function(event) {
+          event.preventDefault();
+        });
+      '))
     )
 }
 
+#please help i cannot remove the empty space under the endday modal
 enddayModal <- function(){
   modalDialog(
     id ="end-day-modal",
     size = "l",
     div(
-      img(src = "assets/Summary_&_End_Day_Prompt.png"),
+      img(src = "assets/Summary&End_day prompt.png"),
       textOutput("fulfilledOutput"),
       textOutput("flowersLeft_sum"),
       textOutput("flowersExp_sum"),
@@ -152,4 +195,30 @@ enddayModal <- function(){
       textInput("staff_fire", ""),
     )
   )
+}
+
+#Order fulfilment
+order_fulfilmentModal <- function(){   
+  modalDialog(     
+    div(       
+      id = "order-fulfilment-modal",       
+      textOutput("order_fulfilmentTitle"),       
+      textOutput("bouquet1fulfilled"),       
+      textOutput("bouquet2fulfilled"),       
+      textOutput("bouquet3fulfilled"),       
+      textOutput("bouquet4fulfilled"),       
+      textOutput("bouquet5fulfilled"),       
+      textOutput("bouquet6fulfilled")     
+    )   
+  ) 
+}
+#scoreleaderboard
+score_leaderboardModal <- function(){   
+  modalDialog(     
+    div(       
+      id = "score-leaderboard-modal",       
+      textOutput("score_leaderboardTitle"),       
+      tableOutput("scoreLeaderboard"),     
+    )   
+  ) 
 }
