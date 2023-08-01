@@ -61,45 +61,45 @@ updateBouquetsMade <- function(day, bouquetsInventory, B1, B2, B3, B4, B5, B6){
   bouquetsInventory
 }
 
-updateFlowersUsed <- function(day, flowersInventory, B1, B2, B3, B4, B5, B6){ #to change
+updateFlowersUsed <- function(day, flowersInventory, F1, F2, F3, F1e, F2e, F3e){ #to change
   row_index <- day+1
-  used_F1 <- B1*3 + B2*3 + B4*5
-  used_F2 <- B1*3 + B3*3 + B5*5
-  used_F3 <- B2*5 + B3*5 + B6*10
+  #used_F1 <- B1*3 + B2*3 + B4*5
+  #used_F2 <- B1*3 + B3*3 + B5*5
+  #sed_F3 <- B2*5 + B3*5 + B6*10
   
   # take from expiring first
-  used_from_F1e <- min(used_F1, flowersInventory[row_index, "F1e"])
-  used_from_F2e <- min(used_F2, flowersInventory[row_index, "F2e"])
-  used_from_F3e <- min(used_F3, flowersInventory[row_index, "F3e"])
+  #used_from_F1e <- min(used_F1, flowersInventory[row_index, "F1e"])
+  #used_from_F2e <- min(used_F2, flowersInventory[row_index, "F2e"])
+  #used_from_F3e <- min(used_F3, flowersInventory[row_index, "F3e"])
   
   # update expiring
-  flowersInventory[row_index, "F1e"] <- flowersInventory[row_index, "F1e"] - used_from_F1e
-  flowersInventory[row_index, "F2e"] <- flowersInventory[row_index, "F2e"] - used_from_F2e
-  flowersInventory[row_index, "F3e"] <- flowersInventory[row_index, "F3e"] - used_from_F3e
+  flowersInventory[row_index, "F1e"] <- F1e
+  flowersInventory[row_index, "F2e"] <- F2e
+  flowersInventory[row_index, "F3e"] <- F3e
   
   #take from fresh flowers
-  used_from_F1 <- min(used_F1 - used_from_F1e, flowersInventory[row_index, "F1e"])
-  used_from_F2 <- min(used_F2 - used_from_F2e, flowersInventory[row_index, "F2e"])
-  used_from_F3 <- min(used_F3 - used_from_F3e, flowersInventory[row_index, "F3e"]) 
+  #used_from_F1 <- min(used_F1 - used_from_F1e, flowersInventory[row_index, "F1e"])
+  #used_from_F2 <- min(used_F2 - used_from_F2e, flowersInventory[row_index, "F2e"])
+  #used_from_F3 <- min(used_F3 - used_from_F3e, flowersInventory[row_index, "F3e"]) 
   
   # update fresh
-  flowersInventory[row_index, "F1"] <- flowersInventory[row_index, "F1"] - used_from_F1
-  flowersInventory[row_index, "F2"] <- flowersInventory[row_index, "F2"] - used_from_F2
-  flowersInventory[row_index, "F3"] <- flowersInventory[row_index, "F3"] - used_from_F3
+  flowersInventory[row_index, "F1"] <- F1
+  flowersInventory[row_index, "F2"] <- F2
+  flowersInventory[row_index, "F3"] <- F3
   flowersInventory
 }
 
 # When user clicks run simulation or open shop or smth
 # At the end of the start of the day
-updateOrdersFulfilled <- function(day, currentDemand, bouquetsInventory, ordersFulfilled){
+updateOrdersFulfilled <- function(day, currentDemand, B1_make, B2_make, B3_make, B4_make, B5_make, B6_make, ordersFulfilled){
   row_index <- day+1
   
-  demand_B1 <- currentDemand[[1]]
-  demand_B2 <- currentDemand[[2]]
-  demand_B3 <- currentDemand[[3]]
-  demand_B4 <- currentDemand[[4]]
-  demand_B5 <- currentDemand[[5]]
-  demand_B6 <- currentDemand[[6]]
+  demand_B1 <- currentDemand[1]
+  demand_B2 <- currentDemand[2]
+  demand_B3 <- currentDemand[3]
+  demand_B4 <- currentDemand[4]
+  demand_B5 <- currentDemand[5]
+  demand_B6 <- currentDemand[6]
   
   # orders fulfilled using B1e, B2e, B3e, B4e, B5e, B6e
   #fulfilled_B1e <- min(demand_B1, bouquetsInventory[row_index, "B1e"])
@@ -118,29 +118,22 @@ updateOrdersFulfilled <- function(day, currentDemand, bouquetsInventory, ordersF
   #bouquetsInventory[row_index, "B6e"] <- bouquetsInventory[row_index, "B6e"] - fulfilled_B1e
   
   # orders fulfilled using B1, B2, B3, B4, B5, B6
-  fulfilled_B1 <- min(demand_B1, bouquetsInventory[row_index, "B1"])
-  fulfilled_B2 <- min(demand_B2, bouquetsInventory[row_index, "B2"])
-  fulfilled_B3 <- min(demand_B3, bouquetsInventory[row_index, "B3"])
-  fulfilled_B4 <- min(demand_B4, bouquetsInventory[row_index, "B4"])
-  fulfilled_B5 <- min(demand_B5, bouquetsInventory[row_index, "B5"])
-  fulfilled_B6 <- min(demand_B6, bouquetsInventory[row_index, "B6"])
+  #fulfilled_B1 <- min(demand_B1, bouquetsInventory[row_index, "B1"])
+  #fulfilled_B2 <- min(demand_B2, bouquetsInventory[row_index, "B2"])
+  #fulfilled_B3 <- min(demand_B3, bouquetsInventory[row_index, "B3"])
+  #fulfilled_B4 <- min(demand_B4, bouquetsInventory[row_index, "B4"])
+  #fulfilled_B5 <- min(demand_B5, bouquetsInventory[row_index, "B5"])
+  #fulfilled_B6 <- min(demand_B6, bouquetsInventory[row_index, "B6"])
   
   # update the ordersFulfilled dataframe for the given day
-  ordersFulfilled[row_index, "B1"] <- fulfilled_B1
-  ordersFulfilled[row_index, "B2"] <- fulfilled_B2
-  ordersFulfilled[row_index, "B3"] <- fulfilled_B3
-  ordersFulfilled[row_index, "B4"] <- fulfilled_B4
-  ordersFulfilled[row_index, "B5"] <- fulfilled_B5
-  ordersFulfilled[row_index, "B6"] <- fulfilled_B6
+  ordersFulfilled[row_index, "B1"] <- B1_make
+  ordersFulfilled[row_index, "B2"] <- B2_make
+  ordersFulfilled[row_index, "B3"] <- B3_make
+  ordersFulfilled[row_index, "B4"] <- B4_make
+  ordersFulfilled[row_index, "B5"] <- B5_make
+  ordersFulfilled[row_index, "B6"] <- B6_make
   
-  bouquetsInventory[row_index, "B1"] <- bouquetsInventory[row_index, "B1"] - fulfilled_B1
-  bouquetsInventory[row_index, "B2"] <- bouquetsInventory[row_index, "B2"] - fulfilled_B1
-  bouquetsInventory[row_index, "B3"] <- bouquetsInventory[row_index, "B3"] - fulfilled_B1
-  bouquetsInventory[row_index, "B4"] <- bouquetsInventory[row_index, "B4"] - fulfilled_B1
-  bouquetsInventory[row_index, "B5"] <- bouquetsInventory[row_index, "B5"] - fulfilled_B1
-  bouquetsInventory[row_index, "B6"] <- bouquetsInventory[row_index, "B6"] - fulfilled_B1
-  
-  bouquetsInventory
+  ordersFulfilled
 }
 
 # this revenue has to be stored in db - not done

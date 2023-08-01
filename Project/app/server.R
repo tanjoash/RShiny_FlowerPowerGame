@@ -15,15 +15,15 @@ server <- function(input, output, session){
                          manpower = 0,
                          cashbal = 500,
                          startday = FALSE,
-                         orders_fulfilled = 0,
+                         orders_fulfilled = c(0, 0, 0, 0, 0, 0),
                          total_orders = 0,
                          bouquet_left = c(0, 0, 0, 0, 0, 0),
-                         bouquet_exp = c(0, 0, 0, 0, 0, 0), # need to linkt o database
+                         bouquet_exp = c(0, 0, 0, 0, 0, 0), # to remove
                          flowers_left = c(0, 0, 0, ""),
-                         flowers_exp = c(10, 10, 20, ""),
+                         flowers_exp = c(0, 0, 0, ""),
                          demand_forecast = c(0, 0, 0, 0, 0, 0),
                          calculator_vals = c(0, 0, 0),
-                         actual_demand = c(6, 5, 4, 3, 2, 1),
+                         actual_demand = c(0, 0, 0, 0, 0, 0),
                          daily_revenue = 0,
                          daily_cost = 0,
                          daily_profit = 0)
@@ -85,7 +85,7 @@ server <- function(input, output, session){
              # "4" = img(id="instruct_4", src=""),
              "4" = p("hi"),
              "5" = img(id="instruct_5", src="assets/Instructions pg5.png", width = "570px"),
-             "6" = img(id="instruct_6", src="assets/Instructions pg6.png", width = "570px"),
+             "6" = img(id="instruct_6", src="assets/Instructions pg6.png", width = "570px")
       )
     })
   }
@@ -118,14 +118,14 @@ server <- function(input, output, session){
     
     ### Number Output for Start Game Modal ###
     #Inventory for Start Game Modal 
-<<<<<<< Updated upstream
-    output$B1Exp_start <- renderText({vals$bouquet_exp[[1]]})
-    output$B2Exp_start <- renderText({vals$bouquet_exp[[2]]})
-    output$B3Exp_start <- renderText({vals$bouquet_exp[[3]]})
-    output$B4Exp_start <- renderText({vals$bouquet_exp[[4]]})
-    output$B5Exp_start <- renderText({vals$bouquet_exp[[5]]})
-    output$B6Exp_start <- renderText({vals$bouquet_exp[[6]]})
-=======
+
+    #output$B1Exp_start <- renderText({vals$bouquet_exp[[1]]})
+    #output$B2Exp_start <- renderText({vals$bouquet_exp[[2]]})
+    #output$B3Exp_start <- renderText({vals$bouquet_exp[[3]]})
+    #output$B4Exp_start <- renderText({vals$bouquet_exp[[4]]})
+    #output$B5Exp_start <- renderText({vals$bouquet_exp[[5]]})
+    #output$B6Exp_start <- renderText({vals$bouquet_exp[[6]]})
+
     output$B1Left_start <- renderText({vals$bouquet_left[[1]]})
     output$B2Left_start <- renderText({vals$bouquet_left[[2]]})
     output$B3Left_start <- renderText({vals$bouquet_left[[3]]})
@@ -138,7 +138,7 @@ server <- function(input, output, session){
     #output$B4Exp_start <- renderText({vals$bouquet_exp[[4]]})
     #output$B5Exp_start <- renderText({vals$bouquet_exp[[5]]})
     #output$B6Exp_start <- renderText({vals$bouquet_exp[[6]]})
->>>>>>> Stashed changes
+
     output$roseLeft_start <- renderText({vals$flowers_left[[1]]})
     output$babyLeft_start <- renderText({vals$flowers_left[[2]]})
     output$carnLeft_start <- renderText({vals$flowers_left[[3]]})
@@ -192,22 +192,70 @@ server <- function(input, output, session){
       used_f2 <- 3*as.numeric(B1_make) + 3*as.numeric(B3_make) + 5*as.numeric(B5_make)
       used_f3 <- 5*as.numeric(B2_make) + 5*as.numeric(B3_make) + 10*as.numeric(B6_make)
       
-      if(used_f1 < total_f1 || used_f2 < total_f2 || used_f3 < total_f3){
+      if(used_f1 <= total_f1 || used_f2 <= total_f2 || used_f3 <= total_f3){
+        if(used_f1 <= as.numeric(vals$flowers_exp[1])){
+          vals$flowers_exp[1] <- as.numeric(vals$flowers_exp[1]) - used_f1 #to throw away today
+        } else { # if used flowers is less than the expiring ones to throw today
+          vals$flowers_left[1] <- as.numeric(vals$flowers_left[1]) - (used_f1 - as.numeric(vals$flowers_exp[1]))
+          vals$flowers_exp[1] <- 0
+        }
+        
+        if(used_f2 <= as.numeric(vals$flowers_exp[2])){
+          vals$flowers_exp[2] <- as.numeric(vals$flowers_exp[2]) - used_f2 #to throw away today
+        } else { # if used flowers is less than the expiring ones to throw today
+          vals$flowers_left[2] <- as.numeric(vals$flowers_left[2]) - (used_f2 - as.numeric(vals$flowers_exp[2]))
+          vals$flowers_exp[2] <- 0
+        }
+        
+        if(used_f3 <= as.numeric(vals$flowers_exp[3])){
+          vals$flowers_exp[3] <- as.numeric(vals$flowers_exp[3]) - used_f3 #to throw away today
+        } else { # if used flowers is less than the expiring ones to throw today
+          vals$flowers_left[3] <- as.numeric(vals$flowers_left[3]) - (used_f3 - as.numeric(vals$flowers_exp[3]))
+          vals$flowers_exp[3] <- 0
+        }
+
         vals$calculator_vals <- c(0, 0, 0)
         bouquetsInventory <- updateBouquetsMade(vals$day, bouquetsInventory, B1_make, B2_make, B3_make, B4_make, B5_make, B6_make)
         print(bouquetsInventory)
-        flowersInventory <- updateFlowersUsed(vals$day, flowersInventory, B1_make, B2_make, B3_make, B4_make, B5_make, B6_make)
+        flowersInventory <- updateFlowersUsed(vals$day, flowersInventory, as.numeric(vals$flowers_left[1]),
+                                              as.numeric(vals$flowers_left[2]),
+                                              as.numeric(vals$flowers_left[3]),
+                                              as.numeric(vals$flowers_exp[1]),
+                                              as.numeric(vals$flowers_exp[2]),
+                                              as.numeric(vals$flowers_exp[3]))
         print(flowersInventory)
-        bouquetsInventory <- updateOrdersFulfilled(vals$day, vals$actual_demand, bouquetsInventory, ordersFulfilled)
-        print(bouquetsInventory)
+        
+        # Calculate orders fulfilled
+        vals$orders_fulfilled <- c(min(B1_make, as.numeric(vals$actual_demand[1])),
+                                   min(B2_make, as.numeric(vals$actual_demand[2])),
+                                   min(B3_make, as.numeric(vals$actual_demand[3])),
+                                   min(B4_make, as.numeric(vals$actual_demand[4])),
+                                   min(B5_make, as.numeric(vals$actual_demand[5])),
+                                   min(B6_make, as.numeric(vals$actual_demand[6])))
+        
+        ordersFulfilled <- updateOrdersFulfilled(vals$day, vals$actual_demand, as.numeric(vals$orders_fulfilled[1]),
+                                                 as.numeric(vals$orders_fulfilled[2]),
+                                                 as.numeric(vals$orders_fulfilled[3]),
+                                                 as.numeric(vals$orders_fulfilled[4]),
+                                                 as.numeric(vals$orders_fulfilled[5]),
+                                                 as.numeric(vals$orders_fulfilled[6]),
+                                                 ordersFulfilled)
+        print(ordersFulfilled)
+        
         vals$revenue <- calculateRevenue(vals$day, ordersFulfilled)
         vals$cashbal <- calculateCashBal(vals$cost, vals$revenue, vals$cashbal)
         uploadValues(vals$day, vals$cashbal, vals$cost, vals$revenue, vals$playerid)
+        
+        # Update demand forecast for next day
+        vals$demand_forecast <- c(forecastB1[vals$day+1], forecastB2[vals$day+1], forecastB3[vals$day+1], forecastB4[vals$day+1], forecastB5[vals$day+1], forecastB6[vals$day+1])
+        
+        # Close the modal after saving
+        removeModal()
       } else {
         print("Not enough flowers")
       }
     } else {
-      print("Error")
+      print("Not a integer value")
     }
     #values$makeB1 <- ifelse(input$B1choice == "", 0, input$B1choice)
     #values$makeB2 <- ifelse(input$B2choice == "", 0, input$B2choice)
@@ -216,11 +264,8 @@ server <- function(input, output, session){
     #values$makeB5 <- ifelse(input$B5choice == "", 0, input$B5choice)
     #values$makeB6 <- ifelse(input$B6choice == "", 0, input$B6choice)
     
-    # Update demand forecast for next day
-    vals$demand_forecast <- c(forecastB1[vals$day+1], forecastB2[vals$day+1], forecastB3[vals$day+1], forecastB4[vals$day+1], forecastB5[vals$day+1], forecastB6[vals$day+1])
-    
-    # Close the modal after saving
-    removeModal()
+   
+
   })
   
   #calendar menu prompt
@@ -229,22 +274,22 @@ server <- function(input, output, session){
   shinyjs::onclick("cal_button", showModal(calendarModal()))
   
   output$nextday_B1 <- renderText({
-    paste("Bouquet 1:", nextdaydemand[1])
+    paste("Bouquet 1:", vals$demand_forecast[1])
   })
   output$nextday_B2 <- renderText({
-    paste("Bouquet 2:", nextdaydemand[2])
+    paste("Bouquet 2:", vals$demand_forecast[2])
   })
   output$nextday_B3 <- renderText({
-    paste("Bouquet 3:", nextdaydemand[3])
+    paste("Bouquet 3:", vals$demand_forecast[3])
   })
   output$nextday_B4 <- renderText({
-    paste("Bouquet 4:", nextdaydemand[4])
+    paste("Bouquet 4:", vals$demand_forecast[4])
   })
   output$nextday_B5 <- renderText({
-    paste("Bouquet 5:", nextdaydemand[5])
+    paste("Bouquet 5:", vals$demand_forecast[5])
   })
   output$nextday_B6 <- renderText({
-    paste("Bouquet 6:", nextdaydemand[6])
+    paste("Bouquet 6:", vals$demand_forecast[6])
   })
   output$nextday_modal_title <- renderText({
     paste("Tomorrow's Demand")
@@ -252,40 +297,40 @@ server <- function(input, output, session){
   ### Number output for Inventory Modal ###
   #output text for the diff values
   output$B1Exp <- renderText({
-    bouquet_exp[1]
+    vals$bouquet_exp[1]
   })
   output$B2Exp <- renderText({
-    bouquet_exp[2]
+    vals$bouquet_exp[2]
   })
   output$B3Exp <- renderText({
-    bouquet_exp[3]
+    vals$bouquet_exp[3]
   })
   output$B4Exp <- renderText({
-    bouquet_exp[4]
+    vals$bouquet_exp[4]
   })
   output$B5Exp <- renderText({
-    bouquet_exp[5]
+    vals$bouquet_exp[5]
   })
   output$B6Exp <- renderText({
-    bouquet_exp[6]
+    vals$bouquet_exp[6]
   })
   output$roseLeft <- renderText({
-    flowers_left[1]
+    vals$flowers_left[1]
   })
   output$babyLeft <- renderText({
-    flowers_left[2]
+    vals$flowers_left[2]
   })
   output$carnLeft <- renderText({
-    flowers_left[3]
+    vals$flowers_left[3]
   })
   output$roseExp <- renderText({
-    flowers_exp[1]
+    vals$flowers_exp[1]
   })
   output$babyExp <- renderText({
-    flowers_exp[2]
+    vals$flowers_exp[2]
   })
   output$carnExp <- renderText({
-    flowers_exp[3]
+    vals$flowers_exp[3]
   })
   
   ### Table output for End Game Modal ###
@@ -332,7 +377,8 @@ server <- function(input, output, session){
     vals$cost <- calculateCost(vals$day, eodOrdered)
     vals$day <- vals$day+1
     vals$startday <- TRUE
-    
+    actdemand <- getDemandEachDay(vals$day, vals$playerid)
+    vals$actual_demand <- c(actdemand[[1]], actdemand[[2]], actdemand[[3]], actdemand[[4]], actdemand[[5]], actdemand[[6]])
     vals$flowers_left <- c(eodOrdered[vals$day, "F1"], eodOrdered[vals$day, "F2"], eodOrdered[vals$day, "F3"], "")
     vals$flowers_exp <- c(flowersInventory[vals$day+1, "F1e"], flowersInventory[vals$day+1, "F2e"], flowersInventory[vals$day+1, "F3e"], "")
     print(eodOrdered)
@@ -366,22 +412,22 @@ server <- function(input, output, session){
   ### Number Output for Order Fulfilment Modal ###      
   output$order_fulfilmentTitle <- renderText({paste("Order Fulfilment")})   
   output$bouquet1fulfilled <- renderText({
-    paste("Bouquet 1:",bouquets_made[1], "/", actual_demand[1])
+    paste("Bouquet 1:", vals$orders_fulfilled[1], "/", vals$actual_demand[1])
     })   
   output$bouquet2fulfilled <- renderText({
-    paste("Bouquet 2:",bouquets_made[2], "/", actual_demand[2])
+    paste("Bouquet 2:", vals$orders_fulfilled[2], "/", vals$actual_demand[2])
     })   
   output$bouquet3fulfilled <- renderText({
-    paste("Bouquet 3:",bouquets_made[3], "/", actual_demand[3])
+    paste("Bouquet 3:", vals$orders_fulfilled[3], "/", vals$actual_demand[3])
     })   
   output$bouquet4fulfilled <- renderText({
-    paste("Bouquet 4:",bouquets_made[4], "/", actual_demand[4])
+    paste("Bouquet 4:", vals$orders_fulfilled[4], "/", vals$actual_demand[4])
     })   
   output$bouquet5fulfilled <- renderText({
-    paste("Bouquet 5:",bouquets_made[5], "/", actual_demand[5])
+    paste("Bouquet 5:", vals$orders_fulfilled[5], "/", vals$actual_demand[5])
     })   
   output$bouquet6fulfilled <- renderText({
-    paste("Bouquet 6:",bouquets_made[6], "/", actual_demand[6])
+    paste("Bouquet 6:", vals$orders_fulfilled[6], "/", vals$actual_demand[6])
     })
   
   ## Table Output for Leaderboard    
