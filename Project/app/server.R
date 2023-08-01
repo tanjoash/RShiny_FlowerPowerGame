@@ -36,11 +36,55 @@ server <- function(input, output, session){
   # Observe button that starts game
   shinyjs::onclick("resetGame", updateTabsetPanel(session, "flowerPages", "StartingPage"))
 
-  
+  #instruction Modal stuff
+  instructPage <- reactiveVal(1)
   # Observe button that opens instructions modal
   observeEvent(input$instructions, {
     showModal(instructionsModal())
+    instructPage(1)
   })
+  
+  observeEvent(input$btn_previous, {
+    instructPage(max(1, instructPage() - 1))
+    updatePageContent()
+  })
+  
+  observeEvent(input$btn_next, {
+    instructPage(min(7, instructPage() + 1))
+    updatePageContent()
+  })
+  observe({
+    # Disable the "Next" button on the last page
+    if (instructPage() == 6) {
+      shinyjs::disable("btn_next")
+    } else {
+      shinyjs::enable("btn_next")
+    }
+    
+    # Disable the "Previous" button on the first page
+    if (instructPage() == 1) {
+      shinyjs::disable("btn_previous")
+    } else {
+      shinyjs::enable("btn_previous")
+    }
+  })
+  observeEvent(input$btn_close, {
+    removeModal()
+  })
+  
+  updatePageContent <- function() {
+    output$page_content <- renderUI({
+      switch(instructPage(),
+             "1" = img(id="instruct_1", src="assets/Instructions pg1.png", width = "570px"),
+             "2" = img(id="instruct_2", src="assets/Instructions pg2.png", width = "570px"),
+             "3" = img(id="instruct_3", src="assets/Instructions pg3.png", width = "570px"),
+             # "4" = img(id="instruct_4", src=""),
+             "4" = p("hi"),
+             "5" = img(id="instruct_5", src="assets/Instructions pg5.png", width = "570px"),
+             "6" = img(id="instruct_6", src="assets/Instructions pg6.png", width = "570px"),
+      )
+    })
+  }
   
   # Get Seed
   observeEvent(input$playButton, {
@@ -70,12 +114,6 @@ server <- function(input, output, session){
     
     ### Number Output for Start Game Modal ###
     #Inventory for Start Game Modal 
-    output$B1Left_start <- renderText({vals$bouquet_left[[1]]})
-    output$B2Left_start <- renderText({vals$bouquet_left[[2]]})
-    output$B3Left_start <- renderText({vals$bouquet_left[[3]]})
-    output$B4Left_start <- renderText({vals$bouquet_left[[4]]})
-    output$B5Left_start <- renderText({vals$bouquet_left[[5]]})
-    output$B6Left_start <- renderText({vals$bouquet_left[[6]]})
     output$B1Exp_start <- renderText({vals$bouquet_exp[[1]]})
     output$B2Exp_start <- renderText({vals$bouquet_exp[[2]]})
     output$B3Exp_start <- renderText({vals$bouquet_exp[[3]]})
@@ -177,24 +215,6 @@ server <- function(input, output, session){
   })
   ### Number output for Inventory Modal ###
   #output text for the diff values
-  output$B1Left <- renderText({
-    bouquet_left[1]
-  })
-  output$B2Left <- renderText({
-    bouquet_left[2]
-  })
-  output$B3Left <- renderText({
-    bouquet_left[3]
-  })
-  output$B4Left <- renderText({
-    bouquet_left[4]
-  })
-  output$B5Left <- renderText({
-    bouquet_left[5]
-  })
-  output$B6Left <- renderText({
-    bouquet_left[6]
-  })
   output$B1Exp <- renderText({
     bouquet_exp[1]
   })
@@ -241,11 +261,6 @@ server <- function(input, output, session){
   flower_prefix <- c("R", "B", "C", "")
   
   
-  matrix_bleft <- reactive({
-    paste_vals <- paste(bouquet_prefix, ":", vals$bouquet_left)
-    matrix(paste_vals, nrow = 2, byrow = TRUE)
-  })
-  
   matrix_bexp <- reactive({
     paste_vals <- paste(bouquet_prefix, ":", vals$bouquet_exp)
     matrix(paste_vals, nrow = 2, byrow = TRUE)
@@ -288,9 +303,6 @@ server <- function(input, output, session){
   })
   
   # Render the table output
-  output$BouqLeftOutput <- renderTable({
-    matrix_bleft()
-  }, include.rownames = FALSE, include.colnames = FALSE)
   output$BouqExpOutput <- renderTable({
     matrix_bexp()
   }, include.rownames = FALSE, include.colnames = FALSE)
