@@ -38,13 +38,7 @@ createInventory <- function() {
     B3 = rep(0, 32),
     B4 = rep(0, 32),
     B5 = rep(0, 32),
-    B6 = rep(0, 32),
-    B1e = rep(0, 32),
-    B2e = rep(0, 32),
-    B3e = rep(0, 32),
-    B4e = rep(0, 32),
-    B5e = rep(0, 32),
-    B6e = rep(0, 32)
+    B6 = rep(0, 32)
   )
   assign("bouquetsInventory", bouquetsInventory, envir = .GlobalEnv)
   
