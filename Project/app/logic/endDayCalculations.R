@@ -9,9 +9,6 @@
 # ordersFulfilled
 # ordersUnfulfilled 
 
-# i assume this returns a list of 6 values eg [3,5,7,9,6,4], each correspinding to the demand of each bouquet 
-currentDemand <- getDemandEachDay(day, playerid)
-
 getCashBal <- function(conn, day, playerid){
   querytemplate <- "SELECT day?number AS cashbal FROM CashBal WHERE finalcashbalid = ?playerid"
   query <- sqlInterpolate(conn, querytemplate, number=day, playerid=playerid)
@@ -30,7 +27,7 @@ updateEodOrdered <- function(day, eodOrdered, F1, F2, F3, manpower){
 }
 
 # this cost has to be stored in db - not done
-calculateCost(day, eodOrdered){
+calculateCost <- function(day, eodOrdered){
   costFlower <- eodOrdered$F1[eodOrdered$day == day]*1 + eodOrdered$F2[eodOrdered$day == day]*0.5 + eodOrdered$F3[eodOrdered$day == day]*0.1
   costManpower <- eodOrdered$manpower[eodOrdered$day == day]*
   costTotal <- costFlower + costManpower
@@ -151,13 +148,13 @@ updateOrdersFulfilled <- function(day, currentDemand, bouquetsInventory, ordersF
 }
 
 # this revenue has to be stored in db - not done
-calculateRevenue(day, ordersFulfilled){
+calculateRevenue <- function(day, ordersFulfilled){
   revenue <- ordersFulfilled$B1[ordersFulfilled$day == day]*9 +  ordersFulfilled$B2[ordersFulfilled$day == day]*7 + ordersFulfilled$B3[ordersFulfilled$day == day]*4 + ordersFulfilled$B4[ordersFulfilled$day == day]*10 + ordersFulfilled$B5[ordersFulfilled$day == day]*5 + ordersFulfilled$B6[ordersFulfilled$day == day]*2
   return(revenue)
 }
 
 # this cashbal has to be stored in db - not done
-calculateCashBal(conn, day, cashBal, cost, revenue){
+calculateCashBal <- function(conn, day, cashBal, cost, revenue){
   oldcashBal <- getOldCashBal(day)
   revenue <- calculateRevenue(day, bouquetsSold)
   cost <- calculateCost(day, flowersBought, manpower)

@@ -16,7 +16,7 @@ createInventory <- function() {
     F3 = rep(0, 32),
     manpower = rep(0,32)
   )
-  assign("flowersBought", flowersBought, envir = .GlobalEnv)
+  assign("eodOrdered", eodOrdered, envir = .GlobalEnv)
   
   # Create the flowersInventory dataframe
   flowersInventory <- data.frame(

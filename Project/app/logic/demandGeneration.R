@@ -16,112 +16,8 @@ setSeed <- function(playerName, seed = sample(1:100000, 1)){
   ## generate days ##
   days <- seq(1, 31)
   
-  ## bouquet 1 linear demand ##
+  ## 3R3C linear demand ##
   b1_demand <- function(day){
-    if (day == 5 || day == 6){
-      5
-    } else if (day == 12 || day == 13){
-      10  
-    } else if (day == 18){
-      16
-    } else if (day == 19){
-      24
-    } else if (day == 20){
-      35
-    } else if (day == 21){
-      21
-    } else if (day == 22 || day == 26){
-      14
-    } else if (day == 27){
-      13
-    } else {
-      y <- 0.4302*day + 1
-      y
-    }
-  }
-  
-  ## bouquet 2 linear demand ##
-  b2_demand <- function(day){
-    if (day == 12 || day == 16){
-      5
-    } else if (day == 12 || day == 13){
-      10  
-    } else if (day == 13){
-      7
-    } else if (day == 14){
-      10
-    } else if (day == 15){
-      8
-    } else {
-      y <- 0.2839*day + 0.5
-      y
-    }
-  }
-  
-  ## bouquet 3 linear demand ##
-  b3_demand <- function(day){
-    if (day == 5 || day == 6){
-      6
-    } else if (day == 12){
-      7
-    } else if (day == 13){
-      8
-    } else if (day == 19){
-      10
-    } else if (day == 20){
-      12
-    } else if (day == 26 || day == 27){
-      15
-    } else {
-      y <- 0.4379*day + 1
-      y
-    }
-  }
-  
-  ## bouquet 4 linear demand ##
-  b4_demand <- function(day){
-    if (day == 5 || day == 6){
-      6
-    } else if (day == 12 || day == 13){
-      11
-    } else if (day == 18){
-      16
-    } else if (day == 19){
-      29
-    } else if (day == 20){
-      40
-    } else if (day == 21){
-      26
-    } else if (day == 22){
-      18
-    } else if (day == 26){
-      15
-    } else if (day == 27){
-      16
-    } else {
-      y <- 0.3875*day + 1.8323
-      y
-    }
-  }
-  
-  ## bouquet 5 linear demand ##
-  b5_demand <- function(day){
-    if (day == 12){
-      7
-    } else if (day == 13 || day == 15){
-      9
-    } else if (day == 14){
-      15
-    } else if (day == 16){
-      6
-    } else {
-      y <- 0.2173*day + 1.6839
-      y
-    }
-  }
-  
-  ## bouquet 6 linear demand ##
-  b6_demand <- function(day){
     if (day == 5 || day == 6){
       5
     } else if (day == 12 || day == 22){
@@ -146,6 +42,110 @@ setSeed <- function(playerName, seed = sample(1:100000, 1)){
       16
     } else {
       y <- 0.5117*day + 1.3613
+      y
+    }
+  }
+  
+  ## 3R5B linear demand ##
+  b2_demand <- function(day){
+    if (day == 5 || day == 6){
+      6
+    } else if (day == 12 || day == 13){
+      11
+    } else if (day == 18){
+      16
+    } else if (day == 19){
+      29
+    } else if (day == 20){
+      40
+    } else if (day == 21){
+      26
+    } else if (day == 22){
+      18
+    } else if (day == 26){
+      15
+    } else if (day == 27){
+      16
+    } else {
+      y <- 0.3875*day + 1.8323
+      y
+    }
+  }
+  
+  ## 3C5B linear demand ##
+  b3_demand <- function(day){
+    if (day == 12){
+      7
+    } else if (day == 13 || day == 15){
+      9
+    } else if (day == 14){
+      15
+    } else if (day == 16){
+      6
+    } else {
+      y <- 0.2173*day + 1.6839
+      y
+    }
+  }
+  
+  ## 5R linear demand ##
+  b4_demand <- function(day){
+    if (day == 5 || day == 6){
+      5
+    } else if (day == 12 || day == 13){
+      10  
+    } else if (day == 18){
+      16
+    } else if (day == 19){
+      24
+    } else if (day == 20){
+      35
+    } else if (day == 21){
+      21
+    } else if (day == 22 || day == 26){
+      14
+    } else if (day == 27){
+      13
+    } else {
+      y <- 0.4302*day + 1
+      y
+    }
+  }
+  
+  ## 5C  linear demand ##
+  b5_demand <- function(day){
+    if (day == 12 || day == 16){
+      5
+    } else if (day == 12 || day == 13){
+      10  
+    } else if (day == 13){
+      7
+    } else if (day == 14){
+      10
+    } else if (day == 15){
+      8
+    } else {
+      y <- 0.2839*day + 0.5
+      y
+    }
+  }
+  
+  ## 10B linear demand ##
+  b6_demand <- function(day){
+    if (day == 5 || day == 6){
+      6
+    } else if (day == 12){
+      7
+    } else if (day == 13){
+      8
+    } else if (day == 19){
+      10
+    } else if (day == 20){
+      12
+    } else if (day == 26 || day == 27){
+      15
+    } else {
+      y <- 0.4379*day + 1
       y
     }
   }
@@ -198,7 +198,7 @@ setSeed <- function(playerName, seed = sample(1:100000, 1)){
 }
 
 
-# demand forecast]
+# demand forecast
 forecastday <- list(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31)
 forecastB1 <- list(2, 3, 4, 2, 3, 4, 5, 4, 6, 5,	7, 8, 9, 10, 11, 10, 11, 12, 11, 12, 11, 12, 12, 10, 14, 15, 16, 16, 17, 18, 16)
 forecastB2 <- list(2, 3, 3, 3, 3, 4, 4, 6, 5, 6, 7, 7, 8, 8, 8, 9, 8, 8, 8, 9, 9, 10, 11, 10, 11, 11, 12,	12, 15, 14, 15)
@@ -207,3 +207,12 @@ forecastB4 <- list(2, 3, 3, 2, 2, 3, 3, 5, 4, 5,	6, 7, 6, 7, 6, 8, 9, 9, 10, 11,
 forecastB5 <- list(1, 2, 1, 2, 1, 3, 2, 3, 2, 4,	3, 4, 3, 4, 5, 5, 5, 6, 5, 7,	6, 5, 8, 7, 10, 8, 6, 9, 7, 9, 11)
 forecastB6 <- list(2, 3, 3, 4, 4, 4, 4, 5, 4, 7, 5, 5, 6, 6, 6, 5, 8, 8, 8, 9, 9, 10, 11, 12, 14, 14, 13, 13, 15, 16, 14)
 
+total_demand_calc <- function(day, playerid){
+  if (day == 0){
+    result <- 0
+  } else {
+    demand <- getDemandEachDay(day, playerid)
+    result <- as.integer(sum(demand[1,]))
+  }
+  result
+}

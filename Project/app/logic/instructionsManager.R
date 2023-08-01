@@ -123,12 +123,12 @@ startgameModal <- function() {
       img(src = "assets/Start-day prompt.png"),
       
       ## user selection for number of flowers for the day
-      textInput("B1choice", NULL , value = ""),       
-      textInput("B2choice", NULL, value = ""),       
-      textInput("B3choice", NULL, value = ""),       
-      textInput("B4choice", NULL, value = ""),       
-      textInput("B5choice", NULL, value = ""),       
-      textInput("B6choice", NULL, value = ""),
+      textInput("B1choice", "" , 0),       
+      textInput("B2choice", "", 0),       
+      textInput("B3choice", "", 0),       
+      textInput("B4choice", "", 0),       
+      textInput("B5choice", "", 0),       
+      textInput("B6choice", "", 0),
       
       ##demand forecast number output 
       textOutput("B1demandforecast_start"),
@@ -188,11 +188,12 @@ enddayModal <- function(){
       tableOutput("BouqExpOutput"),
       tableOutput("flowExpOutput"),
       tableOutput("flowLeftOutput"),
-      textInput("r_order", ""),
-      textInput("c_order", ""),
-      textInput("b_order", ""),
-      textInput("staff_hire", ""),
-      textInput("staff_fire", ""),
+      textInput("r_order", "", 0),
+      textInput("c_order", "", 0),
+      textInput("b_order", "", 0),
+      textInput("staff_hire", "", 0),
+      textInput("staff_fire", "", 0),
+      actionButton("endday_btn", "End Day!")
     )
   )
 }
