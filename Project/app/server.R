@@ -68,6 +68,9 @@ server <- function(input, output, session){
       shinyjs::enable("btn_previous")
     }
   })
+  shinyjs::onclick("back_btn", {
+    showModal(cal_menuModal())
+  })
   observeEvent(input$btn_close, {
     removeModal()
   })
