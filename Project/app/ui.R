@@ -24,6 +24,7 @@ ui <- shinyUI(fillPage(
       img(id="scoreButton", src="assets/Score Button.png"),
       img(id="orderButton", src="assets/Order button.png"),
       img(id="inventoryButton", src="assets/Inventory Button.png"),
+      textOutput("cashBal"),
       img(id="dayButton", src="assets/dayButton.png"),
       img(id="resetGame", src="assets/reset button.png"),
       img(id="endDay", src="assets/End of day button.png")

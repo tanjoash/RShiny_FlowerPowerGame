@@ -10,23 +10,22 @@ server <- function(input, output, session){
   # reactiveValues objects for storing items like the user password
   vals <- reactiveValues(playerid = NULL,
                          day = 0,
-                         startday=FALSE,
+                         cost = 0,
+                         revenue = 0,
+                         cashbal = 500,
+                         startday = FALSE,
                          orders_fulfilled = 0,
                          total_orders = 0,
                          bouquet_left = c(0, 0, 0, 0, 0, 0),
-                         bouquet_exp = c(0, 0, 0, 0, 0, 0),
+                         bouquet_exp = c(0, 0, 0, 0, 0, 0), # need to linkt o database
                          flowers_left = c(10, 10, 20, ""),
-                         og1 = 0,
                          flowers_exp = c(10, 10, 20, ""),
                          demand_forecast = c(0, 0, 0, 0, 0, 0),
+                         calculator_vals = c(0, 0, 0),
+                         actual_demand = c(6, 5, 4, 3, 2, 1),
                          daily_revenue = 0,
                          daily_cost = 0,
                          daily_profit = 0)
-  
-  r_order_reactive <- reactive({
-    # Access the value of the "r_order" text input and return it
-    input$r_order
-  })
   
   #placeholder list
   nextdaydemand <- c(1,2,3,4,5,6)
@@ -98,6 +97,10 @@ server <- function(input, output, session){
     output$B5demandforecast_start <- renderText({vals$demand_forecast[[5]]})
     output$B6demandforecast_start <- renderText({vals$demand_forecast[[6]]})
     
+    output$R <- renderText({vals$calculator_vals[1]})
+    output$C <- renderText({vals$calculator_vals[2]})
+    output$B <- renderText({vals$calculator_vals[3]})
+    
         # updateTabsetPanel(session, "flowerPages", "SecondPage")
       
   })
@@ -108,18 +111,11 @@ server <- function(input, output, session){
   shinyjs::onclick("orderButton", showModal(order_fulfilmentModal()))
   shinyjs::onclick("scoreButton", showModal(score_leaderboardModal()))
   
-  observeEvent(input$B1choice, {
-    new_value <- as.integer(input$B1choice)
-    og1 <- as.integer(vals$og1)
-    if(new_value > og1){
-      vals$flowers_left[1] <- as.numeric(vals$flowers_left[1]) - (new_value-og1)*3
-      vals$flowers_left[2] <- as.numeric(vals$flowers_left[2]) - (new_value-og1)*3
-      vals$og1 <- new_value
-    } else if (new_value < og1){
-      vals$flowers_left[1] <- as.numeric(vals$flowers_left[1]) + (og1-new_value)*3
-      vals$flowers_left[2] <- as.numeric(vals$flowers_left[2]) + (og1-new_value)*3
-      vals$og1 <- new_value
-    }
+  observeEvent(input$calc, {
+    calculator_R <- 3*as.numeric(input$B1calc) + 3*as.numeric(input$B2calc) + 5*as.numeric(input$B4calc)
+    calculator_C <- 3*as.numeric(input$B1calc) + 3*as.numeric(input$B3calc) + 5*as.numeric(input$B5calc)
+    calculator_B <- 5*as.numeric(input$B2calc) + 5*as.numeric(input$B3calc) + 10*as.numeric(input$B6calc)
+    vals$calculator_vals <- c(calculator_R, calculator_C, calculator_B)
   })
   
   observeEvent(input$startday_btn, {
@@ -131,7 +127,11 @@ server <- function(input, output, session){
     B5_make <- as.integer(input$B5choice)
     B6_make <- as.integer(input$B6choice) # NEED TO CHECK IF CAN MAKE THE BOUQUETS
     if(is.numeric(B1_make) || is.numeric(B2_make) || is.numeric(B3_make) || is.numeric(B4_make) || is.numeric(B5_make) || is.numeric(B6_make)){
-      print("success")
+      print("success") # run some function to calculate B1 to B6e
+      updateBouquetsMade(vals$day, bouquetsInventory, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12)
+      updateOrdersFulfilled(vals$day, vals$actual_demand, bouquetsInventory, ordersFulfilled)
+      vals$revenue <- calculateRevenue(vals$day, ordersFulfilled)
+      calculateCashBal(vals$cost, vals$revenue, vals$cashbal)
     } else {
       print("Error")
     }
@@ -277,6 +277,9 @@ server <- function(input, output, session){
     } else {
       print("Please input integers only") #need render?
     }
+    updateFlowersInvStart(vals$day, flowersInventory, eodOrdered)
+    updateBouquetsInvStart()
+    vals$cost <- calculateCost(vals$day, eodOrdered)
     vals$day <- vals$day+1
     vals$startday <- TRUE
     # Close the modal after saving
@@ -339,4 +342,8 @@ server <- function(input, output, session){
   # Render Leaderboard Table   
   output$scoreLeaderboard <- renderTable({
     matrix_leaderboard}, include.rownames = FALSE, include.colnames = FALSE)
+  
+  output$cashBal <- renderText({
+    paste(vals$cashbal)
+  })
 }

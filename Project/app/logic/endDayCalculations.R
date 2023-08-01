@@ -19,46 +19,47 @@ getCashBal <- function(conn, day, playerid){
 # this is to be stored right after player orders
 # name of flowers is F1, F2, F3
 updateEodOrdered <- function(day, eodOrdered, F1, F2, F3, manpower){
-  row_index <- day+1
+  row_index <- day+1 #1 day 0
   eodOrdered[row_index, "F1"] <- F1
   eodOrdered[row_index, "F2"] <- F2
   eodOrdered[row_index, "F3"] <- F3
   eodOrdered[row_index, "manpower"] <- manpower
 }
 
+# At start of day
+updateFlowersInvStart <- function(day, flowersInventory, eodOrdered){
+  row_index <- day+1 #1 day 0
+  flowersInventory[row_index+1, "F1e"] <- flowersInventory[row_index, "F1"] #2 day 1e <- #1 day 0
+  flowersInventory[row_index+1, "F2e"] <- flowersInventory[row_index, "F2"]
+  flowersInventory[row_index+1, "F3e"] <- flowersInventory[row_index, "F3"]
+  flowersInventory[row_index+1, "F1"] <- eodOrdered[row_index, "F1"] #2 day 1 <- #1 day0 EODordered
+  flowersInventory[row_index+1, "F2"] <- eodOrdered[row_index, "F2"]
+  flowersInventory[row_index+1, "F3"] <- eodOrdered[row_index, "F3"]
+}
+
 # this cost has to be stored in db - not done
 calculateCost <- function(day, eodOrdered){
   costFlower <- eodOrdered$F1[eodOrdered$day == day]*1 + eodOrdered$F2[eodOrdered$day == day]*0.5 + eodOrdered$F3[eodOrdered$day == day]*0.1
-  costManpower <- eodOrdered$manpower[eodOrdered$day == day]*
+  costManpower <- eodOrdered$manpower[eodOrdered$day == day]*10
   costTotal <- costFlower + costManpower
-  return(costTotal)
-}
-
-# At start of day
-updateFlowersInvStart <- function(day, flowersInventory, eodOrdered){
-  row_index <- day+1
-  flowersInventory[row_index, "F1e"] <- flowersInventory[row_index-1, "F1"]
-  flowersInventory[row_index, "F2e"] <- flowersInventory[row_index-1, "F2"]
-  flowersInventory[row_index, "F3e"] <- flowersInventory[row_index-1, "F3"]
-  flowersInventory[row_index, "F1"] <- eodOrdered[row_index, "F1"]
-  flowersInventory[row_index, "F2"] <- eodOrdered[row_index, "F2"]
-  flowersInventory[row_index, "F3"] <- eodOrdered[row_index, "F3"]
+  return(costTotal) # for the next day costs
 }
 
 updateBouquetsInvStart <- function(day, bouquetsInventory){
   row_index <- day+1
-  bouquetsInventory[row_index, "B1e"] <- bouquetsInventory[row_index-1, "B1"]
-  bouquetsInventory[row_index, "B2e"] <- bouquetsInventory[row_index-1, "B2"]
-  bouquetsInventory[row_index, "B3e"] <- bouquetsInventory[row_index-1, "B3"]
-  bouquetsInventory[row_index, "B4e"] <- bouquetsInventory[row_index-1, "B4"]
-  bouquetsInventory[row_index, "B5e"] <- bouquetsInventory[row_index-1, "B5"]
-  bouquetsInventory[row_index, "B6e"] <- bouquetsInventory[row_index-1, "B6"]
+  bouquetsInventory[row_index+1, "B1e"] <- bouquetsInventory[row_index, "B1"]
+  bouquetsInventory[row_index+1, "B2e"] <- bouquetsInventory[row_index, "B2"]
+  bouquetsInventory[row_index+1, "B3e"] <- bouquetsInventory[row_index, "B3"]
+  bouquetsInventory[row_index+1, "B4e"] <- bouquetsInventory[row_index, "B4"]
+  bouquetsInventory[row_index+1, "B5e"] <- bouquetsInventory[row_index, "B5"]
+  bouquetsInventory[row_index+1, "B6e"] <- bouquetsInventory[row_index, "B6"]
 }
 
+# the global day + 1 here
 # Not sure how to use the database to limit the bouquets made, but that's at the front-end part?
 # name of flowers is B1, B2, B3, B4, B5, B6
 
-updateBouquetsMade <- function(day, bouquetsInventory, B1, B2, B3, B4, B5, B6){
+updateBouquetsMade <- function(day, bouquetsInventory, B1, B2, B3, B4, B5, B6, B1e, B2e, B3e, B4e, B5e, B6e){
   row_index <- day+1
   bouquetsInventory[row_index, "B1"] <- B1
   bouquetsInventory[row_index, "B2"] <- B2
@@ -66,9 +67,15 @@ updateBouquetsMade <- function(day, bouquetsInventory, B1, B2, B3, B4, B5, B6){
   bouquetsInventory[row_index, "B4"] <- B4
   bouquetsInventory[row_index, "B5"] <- B5
   bouquetsInventory[row_index, "B6"] <- B6
+  bouquetsInventory[row_index, "B1e"] <- bouquetsInventory[row_index, "B1e"] + B1e
+  bouquetsInventory[row_index, "B2e"] <- bouquetsInventory[row_index, "B2e"] + B2e
+  bouquetsInventory[row_index, "B3e"] <- bouquetsInventory[row_index, "B3e"] + B3e
+  bouquetsInventory[row_index, "B4e"] <- bouquetsInventory[row_index, "B4e"] + B4e
+  bouquetsInventory[row_index, "B5e"] <- bouquetsInventory[row_index, "B5e"] + B5e
+  bouquetsInventory[row_index, "B6e"] <- bouquetsInventory[row_index, "B6e"] + B6e
 }
 
-updateFlowersUsed <- function(day, flowersInventory, B1, B2, B3, B4, B5, B6){
+updateFlowersUsed <- function(day, flowersInventory, B1, B2, B3, B4, B5, B6){ #to change
   row_index <- day+1
   used_F1 <- B1*3 + B2*3 + B4*5
   used_F1 <- B1*3 + B3*3 + B5*5
@@ -96,7 +103,7 @@ updateFlowersUsed <- function(day, flowersInventory, B1, B2, B3, B4, B5, B6){
 }
 
 # When user clicks run simulation or open shop or smth
-# At the end of day
+# At the end of the start of the day
 updateOrdersFulfilled <- function(day, currentDemand, bouquetsInventory, ordersFulfilled){
   row_index <- day+1
   
@@ -154,10 +161,7 @@ calculateRevenue <- function(day, ordersFulfilled){
 }
 
 # this cashbal has to be stored in db - not done
-calculateCashBal <- function(conn, day, cashBal, cost, revenue){
-  oldcashBal <- getOldCashBal(day)
-  revenue <- calculateRevenue(day, bouquetsSold)
-  cost <- calculateCost(day, flowersBought, manpower)
+calculateCashBal <- function(cost, revenue, oldcashBal){
   newCashBal <- oldcashBal - cost + revenue
   return(newCashBal)
 }

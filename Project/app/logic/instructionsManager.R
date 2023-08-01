@@ -158,6 +158,17 @@ startgameModal <- function() {
       textOutput("babyExp_start"),
       textOutput("carnExp_start"),
       
+      textInput("B1calc", "B1" , 0),
+      textInput("B2calc", "B2" , 0), 
+      textInput("B3calc", "B3" , 0), 
+      textInput("B4calc", "B4" , 0), 
+      textInput("B5calc", "B5" , 0), 
+      textInput("B6calc", "B6" , 0), 
+      actionButton("calc", "Calculator"),
+      textOutput("R"),
+      textOutput("B"),
+      textOutput("C"),
+      
       #Button to proceed with the game and assign values to variables
       actionButton("startday_btn", "Start Day !"),
       
