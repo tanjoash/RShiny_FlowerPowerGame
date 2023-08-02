@@ -14,3 +14,8 @@ initialiseNameSeed <- function(conn, playerName, seedNumber){
   query <- sqlInterpolate(conn, querytemplate, currentID=currentID)
   dbExecute(conn, query)
 }
+
+getPlayerID <- function(conn){
+  result <- dbGetQuery(conn, "SELECT MAX(playerID) AS playerid FROM FlowerPower")$playerid
+  result
+}

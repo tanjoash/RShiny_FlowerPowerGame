@@ -53,3 +53,15 @@ uploadValues <- function(day, cashBal, cost, revenue, playerid){
   dbDisconnect(conn)
 }
 
+playerID <- function(){
+  conn <- getAWSConnection()
+  playerid <- getPlayerID(conn)
+  dbDisconnect(conn)
+  playerid
+}
+
+getLeaderBoard <- function(){
+  conn <- getAWSConnection()
+  # DO SQL FN TO GET TOP 10
+  dbDisconnect(conn)
+}

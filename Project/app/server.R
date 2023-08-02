@@ -20,7 +20,7 @@ server <- function(input, output, session){
                          bouquet_left = c(0, 0, 0, 0, 0, 0),
                          bouquet_exp = c(0, 0, 0, 0, 0, 0), # to remove
                          flowers_left = c(0, 0, 0, ""),
-                         flowers_exp = c(0, 0, 0, ""),
+                         flowers_exp = c(1, 2, 3, ""),
                          demand_forecast = c(0, 0, 0, 0, 0, 0),
                          calculator_vals = c(0, 0, 0),
                          actual_demand = c(0, 0, 0, 0, 0, 0),
@@ -92,7 +92,8 @@ server <- function(input, output, session){
   
   # Get Seed
   observeEvent(input$playButton, {
-    vals$playerid <- 1 # need to change and get latest playerid
+    vals$playerid <- playerID() # need to change and get latest playerid
+    print(vals$playerid)
     vals$total_orders <- total_demand_calc(vals$day, vals$playerid)
     vals$demand_forecast <- c(forecastB1[vals$day+1], forecastB2[vals$day+1], forecastB3[vals$day+1], forecastB4[vals$day+1], forecastB5[vals$day+1], forecastB6[vals$day+1])
     createInventory()
@@ -193,37 +194,40 @@ server <- function(input, output, session){
       used_f3 <- 5*as.numeric(B2_make) + 5*as.numeric(B3_make) + 10*as.numeric(B6_make)
       
       if(used_f1 <= total_f1 || used_f2 <= total_f2 || used_f3 <= total_f3){
-        if(used_f1 <= as.numeric(vals$flowers_exp[1])){
+        if(used_f1 <= as.numeric(vals$flowers_exp[1])){ # if used flowers is less than the expiring ones to throw today
           vals$flowers_exp[1] <- as.numeric(vals$flowers_exp[1]) - used_f1 #to throw away today
-        } else { # if used flowers is less than the expiring ones to throw today
+        } else { 
           vals$flowers_left[1] <- as.numeric(vals$flowers_left[1]) - (used_f1 - as.numeric(vals$flowers_exp[1]))
           vals$flowers_exp[1] <- 0
         }
         
-        if(used_f2 <= as.numeric(vals$flowers_exp[2])){
+        if(used_f2 <= as.numeric(vals$flowers_exp[2])){ # if used flowers is less than the expiring ones to throw today
           vals$flowers_exp[2] <- as.numeric(vals$flowers_exp[2]) - used_f2 #to throw away today
-        } else { # if used flowers is less than the expiring ones to throw today
+        } else { 
           vals$flowers_left[2] <- as.numeric(vals$flowers_left[2]) - (used_f2 - as.numeric(vals$flowers_exp[2]))
           vals$flowers_exp[2] <- 0
         }
         
-        if(used_f3 <= as.numeric(vals$flowers_exp[3])){
+        if(used_f3 <= as.numeric(vals$flowers_exp[3])){ # if used flowers is less than the expiring ones to throw today
           vals$flowers_exp[3] <- as.numeric(vals$flowers_exp[3]) - used_f3 #to throw away today
-        } else { # if used flowers is less than the expiring ones to throw today
+        } else { 
           vals$flowers_left[3] <- as.numeric(vals$flowers_left[3]) - (used_f3 - as.numeric(vals$flowers_exp[3]))
           vals$flowers_exp[3] <- 0
         }
+        
+        print(paste0("Flowers Expired today", vals$flowers_exp))
+        print(paste0("Flowers Left today", vals$flowers_left))
 
         vals$calculator_vals <- c(0, 0, 0)
         bouquetsInventory <- updateBouquetsMade(vals$day, bouquetsInventory, B1_make, B2_make, B3_make, B4_make, B5_make, B6_make)
-        print(bouquetsInventory)
+        #print(bouquetsInventory)
         flowersInventory <- updateFlowersUsed(vals$day, flowersInventory, as.numeric(vals$flowers_left[1]),
                                               as.numeric(vals$flowers_left[2]),
                                               as.numeric(vals$flowers_left[3]),
                                               as.numeric(vals$flowers_exp[1]),
                                               as.numeric(vals$flowers_exp[2]),
                                               as.numeric(vals$flowers_exp[3]))
-        print(flowersInventory)
+        #print(flowersInventory)
         
         # Calculate orders fulfilled
         vals$orders_fulfilled <- c(min(B1_make, as.numeric(vals$actual_demand[1])),
@@ -240,7 +244,7 @@ server <- function(input, output, session){
                                                  as.numeric(vals$orders_fulfilled[5]),
                                                  as.numeric(vals$orders_fulfilled[6]),
                                                  ordersFulfilled)
-        print(ordersFulfilled)
+        #print(ordersFulfilled)
         
         vals$revenue <- calculateRevenue(vals$day, ordersFulfilled)
         vals$cashbal <- calculateCashBal(vals$cost, vals$revenue, vals$cashbal)
