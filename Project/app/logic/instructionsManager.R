@@ -1,7 +1,13 @@
 ## Modal for instructions ##
 instructionsModal <- function() {
   modalDialog(
-    title = "Instructions"
+    title = "Instructions",
+    uiOutput("page_content"),
+    footer = tagList(
+      actionButton("btn_previous", "Previous"),
+      actionButton("btn_next", "Next"),
+      actionButton("btn_close", "Dismiss")
+    )
   )
 }
 nameError <- function(){
@@ -13,7 +19,6 @@ nameError <- function(){
 
 cal_menuModal <- function() {
   modalDialog(
-    size = "l",
     div(
       id = "cal-menu-modal",
       img(src = "assets/Forecast Demand wo button.png"),
@@ -28,6 +33,10 @@ month_fcModal <- function(){
   modalDialog(
     id = "month-fc-modal",
     # img(src = "insert graph here")
+    footer = tagList(
+      actionButton("back_btn", "Back"),
+      actionButton("btn_close", "Dismiss")
+    )
   )
 }
 next_fcModal <- function(){
@@ -40,66 +49,35 @@ next_fcModal <- function(){
       textOutput("nextday_B3"),
       textOutput("nextday_B4"),
       textOutput("nextday_B5"),
-      textOutput("nextday_B6")
+      textOutput("nextday_B6"),
+      ),
+    footer = tagList(
+      actionButton("back_btn", "Back"),
+      actionButton("btn_close", "Dismiss")
     )
   )
 }
 
 calendarModal <- function() {
   modalDialog(
-    size = "l",
     div(
       id = "calendar-modal",
       tags$img(src = "assets/calendar prompt font changed.png"),
-      # actionButton("May_1", ""),
-      # actionButton("May_2", ""),
-      # actionButton("May_3", ""),
-      # actionButton("May_4", ""),
-      # actionButton("May_5", ""),
-      # actionButton("May_6", ""),
-      # actionButton("May_7", ""),
-      # actionButton("May_8", ""),
-      # actionButton("May_9", ""),
-      # actionButton("May_10", ""),
-      # actionButton("May_11", ""),
-      # actionButton("May_12", ""),
-      # actionButton("May_13", ""),
-      # actionButton("mothersday", ""),
-      # actionButton("May_15", ""),
-      # actionButton("May_16", ""),
-      # actionButton("May_17", ""),
-      # actionButton("May_18", ""),
-      # actionButton("May_19", ""),
-      # actionButton("wuerling", ""),
-      # actionButton("May_21", ""),
-      # actionButton("May_22", ""),
-      # actionButton("May_23", ""),
-      # actionButton("May_24", ""),
-      # actionButton("May_25", ""),
-      # actionButton("May_26", ""),
-      # actionButton("May_27", ""),
-      # actionButton("May_28", ""),
-      # actionButton("May_29", ""),
-      # actionButton("May_30", ""),
-      # actionButton("May_31", ""),
+    ),
+    footer = tagList(
+      actionButton("back_btn", "Back"),
+      actionButton("btn_close", "Dismiss")
     )
   )
 }
 
 inventoryModal <- function(){
   modalDialog(
-    size = "l",
     div(
       id = "inventory-modal",
-      tags$img(src = "assets/photo_2023-07-19_12-39-09.jpg"),
+      tags$img(src = "assets/Inventory prompt.png"),
       
       ##inventory number output
-      textOutput("B1Left"),
-      textOutput("B2Left"),
-      textOutput("B3Left"),
-      textOutput("B4Left"),
-      textOutput("B5Left"),
-      textOutput("B6Left"),
       textOutput("B1Exp"),
       textOutput("B2Exp"),
       textOutput("B3Exp"),
@@ -120,15 +98,15 @@ startgameModal <- function() {
     title = "Start Game Modal",     
     div(       
       id = "start-game-modal",       
-      img(src = "assets/Start-day prompt.png"),
+      img(src = "assets/start.png"),
       
       ## user selection for number of flowers for the day
-      textInput("B1choice", "" , 0),       
-      textInput("B2choice", "", 0),       
-      textInput("B3choice", "", 0),       
-      textInput("B4choice", "", 0),       
-      textInput("B5choice", "", 0),       
-      textInput("B6choice", "", 0),
+      numericInput("B1choice", NULL , 0),       
+      numericInput("B2choice", NULL, 0),       
+      numericInput("B3choice", NULL, 0),       
+      numericInput("B4choice", NULL, 0),       
+      numericInput("B5choice", NULL, 0),       
+      numericInput("B6choice", NULL, 0),
       
       ##demand forecast number output 
       textOutput("B1demandforecast_start"),
@@ -139,18 +117,7 @@ startgameModal <- function() {
       textOutput("B6demandforecast_start"),
       
       ##inventory number output 
-      textOutput("B1Left_start"),
-      textOutput("B2Left_start"),
-      textOutput("B3Left_start"),
-      textOutput("B4Left_start"),
-      textOutput("B5Left_start"),
-      textOutput("B6Left_start"),
-      textOutput("B1Exp_start"),
-      textOutput("B2Exp_start"),
-      textOutput("B3Exp_start"),
-      textOutput("B4Exp_start"),
-      textOutput("B5Exp_start"),
-      textOutput("B6Exp_start"),
+      textOutput("numberofstaff"),
       textOutput("roseLeft_start"),
       textOutput("babyLeft_start"),
       textOutput("carnLeft_start"),
@@ -158,22 +125,51 @@ startgameModal <- function() {
       textOutput("babyExp_start"),
       textOutput("carnExp_start"),
       
-      textInput("B1calc", "B1" , 0),
-      textInput("B2calc", "B2" , 0), 
-      textInput("B3calc", "B3" , 0), 
-      textInput("B4calc", "B4" , 0), 
-      textInput("B5calc", "B5" , 0), 
-      textInput("B6calc", "B6" , 0), 
-      actionButton("calc", "Calculator"),
-      textOutput("R"),
-      textOutput("B"),
-      textOutput("C"),
+      #start day calculator
+      div(
+        id = "startcalc_B1",
+        numericInput("B1calc", NULL , 0),
+      ),
+      
+      div(
+        id = "startcalc_B2",
+        numericInput("B2calc", NULL , 0),
+      ),
+      div(
+        id = "startcalc_B3",
+        numericInput("B3calc", NULL , 0),
+      ),
+      div(
+        id = "startcalc_B4",
+        numericInput("B4calc", NULL , 0),
+      ),
+      div(
+        id = "startcalc_B5",
+        numericInput("B5calc", NULL , 0),
+      ),
+      div(
+        id = "startcalc_B6",
+        numericInput("B6calc", NULL , 0),
+      ),
+      div(
+        id = "startcalc_r",
+        textOutput("R"),
+      ),
+      div(
+        id = "startcalc_b",
+        textOutput("B"),
+      ),
+      div(
+        id = "startcalc_c",
+        textOutput("C"),
+      ),
       
       #Button to proceed with the game and assign values to variables
-      actionButton("startday_btn", "Start Day !"),
-      
-      # tags$div(dataTableOutput("forecast_demandTable"), id = "Forecast_D_table")
       ),
+    footer = tagList(
+      actionButton("startday_btn", "Start Day !"),
+      actionButton("btn_close", "Dismiss")
+    ),
     options = list(onshow = HTML('
         $("#modal .modal-header .close").on("click", function(event) {
           event.preventDefault();
@@ -186,25 +182,71 @@ startgameModal <- function() {
 enddayModal <- function(){
   modalDialog(
     id ="end-day-modal",
-    size = "l",
     div(
-      img(src = "assets/Summary&End_day prompt.png"),
+      img(src = "assets/Summary_&_End_Day_Prompt 3.png"),
+      #summary output
       textOutput("fulfilledOutput"),
       textOutput("flowersLeft_sum"),
       textOutput("flowersExp_sum"),
       textOutput("dailyRevenue"),
       textOutput("dailyCost"),
       textOutput("dailyProfit"),
-      tableOutput("BouqLeftOutput"),
-      tableOutput("BouqExpOutput"),
       tableOutput("flowExpOutput"),
       tableOutput("flowLeftOutput"),
-      textInput("r_order", "", 0),
-      textInput("c_order", "", 0),
-      textInput("b_order", "", 0),
-      textInput("staff_hire", "", 0),
-      textInput("staff_fire", "", 0),
-      actionButton("endday_btn", "End Day!")
+      #user input
+      numericInput("r_order", NULL, 0),
+      numericInput("c_order", NULL, 0),
+      numericInput("b_order", NULL, 0),
+      numericInput("staff_hire", NULL, 0),
+      numericInput("staff_fire", NULL, 0),
+      #calculator
+      div(
+        id = "endcalc_B1",
+        numericInput("B1calc", NULL , 0),
+        ),
+      
+      div(
+        id = "endcalc_B2",
+        numericInput("B2calc", NULL , 0),
+      ),
+      div(
+        id = "endcalc_B3",
+        numericInput("B3calc", NULL , 0),
+      ),
+      div(
+        id = "endcalc_B4",
+        numericInput("B4calc", NULL , 0),
+      ),
+      div(
+        id = "endcalc_B5",
+        numericInput("B5calc", NULL , 0),
+      ),
+      div(
+        id = "endcalc_B6",
+        numericInput("B6calc", NULL , 0),
+      ),
+      div(
+        id = "endcalc_r",
+        textOutput("R"),
+      ),
+      div(
+        id = "endcalc_b",
+        textOutput("B"),
+      ),
+      div(
+        id = "endcalc_c",
+        textOutput("C"),
+      ),
+      textOutput("b1_ec_input"),
+      textOutput("b2_ec_input"),
+      textOutput("b3_ec_input"),
+      textOutput("b4_ec_input"),
+      textOutput("b5_ec_input"),
+      textOutput("b6_ec_input"),
+    ),
+    footer = tagList(
+      actionButton("endday_btn", "End Day !"),
+      actionButton("btn_close", "Dismiss")
     )
   )
 }

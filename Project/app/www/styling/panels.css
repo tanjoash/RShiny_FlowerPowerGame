@@ -24,7 +24,7 @@
 #scoreButton {
   position:absolute;
   left: 1%;
-  top: 4px;
+  top: 2.25px;
   width: 15%;
   height: auto;
   cursor: pointer;
@@ -42,8 +42,8 @@
 #inventoryButton {
   position: absolute;
   left: 28%;
-  top: 10px;
-  width: 11.5%;
+  top: 9.75px;
+  width: 11.75%;
   height: auto;
   cursor: pointer;
 }
@@ -52,7 +52,7 @@
   position: absolute;
   right: 1%;
   top: 10px;
-  width: 11%;
+  width: 10%;
   height: auto;
   cursor: pointer;
 }
@@ -74,12 +74,21 @@
   height: auto;
   cursor: pointer;
 }
+#cashBal {
+  position: absolute;
+  top: 13.25px;
+  right: 85%;
+  z-index: 3;
+  font-size: 30px;
+  font-weight: bold;
+  font-family: "Avenir", sans-serif;
+}
 #instructions {
   position: absolute;
   z-index: 3;
   width: 17%;
   height: auto;
-  top: 350px;
+  top: 420px;
   left: 30%;
   font-size: 20px;
   cursor: pointer;
@@ -90,7 +99,7 @@
   z-index: 3;
   width: 17%;
   height: auto;
-  top: 350px;
+  top: 420px;
   right: 30%;
   font-size: 20px;
   cursor: pointer;
@@ -99,7 +108,7 @@
 #playerName {
   position: absolute;
   z-index: 2;
-  top: 275px;
+  top: 345px;
   left: 50%;
   transform: translate(-50%, -50%);
   width: 15%;
@@ -107,7 +116,7 @@
 #seedNumber {
   position: absolute;
   z-index: 2;
-  top: 325px;
+  top: 395px;
   left: 50%;
   transform: translate(-50%, -57%);
   width: 15%;
@@ -117,7 +126,7 @@
   z-index: 2;
   color: black;
   font-size: 20px;
-  top: 263px;
+  top: 333px;
   right: 58%;
 }
 .seed-text-class {
@@ -125,7 +134,7 @@
   z-index: 2;
   color: black;
   font-size: 20px;
-  top: 310px;
+  top: 380px;
   right: 58%;
 }
 
@@ -136,79 +145,6 @@
 }
 
 /* Inventory for start-game-modal */
-#B1Left_start,
-#B2Left_start,
-#B3Left_start,
-#B4Left_start,
-#B5Left_start,
-#B6Left_start{
-  position: absolute;
-  z-index: 2;
-  top: 75px;
-  font-size: 12px;
-  color: green;
-}
-
-#B1Left_start { 
-  left: 44%;
-}
-
-#B2Left_start {
-  left: 50%;
-}
-
-#B3Left_start {
-  left: 56%;
-}
-
-#B4Left_start {
-  left: 63%;
-}
-
-#B5Left_start {
-  left: 70%;
-}
-
-#B6Left_start {
-  left: 77%;
-}
-
-#B1Exp_start,
-#B2Exp_start,
-#B3Exp_start,
-#B4Exp_start,
-#B5Exp_start,
-#B6Exp_start{
-  position: absolute;
-  z-index: 2;
-  font-size: 12px;
-  top: 130px;
-  color: green;
-}
-
-#B1Exp_start { 
-  left: 44%;
-}
-
-#B2Exp_start {
-  left: 50%;
-}
-
-#B3Exp_start {
-  left: 56%;
-}
-
-#B4Exp_start {
-  left: 63%;
-}
-
-#B5Exp_start {
-  left: 70%;
-}
-
-#B6Exp_start {
-  left: 77%;
-}
 #roseLeft_start,
 #babyLeft_start,
 #carnLeft_start,
@@ -217,40 +153,47 @@
 #carnExp_start {
   position: absolute;
   z-index: 2;
-  font-size: 12px;
+  font-size: 15px;
   color: green;
 }
 
 #roseLeft_start {
-  top: 60px;
-  right: 13%;
+  top: 85px;
+  left: 51%;
 }
 
 #babyLeft_start {
-  top: 65px;
-  right: 6%;
+  top: 85px;
+  left: 76%;
 }
 #carnLeft_start {
   top: 85px;
-  right: 13%;
+  left: 63%;
 }
 #roseExp_start {
-  top: 115px;
-  right: 13%;
+  top: 150px;
+  left: 51%;
 }
 
 #babyExp_start {
-  top: 120px;
-  right: 6%;
+  top: 150px;
+  left: 76%;
 }
 #carnExp_start {
-  top: 140px;
-  right: 13%;
+  top: 150px;
+  left: 63%;
 }
 
+#numberofstaff {
+  position: absolute;
+  z-index: 2;
+  color: purple;
+  font-size: 50px;
+  top: 80px;
+  left: 84%;
+}
 
 /* End of Inventory for start-game-modal */
-
 /* Start of Demand Forecast for start-game-modal */ 
 
 #B1demandforecast_start,
@@ -272,12 +215,12 @@
 
 #B2demandforecast_start {
   top: 60px;
-  left: 23%;
+  left: 25%;
 }
 
 #B3demandforecast_start {
   top: 60px;
-  left: 34%;
+  left: 37%;
 }
 
 #B4demandforecast_start {
@@ -287,12 +230,12 @@
 
 #B5demandforecast_start {
   top: 120px;
-  left: 23%;
+  left: 25%;
 }
 
 #B6demandforecast_start {
   top: 120px;
-  left: 34%;
+  left: 37%;
 }
 
 /* End of Demand Forecast for start-game-modal */
@@ -314,39 +257,106 @@
 }
 
 #B1choice {
-  top: 202px;
-  left: 35.25%;
+  top: 225px;
+  left: 48%;
 }
 
 #B2choice {
-  top: 202px;
-  left: 53.75%;
+  top: 225px;
+  left: 68%;
 }
 
 #B3choice {
-  top: 202px;
-  left: 72%;
+  top: 225px;
+  left: 88%;
 }
 
 #B4choice {
-  top: 255px;
-  left: 35.25%;
+  top: 285px;
+  left: 48%;
 }
 
 #B5choice {
-  top: 255px;
-  left: 53.75%;
+  top: 285px;
+  left: 68%;
 }
 
 #B6choice {
-  top: 255px;
-  left: 72%;
+  top: 285px;
+  left: 88%;
 
 }
 
 /* End of User input for start-game-modal */
 
-/*/* End of Start Game Modal */
+/* start of start game calc */
+#startcalc_B1, #startcalc_B2, #startcalc_B3, #startcalc_B4, #startcalc_B5, #startcalc_B6 {
+  position: absolute;
+  z-index: 2;
+  height: auto;
+  width: 6%;
+  padding-left: 2px;
+  padding-right: 0px;
+}
+
+#startcalc_B1 {
+  top: 208px;
+  left: 10%;
+}
+
+
+#startcalc_B2 {
+  top: 208px;
+  left: 20%;
+}
+
+
+#startcalc_B3 {
+  top: 208px;
+  left: 30%;
+}
+
+
+#startcalc_B4 {
+  top: 235px;
+  left: 10%;
+}
+
+
+#startcalc_B5 {
+  top: 235px;
+  left: 20%;
+}
+
+
+#startcalc_B6 {
+  top: 235px;
+  left: 30%;
+}
+
+
+#startcalc_r, #startcalc_b, #startcalc_c {
+  position: absolute;
+  z-index: 2;
+  font-size: 14px;
+}
+#startcalc_r { 
+   top: 271px;
+  left: 7% ;
+}
+
+#startcalc_b {
+   top: 291px;
+  left: 7% ;
+}
+
+#startcalc_c {
+   top: 311px;
+  left: 7% ;
+}
+/* end of start game calc */
+
+/* End of Start Game Modal */
 
 /* Start of Calendar Modal */ 
 #cal-menu-modal {
@@ -407,48 +417,6 @@
   height: auto;
 }
 
-#inventory-modal {
-  position: relative;
-}
-
-
-
-#B1Left,
-#B2Left,
-#B3Left,
-#B4Left,
-#B5Left,
-#B6Left{
-  position: absolute;
-  z-index: 2;
-  top: 83px;
-  font-size: 20px;
-}
-
-#B1Left { 
-  left: 10%;
-}
-
-#B2Left {
-  left: 21.5%;
-}
-
-#B3Left {
-  left: 33.5%;
-}
-
-#B4Left {
-  left: 45.5%;
-}
-
-#B5Left {
-  left: 57.5%;
-}
-
-#B6Left {
-  left: 69%;
-}
-
 #B1Exp,
 #B2Exp,
 #B3Exp,
@@ -458,32 +426,25 @@
   position: absolute;
   z-index: 2;
   font-size: 20px;
+  color: green;
+}
+
+#B1Exp, #B4Exp { 
+  left: 12%;
+}
+#B2Exp, #B5Exp {
+  left: 23%;
+}
+#B3Exp, #B6Exp {
+  left: 34.5%;
+}
+#B1Exp, #B2Exp, #B3Exp {
+  top: 97.5px;
+}
+#B4Exp, #B5Exp, #B6Exp {
   top: 207px;
 }
 
-#B1Exp { 
-  left: 10%;
-}
-
-#B2Exp {
-  left: 21.5%;
-}
-
-#B3Exp {
-  left: 33.5%;
-}
-
-#B4Exp {
-  left: 45.5%;
-}
-
-#B5Exp {
-  left: 57.5%;
-}
-
-#B6Exp {
-  left: 69%;
-}
 #roseLeft,
 #babyLeft,
 #carnLeft,
@@ -493,33 +454,23 @@
   position: absolute;
   z-index: 2;
   font-size: 20px;
+  color: green;
+}
+#roseLeft, #babyLeft, #carnLeft {
+  right: 23%;
+}
+#roseExp, #babyExp, #carnExp {
+  left: 49%;
+}
+#roseLeft, #roseExp {
+  top: 83px;
 }
 
-#roseLeft {
-  top: 75px;
-  right: 11%;
+#babyLeft, #babyExp {
+  top: 223px;
 }
-
-#babyLeft {
-  top: 75px;
-  right: 2%;
-}
-#carnLeft {
-  top: 115px;
-  right: 11%;
-}
-#roseExp {
-  top: 200px;
-  right: 11%;
-}
-
-#babyExp {
-  top: 200px;
-  right: 2%;
-}
-#carnExp {
-  top: 233px;
-  right: 11%;
+#carnLeft, #carnExp {
+  top: 153px;
 }
 
 /* End of inventory-modal*/
@@ -549,12 +500,8 @@
   background: transparent;
   border: none;
   border-collapse: collapse;
-  font-size: 10px;
   }
-#BouqLeftOutput th,
-#BouqLeftOutput td,
-#BouqExpOutput th,
-#BouqExpOutput td,
+
 #flowExpOutput th,
 #flowExpOutput td,
 #flowLeftOutput th
@@ -571,39 +518,31 @@
 }
 
 #fulfilledOutput {
-  top: 58px;
+  top: 62px;
   left: 22%
 }
-
+#dailyRevenue, #dailyCost, #dailyProfit {
+  right: 47%
+}
 #dailyRevenue {
-  top: 273px;
-  right: 74%
+  top: 64px;
 }
 
 #dailyCost {
-  top: 291px;
-  right: 74%
+  top: 82px;
 }
 
 #dailyProfit {
-  top: 314px;
-  right: 74%
+  top: 105px;
 }
-#BouqLeftOutput {
-  top: 147px;
-  left: 5.5%
-}
-#BouqExpOutput {
-  top: 209px;
-  left: 5.5%
-}
+
 #flowExpOutput {
-  top: 147px;
-  left: 32%
+  top: 131px;
+  left: 5%
 }
 #flowLeftOutput {
-  top: 209px;
-  left: 32%
+  top: 173px;
+  left: 5%
 }
 #r_order,
 #c_order,
@@ -611,28 +550,93 @@
 #staff_hire,
 #staff_fire {
   position: absolute;
-  width:5%;
+  width:7%;
   height: auto;
   z-index: 5;
-  right: 38%;
+  right: 35%;
   padding-left: 2px;
   padding-right: 2px;
 }
 #r_order {
-  top: 73px
+  top: 83px
 }
 #c_order {
-  top: 112px
+  top: 122px
 }
 #b_order {
-  top: 151px
+  top: 161px
 }
 #staff_hire {
-  top: 223px
+  top: 248px
 }
 #staff_fire {
-  top: 262px
+  top: 287px
 }
+/* start of end day calc */
+#endcalc_B1, #endcalc_B2, #endcalc_B3, #endcalc_B4, #endcalc_B5, #endcalc_B6 {
+  position: absolute;
+  z-index: 2;
+  height: auto;
+  width: 9%;
+  padding-left: 2px;
+  padding-right: 2px;
+}
+
+#endcalc_B1, #endcalc_B4 {
+  left: 10%;
+}
+#endcalc_B2, #endcalc_B5 {
+  left: 25%;
+}
+#endcalc_B3, #endcalc_B6 {
+  left: 40%;
+}
+#endcalc_B1, #endcalc_B2, #endcalc_B3  {
+  top: 228px;
+}
+#endcalc_B4, #endcalc_B5, #endcalc_B6 {
+  top: 265px;
+}
+
+#endcalc_r, #endcalc_b, #endcalc_c {
+  position: absolute;
+  z-index: 2;
+  font-size: 14px;
+}
+#endcalc_r { 
+   top: 306px;
+  left: 7% ;
+}
+
+#endcalc_b {
+   top: 326px;
+  left: 7% ;
+}
+
+#endcalc_c {
+   top: 346px;
+  left: 7% ;
+}
+#b1_ec_input, #b2_ec_input, #b3_ec_input, #b4_ec_input, #b5_ec_input, #b6_ec_input{
+  position: absolute;
+  z-index: 3;
+}
+#b1_ec_input, #b2_ec_input, #b3_ec_input{
+top: 234px;
+}
+#b4_ec_input, #b5_ec_input, #b6_ec_input{
+top: 271px;
+}
+#b1_ec_input, #b4_ec_input{
+left: 6%;
+}
+#b2_ec_input, #b5_ec_input{
+left: 21%;
+}
+#b3_ec_input, #b6_ec_input{
+left: 36%;
+}
+/* end of end day calc */
 /* End of end-day-modal */
 
 /* Start of order-fulfilment-modal */   
@@ -669,7 +673,9 @@
 /* End of of order-fulfilment-modal */
 /* Start of score-leaderboard-modal*/  
 #score-leaderboard-modal {    
-  background-color: rgb(250, 242, 243); 
+  background-color: rgb(250, 242, 243);
+  border:2px solid black;
+  padding: 15px
 }  
 #score_leaderboardTitle {   
   font-size: 30px;   top: 5px; 
@@ -678,6 +684,6 @@
   background: transparent;   
   border: none;   
   border-collapse: collapse;   
-  font-size: 10px; 
+  font-size: 20px; 
 }    
 /* End of score-leaderboard-modal */

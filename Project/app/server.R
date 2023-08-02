@@ -18,6 +18,12 @@ server <- function(input, output, session){
                          orders_fulfilled = c(0, 0, 0, 0, 0, 0),
                          total_orders = 0,
                          bouquet_left = c(0, 0, 0, 0, 0, 0),
+<<<<<<< Updated upstream
+=======
+                         bouquet_exp = c(0, 0, 0, 0, 0, 0), # need to linkt o database
+                         flowers_left = c(0, 0, 0),
+                         flowers_exp = c(10, 10, 20),
+>>>>>>> Stashed changes
                          bouquet_exp = c(0, 0, 0, 0, 0, 0), # to remove
                          flowers_left = c(0, 0, 0, ""),
                          flowers_exp = c(1, 2, 3, ""),
@@ -32,7 +38,8 @@ server <- function(input, output, session){
   nextdaydemand <- c(1,2,3,4,5,6)
   actual_demand <- (c(6,5,4,3,2,1))
   bouquets_made <- c(8,7,6,5,4,3)
-  
+  player_name <- c("Penis0", "Penis1", "Penis2", "Penis3", "Penis4", "Penis5")   
+  player_score <- c("0", "1", "2", "3", "4", "5") 
   
   # Observe button that starts game
   shinyjs::onclick("resetGame", updateTabsetPanel(session, "flowerPages", "StartingPage"))
@@ -103,7 +110,7 @@ server <- function(input, output, session){
     #   setSeed(input$playerName, as.integer(input$seedNumber))
     updateTabsetPanel(session, "flowerPages", "SecondPage")
     if (vals$startday == FALSE || vals$day == 0){
-      showModal(enddayModal())
+      showModal(startgameModal())
     }
     # } else if (!is.null(input$seedNumber)) {
     #   setSeed(input$playerName)
@@ -119,6 +126,10 @@ server <- function(input, output, session){
     
     ### Number Output for Start Game Modal ###
     #Inventory for Start Game Modal 
+<<<<<<< Updated upstream
+=======
+    output$numberofstaff <- renderText({69}) ### actual is reference manpower value below 
+>>>>>>> Stashed changes
 
     #output$B1Exp_start <- renderText({vals$bouquet_exp[[1]]})
     #output$B2Exp_start <- renderText({vals$bouquet_exp[[2]]})
@@ -139,7 +150,10 @@ server <- function(input, output, session){
     #output$B4Exp_start <- renderText({vals$bouquet_exp[[4]]})
     #output$B5Exp_start <- renderText({vals$bouquet_exp[[5]]})
     #output$B6Exp_start <- renderText({vals$bouquet_exp[[6]]})
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
     output$roseLeft_start <- renderText({vals$flowers_left[[1]]})
     output$babyLeft_start <- renderText({vals$flowers_left[[2]]})
     output$carnLeft_start <- renderText({vals$flowers_left[[3]]})
@@ -155,11 +169,9 @@ server <- function(input, output, session){
     output$B5demandforecast_start <- renderText({vals$demand_forecast[[5]]})
     output$B6demandforecast_start <- renderText({vals$demand_forecast[[6]]})
     
-    output$R <- renderText({vals$calculator_vals[1]})
-    output$C <- renderText({vals$calculator_vals[2]})
-    output$B <- renderText({vals$calculator_vals[3]})
-    
-        # updateTabsetPanel(session, "flowerPages", "SecondPage")
+    output$R <- renderText({paste("Roses Required:", vals$calculator_vals[1])})
+    output$C <- renderText({paste("Carnations Required:",vals$calculator_vals[2])})
+    output$B <- renderText({paste("Baby Breaths Required:", vals$calculator_vals[3])})
       
   })
   
@@ -169,12 +181,25 @@ server <- function(input, output, session){
   shinyjs::onclick("orderButton", showModal(order_fulfilmentModal()))
   shinyjs::onclick("scoreButton", showModal(score_leaderboardModal()))
   
-  observeEvent(input$calc, {
-    calculator_R <- 3*as.numeric(input$B1calc) + 3*as.numeric(input$B2calc) + 5*as.numeric(input$B4calc)
-    calculator_C <- 3*as.numeric(input$B1calc) + 3*as.numeric(input$B3calc) + 5*as.numeric(input$B5calc)
-    calculator_B <- 5*as.numeric(input$B2calc) + 5*as.numeric(input$B3calc) + 10*as.numeric(input$B6calc)
-    vals$calculator_vals <- c(calculator_R, calculator_C, calculator_B)
-  })
+  ## Calculator Reactive Value 
+  flower_requirements <- reactiveValues(
+    R = 0,
+    B = 0,
+    C = 0
+  )
+  
+  ## Calculator Observe Event 
+  observeEvent({input$B1calc
+    input$B2calc
+    input$B3calc
+    input$B4calc
+    input$B5calc
+    input$B6calc}, {
+      calculator_R <- 3*as.numeric(input$B1calc) + 3*as.numeric(input$B2calc) + 5*as.numeric(input$B4calc)
+      calculator_C <- 3*as.numeric(input$B1calc) + 3*as.numeric(input$B3calc) + 5*as.numeric(input$B5calc)
+      calculator_B <- 5*as.numeric(input$B2calc) + 5*as.numeric(input$B3calc) + 10*as.numeric(input$B6calc)
+      vals$calculator_vals <- c(calculator_R, calculator_C, calculator_B)
+    })
   
   observeEvent(input$startday_btn, {
     # Get the values from the textInputs
@@ -342,23 +367,16 @@ server <- function(input, output, session){
     paste(vals$orders_fulfilled, "/", vals$total_orders)
   })
   
-  bouquet_prefix <- c("B1", "B2", "B3", "B4", "B5", "B6")
-  flower_prefix <- c("R", "B", "C", "")
-  
-  
-  matrix_bexp <- reactive({
-    paste_vals <- paste(bouquet_prefix, ":", vals$bouquet_exp)
-    matrix(paste_vals, nrow = 2, byrow = TRUE)
-  })
+  flower_prefix <- c("R", "B", "C")
   
   matrix_fexp <- reactive({
     paste_vals <- paste(flower_prefix, ":", vals$flowers_exp)
-    matrix(paste_vals, nrow = 2, byrow = TRUE)
+    matrix(paste_vals, nrow = 1, byrow = TRUE)
   })
   
   matrix_fleft <- reactive({
     paste_vals <- paste(flower_prefix, ":", vals$flowers_left)
-    matrix(paste_vals, nrow = 2, byrow = TRUE)
+    matrix(paste_vals, nrow = 1, byrow = TRUE)
   })
   
   observeEvent(input$endday_btn, {
@@ -400,9 +418,6 @@ server <- function(input, output, session){
   })
   
   # Render the table output
-  output$BouqExpOutput <- renderTable({
-    matrix_bexp()
-  }, include.rownames = FALSE, include.colnames = FALSE)
   output$flowExpOutput <- renderTable({
     matrix_fexp()
   }, include.rownames = FALSE, include.colnames = FALSE)
@@ -418,6 +433,24 @@ server <- function(input, output, session){
   })
   output$dailyProfit <- renderText({
     paste("$", vals$daily_profit)
+  })
+  output$b1_ec_input <- renderText({
+    paste("B1:")
+  })
+  output$b2_ec_input <- renderText({
+    "B2:"
+  })
+  output$b3_ec_input <- renderText({
+    "B3:"
+  })
+  output$b4_ec_input <- renderText({
+    "B4:"
+  })
+  output$b5_ec_input <- renderText({
+    "B5:"
+  })
+  output$b6_ec_input <- renderText({
+    "B6:"
   })
   
   ### Number Output for Order Fulfilment Modal ###      
@@ -441,18 +474,19 @@ server <- function(input, output, session){
     paste("Bouquet 6:", vals$orders_fulfilled[6], "/", vals$actual_demand[6])
     })
   
-  ## Table Output for Leaderboard    
-  player_name <- c("Penis0", "Penis1", "Penis2", "Penis3", "Penis4", "Penis5")   
-  player_score <- c("0", "1", "2", "3", "4", "5")      
   # Create matrix for leaderboard    
   matrix_leaderboard <- matrix(     
     paste(player_name, ":", c(player_score)),     
-    nrow = 2, byrow = TRUE)      
+    nrow = length(player_name), byrow = TRUE)      
   # Render Leaderboard Table   
+  output$score_leaderboardTitle <- renderText({
+    paste("LeaderBoard")
+  })
   output$scoreLeaderboard <- renderTable({
     matrix_leaderboard}, include.rownames = FALSE, include.colnames = FALSE)
   
   output$cashBal <- renderText({
     paste(vals$cashbal)
   })
+  
 }
