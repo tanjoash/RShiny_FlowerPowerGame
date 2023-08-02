@@ -18,12 +18,9 @@ server <- function(input, output, session){
                          orders_fulfilled = c(0, 0, 0, 0, 0, 0),
                          total_orders = 0,
                          bouquet_left = c(0, 0, 0, 0, 0, 0),
-<<<<<<< Updated upstream
-=======
                          bouquet_exp = c(0, 0, 0, 0, 0, 0), # need to linkt o database
                          flowers_left = c(0, 0, 0),
                          flowers_exp = c(10, 10, 20),
->>>>>>> Stashed changes
                          bouquet_exp = c(0, 0, 0, 0, 0, 0), # to remove
                          flowers_left = c(0, 0, 0, ""),
                          flowers_exp = c(1, 2, 3, ""),
@@ -126,10 +123,7 @@ server <- function(input, output, session){
     
     ### Number Output for Start Game Modal ###
     #Inventory for Start Game Modal 
-<<<<<<< Updated upstream
-=======
-    output$numberofstaff <- renderText({69}) ### actual is reference manpower value below 
->>>>>>> Stashed changes
+    output$numberofstaff <- renderText({69}) ### actual is reference manpower value below
 
     #output$B1Exp_start <- renderText({vals$bouquet_exp[[1]]})
     #output$B2Exp_start <- renderText({vals$bouquet_exp[[2]]})
@@ -150,10 +144,6 @@ server <- function(input, output, session){
     #output$B4Exp_start <- renderText({vals$bouquet_exp[[4]]})
     #output$B5Exp_start <- renderText({vals$bouquet_exp[[5]]})
     #output$B6Exp_start <- renderText({vals$bouquet_exp[[6]]})
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
     output$roseLeft_start <- renderText({vals$flowers_left[[1]]})
     output$babyLeft_start <- renderText({vals$flowers_left[[2]]})
     output$carnLeft_start <- renderText({vals$flowers_left[[3]]})
@@ -364,7 +354,7 @@ server <- function(input, output, session){
   
   ### Table output for End Game Modal ###
   output$fulfilledOutput <- renderText({
-    paste(vals$orders_fulfilled, "/", vals$total_orders)
+    paste(sum(vals$orders_fulfilled), "/", vals$total_orders)
   })
   
   flower_prefix <- c("R", "B", "C")

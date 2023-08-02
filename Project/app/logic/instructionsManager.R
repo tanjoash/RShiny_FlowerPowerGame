@@ -101,12 +101,12 @@ startgameModal <- function() {
       img(src = "assets/start.png"),
       
       ## user selection for number of flowers for the day
-      numericInput("B1choice", NULL , 0),       
-      numericInput("B2choice", NULL, 0),       
-      numericInput("B3choice", NULL, 0),       
-      numericInput("B4choice", NULL, 0),       
-      numericInput("B5choice", NULL, 0),       
-      numericInput("B6choice", NULL, 0),
+      textInput("B1choice", NULL , 0),       
+      textInput("B2choice", NULL, 0),       
+      textInput("B3choice", NULL, 0),       
+      textInput("B4choice", NULL, 0),       
+      textInput("B5choice", NULL, 0),       
+      textInput("B6choice", NULL, 0),
       
       ##demand forecast number output 
       textOutput("B1demandforecast_start"),
@@ -128,28 +128,28 @@ startgameModal <- function() {
       #start day calculator
       div(
         id = "startcalc_B1",
-        numericInput("B1calc", NULL , 0),
+        textInput("B1calc", NULL , 0),
       ),
       
       div(
         id = "startcalc_B2",
-        numericInput("B2calc", NULL , 0),
+        textInput("B2calc", NULL , 0),
       ),
       div(
         id = "startcalc_B3",
-        numericInput("B3calc", NULL , 0),
+        textInput("B3calc", NULL , 0),
       ),
       div(
         id = "startcalc_B4",
-        numericInput("B4calc", NULL , 0),
+        textInput("B4calc", NULL , 0),
       ),
       div(
         id = "startcalc_B5",
-        numericInput("B5calc", NULL , 0),
+        textInput("B5calc", NULL , 0),
       ),
       div(
         id = "startcalc_B6",
-        numericInput("B6calc", NULL , 0),
+        textInput("B6calc", NULL , 0),
       ),
       div(
         id = "startcalc_r",
@@ -194,36 +194,36 @@ enddayModal <- function(){
       tableOutput("flowExpOutput"),
       tableOutput("flowLeftOutput"),
       #user input
-      numericInput("r_order", NULL, 0),
-      numericInput("c_order", NULL, 0),
-      numericInput("b_order", NULL, 0),
-      numericInput("staff_hire", NULL, 0),
-      numericInput("staff_fire", NULL, 0),
+      textInput("r_order", NULL, 0),
+      textInput("c_order", NULL, 0),
+      textInput("b_order", NULL, 0),
+      textInput("staff_hire", NULL, 0),
+      textInput("staff_fire", NULL, 0),
       #calculator
       div(
         id = "endcalc_B1",
-        numericInput("B1calc", NULL , 0),
+        textInput("B1calc", NULL , 0),
         ),
       
       div(
         id = "endcalc_B2",
-        numericInput("B2calc", NULL , 0),
+        textInput("B2calc", NULL , 0),
       ),
       div(
         id = "endcalc_B3",
-        numericInput("B3calc", NULL , 0),
+        textInput("B3calc", NULL , 0),
       ),
       div(
         id = "endcalc_B4",
-        numericInput("B4calc", NULL , 0),
+        textInput("B4calc", NULL , 0),
       ),
       div(
         id = "endcalc_B5",
-        numericInput("B5calc", NULL , 0),
+        textInput("B5calc", NULL , 0),
       ),
       div(
         id = "endcalc_B6",
-        numericInput("B6calc", NULL , 0),
+        textInput("B6calc", NULL , 0),
       ),
       div(
         id = "endcalc_r",
