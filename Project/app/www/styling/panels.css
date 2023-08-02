@@ -158,29 +158,29 @@
 }
 
 #roseLeft_start {
-  top: 85px;
+  top: 150px;
   left: 51%;
 }
 
 #babyLeft_start {
-  top: 85px;
+  top: 150px;
   left: 76%;
 }
 #carnLeft_start {
-  top: 85px;
+  top: 150px;
   left: 63%;
 }
 #roseExp_start {
-  top: 150px;
+  top: 85px;
   left: 51%;
 }
 
 #babyExp_start {
-  top: 150px;
+  top: 85px;
   left: 76%;
 }
 #carnExp_start {
-  top: 150px;
+  top: 85px;
   left: 63%;
 }
 

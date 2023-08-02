@@ -11,6 +11,7 @@ server <- function(input, output, session){
   vals <- reactiveValues(playerid = NULL,
                          day = 0,
                          cost = 0,
+                         profit = 0,
                          revenue = 0,
                          manpower = 0,
                          cashbal = 500,
@@ -20,16 +21,11 @@ server <- function(input, output, session){
                          bouquet_left = c(0, 0, 0, 0, 0, 0),
                          bouquet_exp = c(0, 0, 0, 0, 0, 0), # need to linkt o database
                          flowers_left = c(0, 0, 0),
-                         flowers_exp = c(10, 10, 20),
-                         bouquet_exp = c(0, 0, 0, 0, 0, 0), # to remove
-                         flowers_left = c(0, 0, 0, ""),
-                         flowers_exp = c(1, 2, 3, ""),
+                         flowers_exp = c(0, 0, 0),
                          demand_forecast = c(0, 0, 0, 0, 0, 0),
                          calculator_vals = c(0, 0, 0),
-                         actual_demand = c(0, 0, 0, 0, 0, 0),
-                         daily_revenue = 0,
-                         daily_cost = 0,
-                         daily_profit = 0)
+                         actual_demand = c(0, 0, 0, 0, 0, 0)
+                         )
   
   #placeholder list
   nextdaydemand <- c(1,2,3,4,5,6)
@@ -98,7 +94,6 @@ server <- function(input, output, session){
   observeEvent(input$playButton, {
     vals$playerid <- playerID() # need to change and get latest playerid
     print(vals$playerid)
-    vals$total_orders <- total_demand_calc(vals$day, vals$playerid)
     vals$demand_forecast <- c(forecastB1[vals$day+1], forecastB2[vals$day+1], forecastB3[vals$day+1], forecastB4[vals$day+1], forecastB5[vals$day+1], forecastB6[vals$day+1])
     createInventory()
     #if (!is.null(input$playername) && input$playername != "") {
@@ -107,7 +102,7 @@ server <- function(input, output, session){
     #   setSeed(input$playerName, as.integer(input$seedNumber))
     updateTabsetPanel(session, "flowerPages", "SecondPage")
     if (vals$startday == FALSE || vals$day == 0){
-      showModal(startgameModal())
+      showModal(enddayModal())
     }
     # } else if (!is.null(input$seedNumber)) {
     #   setSeed(input$playerName)
@@ -123,7 +118,7 @@ server <- function(input, output, session){
     
     ### Number Output for Start Game Modal ###
     #Inventory for Start Game Modal 
-    output$numberofstaff <- renderText({69}) ### actual is reference manpower value below
+    output$numberofstaff <- renderText({vals$manpower}) ### actual is reference manpower value below
 
     #output$B1Exp_start <- renderText({vals$bouquet_exp[[1]]})
     #output$B2Exp_start <- renderText({vals$bouquet_exp[[2]]})
@@ -145,11 +140,13 @@ server <- function(input, output, session){
     #output$B5Exp_start <- renderText({vals$bouquet_exp[[5]]})
     #output$B6Exp_start <- renderText({vals$bouquet_exp[[6]]})
     output$roseLeft_start <- renderText({vals$flowers_left[[1]]})
-    output$babyLeft_start <- renderText({vals$flowers_left[[2]]})
-    output$carnLeft_start <- renderText({vals$flowers_left[[3]]})
+    output$carnLeft_start <- renderText({vals$flowers_left[[2]]})
+    output$babyLeft_start <- renderText({vals$flowers_left[[3]]})
+
     output$roseExp_start <- renderText({vals$flowers_exp[[1]]})
-    output$babyExp_start <- renderText({vals$flowers_exp[[2]]})
-    output$carnExp_start <- renderText({vals$flowers_exp[[3]]})
+    output$carnExp_start <- renderText({vals$flowers_exp[[2]]})
+    output$babyExp_start <- renderText({vals$flowers_exp[[3]]})
+
     
     #Demand Forecast for Start Game Modal 
     output$B1demandforecast_start <- renderText({vals$demand_forecast[[1]]})
@@ -230,19 +227,21 @@ server <- function(input, output, session){
           vals$flowers_exp[3] <- 0
         }
         
-        print(paste0("Flowers Expired today", vals$flowers_exp))
-        print(paste0("Flowers Left today", vals$flowers_left))
+        print(paste("Flowers Expired today", vals$flowers_exp))
+        print(paste("Flowers Left today", vals$flowers_left))
 
         vals$calculator_vals <- c(0, 0, 0)
         bouquetsInventory <- updateBouquetsMade(vals$day, bouquetsInventory, B1_make, B2_make, B3_make, B4_make, B5_make, B6_make)
-        #print(bouquetsInventory)
+        print("bouquet Inventory")
+        print(bouquetsInventory)
         flowersInventory <- updateFlowersUsed(vals$day, flowersInventory, as.numeric(vals$flowers_left[1]),
                                               as.numeric(vals$flowers_left[2]),
                                               as.numeric(vals$flowers_left[3]),
                                               as.numeric(vals$flowers_exp[1]),
                                               as.numeric(vals$flowers_exp[2]),
                                               as.numeric(vals$flowers_exp[3]))
-        #print(flowersInventory)
+        print("flower Inventory")
+        print(flowersInventory)
         
         # Calculate orders fulfilled
         vals$orders_fulfilled <- c(min(B1_make, as.numeric(vals$actual_demand[1])),
@@ -259,11 +258,13 @@ server <- function(input, output, session){
                                                  as.numeric(vals$orders_fulfilled[5]),
                                                  as.numeric(vals$orders_fulfilled[6]),
                                                  ordersFulfilled)
-        #print(ordersFulfilled)
+        print("orders fulfilled")
+        print(ordersFulfilled)
         
         vals$revenue <- calculateRevenue(vals$day, ordersFulfilled)
         vals$cashbal <- calculateCashBal(vals$cost, vals$revenue, vals$cashbal)
         uploadValues(vals$day, vals$cashbal, vals$cost, vals$revenue, vals$playerid)
+        vals$profit <- vals$revenue - vals$cost
         
         # Update demand forecast for next day
         vals$demand_forecast <- c(forecastB1[vals$day+1], forecastB2[vals$day+1], forecastB3[vals$day+1], forecastB4[vals$day+1], forecastB5[vals$day+1], forecastB6[vals$day+1])
@@ -336,28 +337,30 @@ server <- function(input, output, session){
   output$roseLeft <- renderText({
     vals$flowers_left[1]
   })
-  output$babyLeft <- renderText({
+  output$carnLeft <- renderText({
     vals$flowers_left[2]
   })
-  output$carnLeft <- renderText({
+  output$babyLeft <- renderText({
     vals$flowers_left[3]
   })
+
   output$roseExp <- renderText({
     vals$flowers_exp[1]
   })
-  output$babyExp <- renderText({
+  output$carnExp <- renderText({
     vals$flowers_exp[2]
   })
-  output$carnExp <- renderText({
+  output$babyExp <- renderText({
     vals$flowers_exp[3]
   })
+
   
   ### Table output for End Game Modal ###
   output$fulfilledOutput <- renderText({
     paste(sum(vals$orders_fulfilled), "/", vals$total_orders)
   })
   
-  flower_prefix <- c("R", "B", "C")
+  flower_prefix <- c("R", "C", "B")
   
   matrix_fexp <- reactive({
     paste_vals <- paste(flower_prefix, ":", vals$flowers_exp)
@@ -378,25 +381,32 @@ server <- function(input, output, session){
     
     if(is.numeric(r_order) || is.numeric(c_order) || is.numeric(b_order) || is.numeric(staff_fire) || is.numeric(staff_hire)){ #need fix
       if(min(staff_fire, staff_hire) == 0){
-        staff_total <- as.numeric(vals$manpower) + staff_hire - staff_fire
-        enddaycost <- r_order*1 + c_order*0.5 + b_order*0.1 + staff_total*10
-        if(enddaycost > as.numeric(vals$cashbal)){
-          print("Not enough money to do purchase.")
+        if((as.numeric(vals$manpower + staff_hire - staff_fire) >= 0)){
+          staff_total <- as.numeric(vals$manpower) + staff_hire - staff_fire
+          enddaycost <- r_order*1 + c_order*0.5 + b_order*0.1 + staff_total*10
+          if(enddaycost > as.numeric(vals$cashbal)){
+            print("Not enough money to do purchase.")
+          } else {
+            vals$manpower <- as.numeric(vals$manpower) + staff_hire - staff_fire
+            eodOrdered <- updateEodOrdered(vals$day, eodOrdered, r_order, c_order, b_order, vals$manpower)
+            flowersInventory <- updateFlowersInvStart(vals$day, flowersInventory, eodOrdered)
+            vals$cost <- calculateCost(vals$day, eodOrdered)
+            vals$day <- vals$day+1
+            actdemand <- getDemandEachDay(vals$day, vals$playerid)
+            vals$actual_demand <- c(actdemand[[1]], actdemand[[2]], actdemand[[3]], actdemand[[4]], actdemand[[5]], actdemand[[6]])
+            vals$total_orders <- sum(as.numeric(vals$actual_demand))
+            vals$flowers_left <- c(eodOrdered[vals$day, "F1"], eodOrdered[vals$day, "F2"], eodOrdered[vals$day, "F3"])
+            vals$flowers_exp <- c(flowersInventory[vals$day+1, "F1e"], flowersInventory[vals$day+1, "F2e"], flowersInventory[vals$day+1, "F3e"])
+            print("eodOrdered")
+            print(eodOrdered)
+            print("flowers Inventory")
+            print(flowersInventory)
+            # Close the modal after saving
+            removeModal()
+            showModal(startgameModal())
+          }
         } else {
-          vals$manpower <- as.numeric(vals$manpower) + staff_hire-staff_fire
-          eodOrdered <- updateEodOrdered(vals$day, eodOrdered, r_order, c_order, b_order, vals$manpower)
-          flowersInventory <- updateFlowersInvStart(vals$day, flowersInventory, eodOrdered)
-          vals$cost <- calculateCost(vals$day, eodOrdered)
-          vals$day <- vals$day+1
-          actdemand <- getDemandEachDay(vals$day, vals$playerid)
-          vals$actual_demand <- c(actdemand[[1]], actdemand[[2]], actdemand[[3]], actdemand[[4]], actdemand[[5]], actdemand[[6]])
-          vals$flowers_left <- c(eodOrdered[vals$day, "F1"], eodOrdered[vals$day, "F2"], eodOrdered[vals$day, "F3"], "")
-          vals$flowers_exp <- c(flowersInventory[vals$day+1, "F1e"], flowersInventory[vals$day+1, "F2e"], flowersInventory[vals$day+1, "F3e"], "")
-          print(eodOrdered)
-          print(flowersInventory)
-          # Close the modal after saving
-          removeModal()
-          showModal(startgameModal())
+          print("You cannot fire more than the number of people you have")
         }
       } else {
         print("You cannot fire and hire at the same time") #need render?
@@ -416,13 +426,13 @@ server <- function(input, output, session){
   }, include.rownames = FALSE, include.colnames = FALSE)
   
   output$dailyRevenue <- renderText({
-    paste("$", vals$daily_revenue)
+    paste("$", vals$revenue)
   })
   output$dailyCost <- renderText({
-    paste("$", vals$daily_cost)
+    paste("$", vals$cost)
   })
   output$dailyProfit <- renderText({
-    paste("$", vals$daily_profit)
+    paste("$", vals$profit)
   })
   output$b1_ec_input <- renderText({
     paste("B1:")
