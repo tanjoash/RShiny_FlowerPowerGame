@@ -25,13 +25,13 @@ ui <- shinyUI(fillPage(
     tabPanelBody(
       "SecondPage",
       img(id="mainGame", src="assets/mainGame.png"),
-      img(id="scoreButton", src="assets/Score Button.png"),
+      img(id="cashbal_btn", src="assets/Score Button.png"),
       img(id="orderButton", src="assets/Order button.png"),
       img(id="inventoryButton", src="assets/Inventory Button.png"),
       textOutput("cashBal"),
       textOutput("dateofmay"),
       img(id="dayButton", src="assets/DayButton 2.png"),
-      img(id="resetGame", src="assets/reset button.png"),
+      img(id="leaderboard_btn", src="assets/reset button.png"),
       img(id="endDay", src="assets/End of day button.png")
       )
   )

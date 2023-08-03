@@ -44,7 +44,7 @@
   height: 100%;
 }
 
-#scoreButton {
+#cashbal_btn {
   position:absolute;
   left: 1%;
   top: 2.25px;
@@ -86,10 +86,11 @@
   z-index: 5;
   font-size: 30px;
   font-weight: bold;
+  color: black;
   font-family: "Avenir", sans-serif;
 }
 
-#resetGame {
+#leaderboard_btn {
   height: auto;
   width: 9.5%;
   position: absolute;
@@ -367,12 +368,12 @@
 }
 
 #startcalc_b {
-   top: 291px;
+   top: 311px;
   left: 7% ;
 }
 
 #startcalc_c {
-   top: 311px;
+   top: 291px;
   left: 7% ;
 }
 /* end of start game calc */
@@ -390,7 +391,6 @@
 #cal_button, #month_fc, #next_fc {
   position: absolute;
   z-index: 3;
-  width 10%;
   font-weight: bold;
   color: black;
   font-size: 20px;
@@ -419,7 +419,7 @@
   font-size: 30px;   
   top: 5px; 
 }  
-#next_fc1, #next_fc2, #next_fc3, #next_fc4, #next_fc5, #next_fc6 {
+#nextday_B1, #nextday_B2, #nextday_B3, #nextday_B4, #nextday_B5, #nextday_B6 {
   font-size: 20px;
 }
 
@@ -565,6 +565,13 @@
   top: 164px;
   left: 5%
 }
+#staffno{
+  position: absolute;
+  z-index: 3;
+  top: 254px;
+  left: 75%;
+  font-size: 20px;
+}
 #r_order,
 #c_order,
 #b_order,
@@ -630,12 +637,12 @@
 }
 
 #endcalc_b {
-   top: 326px;
+   top: 346px;
   left: 7% ;
 }
 
 #endcalc_c {
-   top: 346px;
+   top: 326px;
   left: 7% ;
 }
 #b1_ec_input, #b2_ec_input, #b3_ec_input, #b4_ec_input, #b5_ec_input, #b6_ec_input{
@@ -656,6 +663,13 @@ left: 21%;
 }
 #b3_ec_input, #b6_ec_input{
 left: 36%;
+}
+#pricecalc {
+  position: absolute;
+  z-index: 2;
+  font-size: 14px;
+  left: 36%;
+  top: 306px;
 }
 /* end of end day calc */
 /* start of endday next forecast */
@@ -730,3 +744,61 @@ left: 36%;
   font-size: 20px; 
 }    
 /* End of score-leaderboard-modal */
+/* start of cash bal modal */
+#cashbal-menu-modal {
+  position: relative;
+}
+#cashbal-menu-modal img {
+  max-width: 100%;
+  height: auto;
+}
+#cash_bal, #cost, #revenue {
+  position: absolute;
+  z-index: 3;
+  font-weight: bold;
+  color: black;
+  font-size: 20px;
+  background-color: rgb(226, 128, 106);
+  border: 2px solid black ;
+}
+#cash_bal {
+  top: 115px;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+#cost {
+  top: 165px;
+  left: 10%;
+  width: 20%;
+}
+#revenue {
+  top: 165px;
+  right: 10%;
+}
+/* end of cash bal modal */
+/* start of finish game */
+#finish-game-modal {  
+  margin: 10px; 
+  background-color: rgb(250, 242, 243);
+  border: 3px solid black;
+  padding: 15px;
+}
+#finish_title {
+  text-align: center ;
+  font-size: 50px;
+  font-weight: bold;
+  color: rgb(226, 128, 106);
+}
+#finalstat_title {
+  font-size: 30px;
+  color: black;
+}
+#final_leaderboard_title {
+  font-size: 30px;
+}
+#thanks {
+  font-size: 40px;
+  font-weight: bold;
+  text-align: center;
+}
+/* end of finish game */

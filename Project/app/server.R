@@ -16,7 +16,7 @@ server <- function(input, output, session){
                          profit = 0,
                          revenue = 0,
                          manpower = 0,
-                         capacity = 0,
+                         capacity = 5,
                          cashbal = 500,
                          startday = FALSE,
                          orders_fulfilled = c(0, 0, 0, 0, 0, 0),
@@ -116,8 +116,11 @@ server <- function(input, output, session){
     }
   })
   
-  # Observe button that starts game
-  shinyjs::onclick("resetGame", updateTabsetPanel(session, "flowerPages", "StartingPage"))
+  shinyjs::onclick("cashbal_btn", showModal(cash_balmenuModal()))
+  shinyjs::onclick("cash_bal", showModal(cash_balModal()))
+  shinyjs::onclick("cost", showModal(costModal()))
+  shinyjs::onclick("revenue", showModal(revenueModal()))
+  shinyjs::onclick("back_btn_cb", {showModal(cash_balmenuModal())})
   
   #date output
   output$dateofmay <- renderText({
@@ -193,7 +196,7 @@ server <- function(input, output, session){
     } else if (is.na(input$seedNumber) || input$seedNumber == '') {
       setSeed(vals$username, as.integer(vals$userid))
       updateTabsetPanel(session, "flowerPages", "SecondPage")
-      showModal(enddayModal())
+      showModal(startgameModal())
     } else {
       # DO SOMETHING IF NOT MET
       showModal(errorModal("Not a Positive Integer."))
@@ -250,7 +253,7 @@ server <- function(input, output, session){
   shinyjs::onclick("inventoryButton", showModal(inventoryModal()))
   shinyjs::onclick("endDay", showModal(enddayModal()))
   shinyjs::onclick("orderButton", showModal(order_fulfilmentModal()))
-  shinyjs::onclick("scoreButton", {
+  shinyjs::onclick("leaderboard_btn", {
     result <- displayLeaderboard()
     vals$leaderboardName <- c(result[,1])
     vals$leaderboardScore <- c(result[,2])
@@ -483,8 +486,7 @@ server <- function(input, output, session){
   observeEvent(input$endday_btn, {
     if (vals$day == 31) {
       vals$day <- 0
-      updateTabsetPanel(session, "flowerPages", "StartingPage")
-      removeModal()
+      showModal(gamefinishModal())
     } else {
       r_order <- as.integer(input$r_order)
       c_order <- as.integer(input$c_order)
@@ -585,6 +587,9 @@ server <- function(input, output, session){
   output$endday_nfc6 <- renderText({
     paste("B6:", vals$demand_forecast[6])
   })
+  output$staffno <- renderText({vals$manpower})
+  output$pricecalc <- renderText({paste("Price: $", vals$calculator_vals[1]+vals$calculator_vals[2]*0.5+vals$calculator_vals[3]*0.1)})
+  
   ### Number Output for Order Fulfilment Modal ###      
   output$order_fulfilmentTitle <- renderText({paste("Order Fulfilment")})   
   output$bouquet1fulfilled <- renderText({
@@ -626,5 +631,25 @@ server <- function(input, output, session){
   
   output$cashBal <- renderText({
     paste(vals$cashbal)
+  })
+  
+  #finish game modal
+  output$finish_title <- renderText({"GAME OVER"})
+  output$finalstat_title <- renderText({"Final Stats:"})
+  output$final_cashbal <- renderText({ paste("Cash Balance: ", vals$cashbal)})
+  output$final_manpower <-renderText({paste("Number of Staff: ", vals$manpower)})
+  output$final_orders_fulfilled <- renderText({paste("Orders Fulfilled: ", sum(vals$order_fulfilled), "/", vals$total_orders)})
+  output$final_fleft_title <- renderText({"Flowers Left:"})
+  output$flowLeftfinish <- renderTable({
+    matrix_fleft()
+  }, include.rownames = FALSE, include.colnames = FALSE)
+  output$final_leaderboard_title <- renderText({"LeaderBoard"})
+  output$final_leaderboard <- renderTable({
+    matrix_leaderboard()}, include.rownames = FALSE, include.colnames = FALSE)
+  output$thanks <-renderText({"Thank You For Playing!"})
+  
+  #button to close/refresh the game
+  observeEvent(input$byebye, {
+    session$reload()
   })
 }

@@ -229,7 +229,7 @@ enddayModal <- function(){
   modalDialog(
     id ="end-day-modal",
     div(
-      img(src = "assets/End_day prompt.png"),
+      img(src = "assets/End day prompt.png"),
       #summary output
       textOutput("fulfilledOutput"),
       textOutput("flowersLeft_sum"),
@@ -295,6 +295,8 @@ enddayModal <- function(){
       textOutput("endday_nfc4"),
       textOutput("endday_nfc5"),
       textOutput("endday_nfc6"),
+      textOutput("staffno"),
+      textOutput("pricecalc"),
     ),
     footer = tagList(
       actionButton("endday_btn", "End Day !"),
@@ -327,4 +329,69 @@ score_leaderboardModal <- function(){
       tableOutput("scoreLeaderboard"),     
     )   
   ) 
+}
+cash_balmenuModal <- function() {
+  modalDialog(
+    div(
+      id = "cashbal-menu-modal",
+      img(src = "assets/Cash Balance.png"),
+      actionButton("cash_bal", "Cash Balance"),
+      actionButton("cost", "Cost"),
+      actionButton("revenue", "Revenue"),
+    )
+  )
+}
+
+cash_balModal <- function(){
+  modalDialog(
+    id = "cash-bal-modal",
+    # img(src = "insert graph here")
+    footer = tagList(
+      actionButton("back_btn_cb", "Back"),
+      actionButton("btn_close", "Dismiss")
+    )
+  )
+}
+
+costModal <- function(){
+  modalDialog(
+    id = "cost-modal",
+    # img(src = "insert graph here")
+    footer = tagList(
+      actionButton("back_btn_cb", "Back"),
+      actionButton("btn_close", "Dismiss")
+    )
+  )
+}
+
+revenueModal <- function(){
+  modalDialog(
+    id = "revenue-modal",
+    # img(src = "insert graph here")
+    footer = tagList(
+      actionButton("back_btn_cb", "Back"),
+      actionButton("btn_close", "Dismiss")
+    )
+  )
+}
+gamefinishModal <- function(){
+  modalDialog(
+    id = "finish-game-modal",
+    div(
+      textOutput("finish_title"),
+      textOutput("finalstat_title"),
+      textOutput("final_cashbal"),
+      textOutput("final_manpower"),
+      textOutput("final_orders_fulfilled"),
+      textOutput("final_fleft_title"),
+      tableOutput("flowLeftfinish"),
+      textOutput("final_leaderboard_title"),
+      tableOutput("final_leaderboard"),
+      textOutput("thanks")
+    ),
+    footer = tagList(
+      actionButton("byebye", "Close Game")
+    )
+    
+  )
 }
