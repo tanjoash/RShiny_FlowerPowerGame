@@ -506,7 +506,24 @@ server <- function(input, output, session){
   output$b6_ec_input <- renderText({
     "B6:"
   })
-  
+  output$endday_nfc1 <- renderText({
+    paste("B1:", vals$demand_forecast[1])
+  })
+  output$endday_nfc2 <- renderText({
+    paste("B2:", vals$demand_forecast[2])
+  })
+  output$endday_nfc3 <- renderText({
+    paste("B3:", vals$demand_forecast[3])
+  })
+  output$endday_nfc4 <- renderText({
+    paste("B4:", vals$demand_forecast[4])
+  })
+  output$endday_nfc5 <- renderText({
+    paste("B5:", vals$demand_forecast[5])
+  })
+  output$endday_nfc6 <- renderText({
+    paste("B6:", vals$demand_forecast[6])
+  })
   ### Number Output for Order Fulfilment Modal ###      
   output$order_fulfilmentTitle <- renderText({paste("Order Fulfilment")})   
   output$bouquet1fulfilled <- renderText({

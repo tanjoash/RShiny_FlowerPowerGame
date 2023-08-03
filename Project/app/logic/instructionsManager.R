@@ -199,7 +199,6 @@ startgameModal <- function() {
         id = "startcalc_b",
         textOutput("B"),
       ),
-      
       #Button to proceed with the game and assign values to variables
       ),
     footer = tagList(
@@ -218,7 +217,7 @@ enddayModal <- function(){
   modalDialog(
     id ="end-day-modal",
     div(
-      img(src = "assets/Summary_&_End_Day_Prompt 3.png"),
+      img(src = "assets/End_day prompt.png"),
       #summary output
       textOutput("fulfilledOutput"),
       textOutput("flowersLeft_sum"),
@@ -278,6 +277,12 @@ enddayModal <- function(){
       textOutput("b4_ec_input"),
       textOutput("b5_ec_input"),
       textOutput("b6_ec_input"),
+      textOutput("endday_nfc1"),
+      textOutput("endday_nfc2"),
+      textOutput("endday_nfc3"),
+      textOutput("endday_nfc4"),
+      textOutput("endday_nfc5"),
+      textOutput("endday_nfc6"),
     ),
     footer = tagList(
       actionButton("endday_btn", "End Day!"),

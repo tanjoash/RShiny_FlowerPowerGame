@@ -402,7 +402,7 @@
   font-size: 30px;   
   top: 5px; 
 }  
-#nextday_B1, #nextday_B2, #nextday_B3, #nextday_B4, #nextday_B5, #nextday_B6 {
+#next_fc1, #next_fc2, #next_fc3, #next_fc4, #next_fc5, #next_fc6 {
   font-size: 20px;
 }
 
@@ -541,11 +541,11 @@
 }
 
 #flowExpOutput {
-  top: 131px;
+  top: 128px;
   left: 5%
 }
 #flowLeftOutput {
-  top: 173px;
+  top: 164px;
   left: 5%
 }
 #r_order,
@@ -562,19 +562,19 @@
   padding-right: 2px;
 }
 #r_order {
-  top: 83px
+  top: 138px
 }
 #c_order {
-  top: 122px
+  top: 177px
 }
 #b_order {
-  top: 161px
+  top: 216px
 }
 #staff_hire {
-  top: 248px
+  top: 283px
 }
 #staff_fire {
-  top: 287px
+  top: 317px
 }
 /* start of end day calc */
 #endcalc_B1, #endcalc_B2, #endcalc_B3, #endcalc_B4, #endcalc_B5, #endcalc_B6 {
@@ -641,6 +641,28 @@ left: 21%;
 left: 36%;
 }
 /* end of end day calc */
+/* start of endday next forecast */
+#endday_nfc1, #endday_nfc2, #endday_nfc3, #endday_nfc4, #endday_nfc5, #endday_nfc6 {
+  position: absolute;
+  z-index: 3;
+  font-size: 14px;
+}
+#endday_nfc1, #endday_nfc2, #endday_nfc3 {
+  top: 65px;
+}
+#endday_nfc4, #endday_nfc5, #endday_nfc6 {
+  top: 90px;
+}
+#endday_nfc1, #endday_nfc4 {
+  left: 58%;
+}
+#endday_nfc2, #endday_nfc5 {
+  left: 68%;
+}
+#endday_nfc3, #endday_nfc6 {
+  left: 78%;
+}
+/* end of endday next forecast */
 /* End of end-day-modal */
 
 /* Start of order-fulfilment-modal */   
