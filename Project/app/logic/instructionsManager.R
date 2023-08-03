@@ -130,8 +130,7 @@ inventoryModal <- function(){
   )
 }
 startgameModal <- function() {   
-  modalDialog(     
-    title = "Start Game Modal",     
+  modalDialog(    
     div(       
       id = "start-game-modal",       
       img(src = "assets/start.png"),
@@ -285,7 +284,7 @@ enddayModal <- function(){
       textOutput("endday_nfc6"),
     ),
     footer = tagList(
-      actionButton("endday_btn", "End Day!"),
+      actionButton("endday_btn", "End Day !"),
       actionButton("btn_close", "Dismiss")
     )
   )
