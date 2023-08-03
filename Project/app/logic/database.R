@@ -85,3 +85,10 @@ registerPlayer <- function(username, password){
   register(conn, username, password)
   dbDisconnect(conn)
 }
+
+displayLeaderboard <- function(){
+  conn <- getAWSConnection()
+  result <- getLeaderboard(conn)
+  dbDisconnect(conn)
+  result
+}

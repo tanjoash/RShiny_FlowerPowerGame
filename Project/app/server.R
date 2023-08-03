@@ -31,7 +31,9 @@ server <- function(input, output, session){
                          eodOrdered = NULL,
                          bouquetsInventory = NULL,
                          flowersInventory = NULL,
-                         ordersFulfilled = NULL
+                         ordersFulfilled = NULL,
+                         leaderboardName = c("", "", "", "", ""),
+                         leaderboardScore = c(0, 0, 0, 0, 0)
                          )
   
   ## Login logic ##
@@ -114,10 +116,6 @@ server <- function(input, output, session){
     }
   })
   
-  #placeholder list
-  player_name <- c("Penis0", "Penis1", "Penis2", "Penis3", "Penis4", "Penis5")   
-  player_score <- c("0", "1", "2", "3", "4", "5") 
-  
   # Observe button that starts game
   shinyjs::onclick("resetGame", updateTabsetPanel(session, "flowerPages", "StartingPage"))
   
@@ -187,15 +185,6 @@ server <- function(input, output, session){
     vals$bouquetsInventory <- createBouquetsInventory()
     vals$flowersInventory <- createFlowersInventory()
     vals$ordersFulfilled <- createOrdersFulfilled()
-<<<<<<< Updated upstream
-    #if (!is.null(input$playername) && input$playername != "") {
-    # regexNumber <- "^[0-9]+$"
-    # if (grepl(regexNumber, input$seedNumber)) { 
-    #   setSeed(input$playerName, as.integer(input$seedNumber))
-    updateTabsetPanel(session, "flowerPages", "SecondPage")
-    if (vals$day == 0){
-      showModal(startgameModal())
-=======
     regexNumber <- "^[0-9]+$"
     if (grepl(regexNumber, input$seedNumber)) { 
       setSeed(vals$username, as.integer(vals$userid), as.integer(input$seedNumber))
@@ -208,7 +197,6 @@ server <- function(input, output, session){
     } else {
       # DO SOMETHING IF NOT MET
       showModal(errorModal("Not a Positive Integer."))
->>>>>>> Stashed changes
     }
 
     
@@ -262,7 +250,12 @@ server <- function(input, output, session){
   shinyjs::onclick("inventoryButton", showModal(inventoryModal()))
   shinyjs::onclick("endDay", showModal(enddayModal()))
   shinyjs::onclick("orderButton", showModal(order_fulfilmentModal()))
-  shinyjs::onclick("scoreButton", showModal(score_leaderboardModal()))
+  shinyjs::onclick("scoreButton", {
+    result <- displayLeaderboard()
+    vals$leaderboardName <- c(result[,1])
+    vals$leaderboardScore <- c(result[,2])
+    showModal(score_leaderboardModal())
+  })
   
   ## Calculator Reactive Value 
   flower_requirements <- reactiveValues(
@@ -613,16 +606,23 @@ server <- function(input, output, session){
     paste("Bouquet 6:", vals$orders_fulfilled[6], "/", vals$actual_demand[6])
     })
   
+  matrix_fleft <- reactive({
+    paste_vals <- paste(flower_prefix, ":", vals$flowers_left)
+    matrix(paste_vals, nrow = 1, byrow = TRUE)
+  })
+  
   # Create matrix for leaderboard    
-  matrix_leaderboard <- matrix(     
-    paste(player_name, ":", c(player_score)),     
-    nrow = length(player_name), byrow = TRUE)      
+  matrix_leaderboard <- reactive({
+    paste_vals <- paste(vals$leaderboardName, ":", vals$leaderboardScore)
+    matrix(paste_vals, nrow = length(vals$leaderboardName), byrow = TRUE)
+  })
+    
   # Render Leaderboard Table   
   output$score_leaderboardTitle <- renderText({
     paste("LeaderBoard")
   })
   output$scoreLeaderboard <- renderTable({
-    matrix_leaderboard}, include.rownames = FALSE, include.colnames = FALSE)
+    matrix_leaderboard()}, include.rownames = FALSE, include.colnames = FALSE)
   
   output$cashBal <- renderText({
     paste(vals$cashbal)

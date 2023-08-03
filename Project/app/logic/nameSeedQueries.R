@@ -43,3 +43,14 @@ register <- function(conn, userName, password){
   query <- sqlInterpolate(conn,querytemplate, userName = userName, password = password)
   dbExecute(conn, query)
 }
+
+getLeaderboard <- function(conn){
+  query <- "SELECT u.username, cb.day31 AS Score
+    FROM User AS u
+    INNER JOIN FlowerPower AS fp ON u.userid = fp.userid
+    INNER JOIN CashBal AS cb ON fp.finalcashbalid = cb.finalcashbalid
+    ORDER BY Score DESC
+    LIMIT 5;"
+  result <- dbGetQuery(conn, query)
+  result
+}
