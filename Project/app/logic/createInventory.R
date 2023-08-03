@@ -57,20 +57,6 @@ createOrdersFulfilled <- function() {
   )
   ordersFulfilled
 }
-
-createOrdersUnfulfilled <- function() {
-  ordersUnfulfilled <- data.frame(
-    day = 0:31,
-    B1 = rep(0, 32),
-    B2 = rep(0, 32),
-    B3 = rep(0, 32),
-    B4 = rep(0, 32),
-    B5 = rep(0, 32),
-    B6 = rep(0, 32)
-  )
-  ordersUnfulfilled
-}
-
 # # Call the function to initialize the dataframes
 # createInventory()
 # 

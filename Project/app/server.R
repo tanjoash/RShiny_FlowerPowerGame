@@ -29,8 +29,7 @@ server <- function(input, output, session){
                          eodOrdered = NULL,
                          bouquetsInventory = NULL,
                          flowersInventory = NULL,
-                         ordersFulfilled = NULL,
-                         ordersUnfulfilled = NULL
+                         ordersFulfilled = NULL
                          )
   
   #placeholder list
@@ -105,13 +104,12 @@ server <- function(input, output, session){
     vals$bouquetsInventory <- createBouquetsInventory()
     vals$flowersInventory <- createFlowersInventory()
     vals$ordersFulfilled <- createOrdersFulfilled()
-    vals$ordersUnfulfilled <- createOrdersUnfulfilled()
     #if (!is.null(input$playername) && input$playername != "") {
     # regexNumber <- "^[0-9]+$"
     # if (grepl(regexNumber, input$seedNumber)) { 
     #   setSeed(input$playerName, as.integer(input$seedNumber))
     updateTabsetPanel(session, "flowerPages", "SecondPage")
-    if (vals$startday == FALSE || vals$day == 0){
+    if (vals$day == 0){
       showModal(enddayModal())
     }
     # } else if (!is.null(input$seedNumber)) {
@@ -119,10 +117,10 @@ server <- function(input, output, session){
     #   updateTabsetPanel(session, "flowerPages", "SecondPage")
     # } else {
     #   # DO SOMETHING IF NOT MET
-    #   print("Not a Positive Integer")
+    #   showModal(errorModal("Not a Positive Integer."))
     # }
     #} else {
-    # showModal(nameError())
+    # showModal(errorModal("Player name is empty!"))
     #}
     #showModal(startgameModal())
     
@@ -206,7 +204,7 @@ server <- function(input, output, session){
     B4_make <- as.integer(input$B4choice)
     B5_make <- as.integer(input$B5choice)
     B6_make <- as.integer(input$B6choice)
-    if(is.numeric(B1_make) || is.numeric(B2_make) || is.numeric(B3_make) || is.numeric(B4_make) || is.numeric(B5_make) || is.numeric(B6_make)){
+    if(is.numeric(B1_make) && is.numeric(B2_make) && is.numeric(B3_make) && is.numeric(B4_make) && is.numeric(B5_make) && is.numeric(B6_make)){
       total_f1 <- as.numeric(vals$flowers_left[1]) + as.numeric(vals$flowers_exp[1])
       print(paste("total_f1", total_f1))
       total_f2 <- as.numeric(vals$flowers_left[2]) + as.numeric(vals$flowers_exp[2])
@@ -221,77 +219,87 @@ server <- function(input, output, session){
       used_f3 <- 5*as.numeric(B2_make) + 5*as.numeric(B3_make) + 10*as.numeric(B6_make)
       print(paste("used_f3", used_f3))
       
-      if(used_f1 <= total_f1 || used_f2 <= total_f2 || used_f3 <= total_f3){
-        if(used_f1 <= as.numeric(vals$flowers_exp[1])){ # if used flowers is less than the expiring ones to throw today
-          vals$flowers_exp[1] <- as.numeric(vals$flowers_exp[1]) - used_f1 #to throw away today
-        } else { 
-          vals$flowers_left[1] <- as.numeric(vals$flowers_left[1]) - (used_f1 - as.numeric(vals$flowers_exp[1]))
-          vals$flowers_exp[1] <- 0
+      total_bouquets_made <- B1_make + B2_make + B3_make + B4_make + B5_make + B6_make
+      
+      if(total_bouquets_made <= as.numeric(vals$capacity)){
+        if(used_f1 <= total_f1 && used_f2 <= total_f2 && used_f3 <= total_f3){
+          if(used_f1 <= as.numeric(vals$flowers_exp[1])){ # if used flowers is less than the expiring ones to throw today
+            vals$flowers_exp[1] <- as.numeric(vals$flowers_exp[1]) - used_f1 #to throw away today
+          } else { 
+            vals$flowers_left[1] <- as.numeric(vals$flowers_left[1]) - (used_f1 - as.numeric(vals$flowers_exp[1]))
+            vals$flowers_exp[1] <- 0
+          }
+          
+          if(used_f2 <= as.numeric(vals$flowers_exp[2])){ # if used flowers is less than the expiring ones to throw today
+            vals$flowers_exp[2] <- as.numeric(vals$flowers_exp[2]) - used_f2 #to throw away today
+          } else { 
+            vals$flowers_left[2] <- as.numeric(vals$flowers_left[2]) - (used_f2 - as.numeric(vals$flowers_exp[2]))
+            vals$flowers_exp[2] <- 0
+          }
+          
+          if(used_f3 <= as.numeric(vals$flowers_exp[3])){ # if used flowers is less than the expiring ones to throw today
+            vals$flowers_exp[3] <- as.numeric(vals$flowers_exp[3]) - used_f3 #to throw away today
+          } else { 
+            vals$flowers_left[3] <- as.numeric(vals$flowers_left[3]) - (used_f3 - as.numeric(vals$flowers_exp[3]))
+            vals$flowers_exp[3] <- 0
+          }
+          
+          vals$calculator_vals <- c(0, 0, 0)
+          vals$bouquetsInventory <- updateBouquetsMade(vals$day, vals$bouquetsInventory, B1_make, B2_make, B3_make, B4_make, B5_make, B6_make)
+          #print("bouquet Inventory")
+          #print(vals$bouquetsInventory)
+          vals$flowersInventory <- updateFlowersUsed(vals$day, vals$flowersInventory, as.numeric(vals$flowers_left[1]),
+                                                     as.numeric(vals$flowers_left[2]),
+                                                     as.numeric(vals$flowers_left[3]),
+                                                     as.numeric(vals$flowers_exp[1]),
+                                                     as.numeric(vals$flowers_exp[2]),
+                                                     as.numeric(vals$flowers_exp[3]))
+          #print("flower Inventory")
+          #print(vals$flowersInventory)
+          
+          # Calculate orders fulfilled
+          vals$orders_fulfilled <- c(min(B1_make, as.numeric(vals$actual_demand[1])),
+                                     min(B2_make, as.numeric(vals$actual_demand[2])),
+                                     min(B3_make, as.numeric(vals$actual_demand[3])),
+                                     min(B4_make, as.numeric(vals$actual_demand[4])),
+                                     min(B5_make, as.numeric(vals$actual_demand[5])),
+                                     min(B6_make, as.numeric(vals$actual_demand[6])))
+          
+          vals$bouquet_exp <- c((B1_make - as.numeric(vals$orders_fulfilled[1])),
+                                (B2_make - as.numeric(vals$orders_fulfilled[2])),
+                                (B3_make - as.numeric(vals$orders_fulfilled[3])),
+                                (B4_make - as.numeric(vals$orders_fulfilled[4])),
+                                (B5_make - as.numeric(vals$orders_fulfilled[5])),
+                                (B6_make - as.numeric(vals$orders_fulfilled[6])))
+          
+          vals$ordersFulfilled <- updateOrdersFulfilled(vals$day, vals$actual_demand, as.numeric(vals$orders_fulfilled[1]),
+                                                        as.numeric(vals$orders_fulfilled[2]),
+                                                        as.numeric(vals$orders_fulfilled[3]),
+                                                        as.numeric(vals$orders_fulfilled[4]),
+                                                        as.numeric(vals$orders_fulfilled[5]),
+                                                        as.numeric(vals$orders_fulfilled[6]),
+                                                        vals$ordersFulfilled)
+          print("orders fulfilled")
+          print(vals$ordersFulfilled)
+          
+          vals$revenue <- calculateRevenue(vals$day, vals$ordersFulfilled)
+          vals$cashbal <- calculateCashBal(vals$cost, vals$revenue, vals$cashbal)
+          uploadValues(vals$day, vals$cashbal, vals$cost, vals$revenue, vals$playerid)
+          vals$profit <- vals$revenue - vals$cost
+          
+          # Update demand forecast for next day
+          vals$demand_forecast <- c(forecastB1[vals$day+1], forecastB2[vals$day+1], forecastB3[vals$day+1], forecastB4[vals$day+1], forecastB5[vals$day+1], forecastB6[vals$day+1])
+          
+          # Close the modal after saving
+          removeModal()
+        } else {
+          showModal(errorModal("Not enough flowers to make bouquets."))
         }
-        
-        if(used_f2 <= as.numeric(vals$flowers_exp[2])){ # if used flowers is less than the expiring ones to throw today
-          vals$flowers_exp[2] <- as.numeric(vals$flowers_exp[2]) - used_f2 #to throw away today
-        } else { 
-          vals$flowers_left[2] <- as.numeric(vals$flowers_left[2]) - (used_f2 - as.numeric(vals$flowers_exp[2]))
-          vals$flowers_exp[2] <- 0
-        }
-        
-        if(used_f3 <= as.numeric(vals$flowers_exp[3])){ # if used flowers is less than the expiring ones to throw today
-          vals$flowers_exp[3] <- as.numeric(vals$flowers_exp[3]) - used_f3 #to throw away today
-        } else { 
-          vals$flowers_left[3] <- as.numeric(vals$flowers_left[3]) - (used_f3 - as.numeric(vals$flowers_exp[3]))
-          vals$flowers_exp[3] <- 0
-        }
-        
-        print(paste("Flowers Expired today", vals$flowers_exp))
-        print(paste("Flowers Left today", vals$flowers_left))
-
-        vals$calculator_vals <- c(0, 0, 0)
-        vals$bouquetsInventory <- updateBouquetsMade(vals$day, vals$bouquetsInventory, B1_make, B2_make, B3_make, B4_make, B5_make, B6_make)
-        print("bouquet Inventory")
-        print(vals$bouquetsInventory)
-        vals$flowersInventory <- updateFlowersUsed(vals$day, vals$flowersInventory, as.numeric(vals$flowers_left[1]),
-                                              as.numeric(vals$flowers_left[2]),
-                                              as.numeric(vals$flowers_left[3]),
-                                              as.numeric(vals$flowers_exp[1]),
-                                              as.numeric(vals$flowers_exp[2]),
-                                              as.numeric(vals$flowers_exp[3]))
-        print("flower Inventory")
-        print(vals$flowersInventory)
-        
-        # Calculate orders fulfilled
-        vals$orders_fulfilled <- c(min(B1_make, as.numeric(vals$actual_demand[1])),
-                                   min(B2_make, as.numeric(vals$actual_demand[2])),
-                                   min(B3_make, as.numeric(vals$actual_demand[3])),
-                                   min(B4_make, as.numeric(vals$actual_demand[4])),
-                                   min(B5_make, as.numeric(vals$actual_demand[5])),
-                                   min(B6_make, as.numeric(vals$actual_demand[6])))
-        
-        vals$ordersFulfilled <- updateOrdersFulfilled(vals$day, vals$actual_demand, as.numeric(vals$orders_fulfilled[1]),
-                                                 as.numeric(vals$orders_fulfilled[2]),
-                                                 as.numeric(vals$orders_fulfilled[3]),
-                                                 as.numeric(vals$orders_fulfilled[4]),
-                                                 as.numeric(vals$orders_fulfilled[5]),
-                                                 as.numeric(vals$orders_fulfilled[6]),
-                                                 vals$ordersFulfilled)
-        print("orders fulfilled")
-        print(vals$ordersFulfilled)
-        
-        vals$revenue <- calculateRevenue(vals$day, vals$ordersFulfilled)
-        vals$cashbal <- calculateCashBal(vals$cost, vals$revenue, vals$cashbal)
-        uploadValues(vals$day, vals$cashbal, vals$cost, vals$revenue, vals$playerid)
-        vals$profit <- vals$revenue - vals$cost
-        
-        # Update demand forecast for next day
-        vals$demand_forecast <- c(forecastB1[vals$day+1], forecastB2[vals$day+1], forecastB3[vals$day+1], forecastB4[vals$day+1], forecastB5[vals$day+1], forecastB6[vals$day+1])
-        
-        # Close the modal after saving
-        removeModal()
       } else {
-        print("Not enough flowers")
+        showModal(errorModal("Not enough manpower to make bouquets."))
       }
     } else {
-      print("Not a integer value")
+      showModal(errorModal("Input was not an integer value."))
     }
     #values$makeB1 <- ifelse(input$B1choice == "", 0, input$B1choice)
     #values$makeB2 <- ifelse(input$B2choice == "", 0, input$B2choice)
@@ -395,13 +403,13 @@ server <- function(input, output, session){
     staff_hire <- as.integer(input$staff_hire)
     staff_fire <- as.integer(input$staff_fire)
     
-    if(is.numeric(r_order) || is.numeric(c_order) || is.numeric(b_order) || is.numeric(staff_fire) || is.numeric(staff_hire)){ #need fix
+    if(is.numeric(r_order) && is.numeric(c_order) && is.numeric(b_order) && is.numeric(staff_fire) && is.numeric(staff_hire)){ #need fix
       if(min(staff_fire, staff_hire) == 0){
         if((as.numeric(vals$manpower + staff_hire - staff_fire) >= 0)){
           staff_total <- as.numeric(vals$manpower) + staff_hire - staff_fire
           enddaycost <- r_order*1 + c_order*0.5 + b_order*0.1 + staff_total*10
           if(enddaycost > as.numeric(vals$cashbal)){
-            print("Not enough money to do purchase.")
+            showModal(errorModal("Not enough money to do purchase."))
           } else {
             vals$manpower <- as.numeric(vals$manpower) + staff_hire - staff_fire
             vals$capacity <- as.numeric(vals$manpower)*5 + 5
@@ -414,22 +422,22 @@ server <- function(input, output, session){
             vals$total_orders <- sum(as.numeric(vals$actual_demand))
             vals$flowers_left <- c(vals$eodOrdered[vals$day, "F1"], vals$eodOrdered[vals$day, "F2"], vals$eodOrdered[vals$day, "F3"])
             vals$flowers_exp <- c(vals$flowersInventory[vals$day+1, "F1e"], vals$flowersInventory[vals$day+1, "F2e"], vals$flowersInventory[vals$day+1, "F3e"])
-            print("eodOrdered")
-            print(vals$eodOrdered)
-            print("flowers Inventory")
-            print(vals$flowersInventory)
+            #print("eodOrdered")
+            #print(vals$eodOrdered)
+            #print("flowers Inventory")
+            #print(vals$flowersInventory)
             # Close the modal after saving
             removeModal()
             showModal(startgameModal())
           }
         } else {
-          print("You cannot fire more than the number of people you have")
+          showModal(errorModal("You cannot fire more than the number of people you have"))
         }
       } else {
-        print("You cannot fire and hire at the same time") #need render?
+        showModal(errorModal("You cannot fire and hire at the same time")) #need render?
       }
     } else {
-      print("Please input integers only") #need render?
+      showModal(errorModal("Please input integers only")) #need render?
     }
     
   })

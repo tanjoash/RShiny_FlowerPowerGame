@@ -10,10 +10,11 @@ instructionsModal <- function() {
     )
   )
 }
-nameError <- function(){
+
+errorModal <- function(text){
   modalDialog(
     title = "Error!",
-    "Player name is empty!"
+    text
   )
 }
 
@@ -167,8 +168,7 @@ startgameModal <- function() {
       #Button to proceed with the game and assign values to variables
       ),
     footer = tagList(
-      actionButton("startday_btn", "Start Day !"),
-      actionButton("btn_close", "Dismiss")
+      actionButton("startday_btn", "Start Day!")
     ),
     options = list(onshow = HTML('
         $("#modal .modal-header .close").on("click", function(event) {
@@ -245,7 +245,7 @@ enddayModal <- function(){
       textOutput("b6_ec_input"),
     ),
     footer = tagList(
-      actionButton("endday_btn", "End Day !"),
+      actionButton("endday_btn", "End Day!"),
       actionButton("btn_close", "Dismiss")
     )
   )
