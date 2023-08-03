@@ -130,7 +130,7 @@ server <- function(input, output, session){
     #   setSeed(input$playerName, as.integer(input$seedNumber))
     updateTabsetPanel(session, "flowerPages", "SecondPage")
     if (vals$day == 0){
-      showModal(enddayModal())
+      showModal(startgameModal())
     }
     # } else if (!is.null(input$seedNumber)) {
     #   setSeed(input$playerName)
