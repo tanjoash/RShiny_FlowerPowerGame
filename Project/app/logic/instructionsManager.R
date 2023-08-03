@@ -156,12 +156,12 @@ startgameModal <- function() {
         textOutput("R"),
       ),
       div(
-        id = "startcalc_b",
-        textOutput("B"),
-      ),
-      div(
         id = "startcalc_c",
         textOutput("C"),
+      ),
+      div(
+        id = "startcalc_b",
+        textOutput("B"),
       ),
       
       #Button to proceed with the game and assign values to variables
@@ -230,12 +230,12 @@ enddayModal <- function(){
         textOutput("R"),
       ),
       div(
-        id = "endcalc_b",
-        textOutput("B"),
-      ),
-      div(
         id = "endcalc_c",
         textOutput("C"),
+      ),
+      div(
+        id = "endcalc_b",
+        textOutput("B"),
       ),
       textOutput("b1_ec_input"),
       textOutput("b2_ec_input"),

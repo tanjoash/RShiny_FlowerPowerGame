@@ -14,6 +14,7 @@ server <- function(input, output, session){
                          profit = 0,
                          revenue = 0,
                          manpower = 0,
+                         capacity = 0,
                          cashbal = 500,
                          startday = FALSE,
                          orders_fulfilled = c(0, 0, 0, 0, 0, 0),
@@ -24,7 +25,12 @@ server <- function(input, output, session){
                          flowers_exp = c(0, 0, 0),
                          demand_forecast = c(0, 0, 0, 0, 0, 0),
                          calculator_vals = c(0, 0, 0),
-                         actual_demand = c(0, 0, 0, 0, 0, 0)
+                         actual_demand = c(0, 0, 0, 0, 0, 0),
+                         eodOrdered = NULL,
+                         bouquetsInventory = NULL,
+                         flowersInventory = NULL,
+                         ordersFulfilled = NULL,
+                         ordersUnfulfilled = NULL
                          )
   
   #placeholder list
@@ -95,7 +101,11 @@ server <- function(input, output, session){
     vals$playerid <- playerID() # need to change and get latest playerid
     print(vals$playerid)
     vals$demand_forecast <- c(forecastB1[vals$day+1], forecastB2[vals$day+1], forecastB3[vals$day+1], forecastB4[vals$day+1], forecastB5[vals$day+1], forecastB6[vals$day+1])
-    createInventory()
+    vals$eodOrdered <- createEodOrdered()
+    vals$bouquetsInventory <- createBouquetsInventory()
+    vals$flowersInventory <- createFlowersInventory()
+    vals$ordersFulfilled <- createOrdersFulfilled()
+    vals$ordersUnfulfilled <- createOrdersUnfulfilled()
     #if (!is.null(input$playername) && input$playername != "") {
     # regexNumber <- "^[0-9]+$"
     # if (grepl(regexNumber, input$seedNumber)) { 
@@ -118,7 +128,7 @@ server <- function(input, output, session){
     
     ### Number Output for Start Game Modal ###
     #Inventory for Start Game Modal 
-    output$numberofstaff <- renderText({vals$manpower}) ### actual is reference manpower value below
+    output$numberofstaff <- renderText({vals$capacity}) ### actual is reference manpower value below
 
     #output$B1Exp_start <- renderText({vals$bouquet_exp[[1]]})
     #output$B2Exp_start <- renderText({vals$bouquet_exp[[2]]})
@@ -198,12 +208,18 @@ server <- function(input, output, session){
     B6_make <- as.integer(input$B6choice)
     if(is.numeric(B1_make) || is.numeric(B2_make) || is.numeric(B3_make) || is.numeric(B4_make) || is.numeric(B5_make) || is.numeric(B6_make)){
       total_f1 <- as.numeric(vals$flowers_left[1]) + as.numeric(vals$flowers_exp[1])
+      print(paste("total_f1", total_f1))
       total_f2 <- as.numeric(vals$flowers_left[2]) + as.numeric(vals$flowers_exp[2])
+      print(paste("total_f2", total_f2))
       total_f3 <- as.numeric(vals$flowers_left[3]) + as.numeric(vals$flowers_exp[3])
+      print(paste("total_f3", total_f3))
       
       used_f1 <- 3*as.numeric(B1_make) + 3*as.numeric(B2_make) + 5*as.numeric(B4_make)
+      print(paste("used_f1", used_f1))
       used_f2 <- 3*as.numeric(B1_make) + 3*as.numeric(B3_make) + 5*as.numeric(B5_make)
+      print(paste("used_f2", used_f2))
       used_f3 <- 5*as.numeric(B2_make) + 5*as.numeric(B3_make) + 10*as.numeric(B6_make)
+      print(paste("used_f3", used_f3))
       
       if(used_f1 <= total_f1 || used_f2 <= total_f2 || used_f3 <= total_f3){
         if(used_f1 <= as.numeric(vals$flowers_exp[1])){ # if used flowers is less than the expiring ones to throw today
@@ -231,17 +247,17 @@ server <- function(input, output, session){
         print(paste("Flowers Left today", vals$flowers_left))
 
         vals$calculator_vals <- c(0, 0, 0)
-        bouquetsInventory <- updateBouquetsMade(vals$day, bouquetsInventory, B1_make, B2_make, B3_make, B4_make, B5_make, B6_make)
+        vals$bouquetsInventory <- updateBouquetsMade(vals$day, vals$bouquetsInventory, B1_make, B2_make, B3_make, B4_make, B5_make, B6_make)
         print("bouquet Inventory")
-        print(bouquetsInventory)
-        flowersInventory <- updateFlowersUsed(vals$day, flowersInventory, as.numeric(vals$flowers_left[1]),
+        print(vals$bouquetsInventory)
+        vals$flowersInventory <- updateFlowersUsed(vals$day, vals$flowersInventory, as.numeric(vals$flowers_left[1]),
                                               as.numeric(vals$flowers_left[2]),
                                               as.numeric(vals$flowers_left[3]),
                                               as.numeric(vals$flowers_exp[1]),
                                               as.numeric(vals$flowers_exp[2]),
                                               as.numeric(vals$flowers_exp[3]))
         print("flower Inventory")
-        print(flowersInventory)
+        print(vals$flowersInventory)
         
         # Calculate orders fulfilled
         vals$orders_fulfilled <- c(min(B1_make, as.numeric(vals$actual_demand[1])),
@@ -251,17 +267,17 @@ server <- function(input, output, session){
                                    min(B5_make, as.numeric(vals$actual_demand[5])),
                                    min(B6_make, as.numeric(vals$actual_demand[6])))
         
-        ordersFulfilled <- updateOrdersFulfilled(vals$day, vals$actual_demand, as.numeric(vals$orders_fulfilled[1]),
+        vals$ordersFulfilled <- updateOrdersFulfilled(vals$day, vals$actual_demand, as.numeric(vals$orders_fulfilled[1]),
                                                  as.numeric(vals$orders_fulfilled[2]),
                                                  as.numeric(vals$orders_fulfilled[3]),
                                                  as.numeric(vals$orders_fulfilled[4]),
                                                  as.numeric(vals$orders_fulfilled[5]),
                                                  as.numeric(vals$orders_fulfilled[6]),
-                                                 ordersFulfilled)
+                                                 vals$ordersFulfilled)
         print("orders fulfilled")
-        print(ordersFulfilled)
+        print(vals$ordersFulfilled)
         
-        vals$revenue <- calculateRevenue(vals$day, ordersFulfilled)
+        vals$revenue <- calculateRevenue(vals$day, vals$ordersFulfilled)
         vals$cashbal <- calculateCashBal(vals$cost, vals$revenue, vals$cashbal)
         uploadValues(vals$day, vals$cashbal, vals$cost, vals$revenue, vals$playerid)
         vals$profit <- vals$revenue - vals$cost
@@ -388,19 +404,20 @@ server <- function(input, output, session){
             print("Not enough money to do purchase.")
           } else {
             vals$manpower <- as.numeric(vals$manpower) + staff_hire - staff_fire
-            eodOrdered <- updateEodOrdered(vals$day, eodOrdered, r_order, c_order, b_order, vals$manpower)
-            flowersInventory <- updateFlowersInvStart(vals$day, flowersInventory, eodOrdered)
-            vals$cost <- calculateCost(vals$day, eodOrdered)
+            vals$capacity <- as.numeric(vals$manpower)*5 + 5
+            vals$eodOrdered <- updateEodOrdered(vals$day, vals$eodOrdered, r_order, c_order, b_order, vals$manpower)
+            vals$flowersInventory <- updateFlowersInvStart(vals$day, vals$flowersInventory, vals$eodOrdered)
+            vals$cost <- calculateCost(vals$day, vals$eodOrdered)
             vals$day <- vals$day+1
             actdemand <- getDemandEachDay(vals$day, vals$playerid)
             vals$actual_demand <- c(actdemand[[1]], actdemand[[2]], actdemand[[3]], actdemand[[4]], actdemand[[5]], actdemand[[6]])
             vals$total_orders <- sum(as.numeric(vals$actual_demand))
-            vals$flowers_left <- c(eodOrdered[vals$day, "F1"], eodOrdered[vals$day, "F2"], eodOrdered[vals$day, "F3"])
-            vals$flowers_exp <- c(flowersInventory[vals$day+1, "F1e"], flowersInventory[vals$day+1, "F2e"], flowersInventory[vals$day+1, "F3e"])
+            vals$flowers_left <- c(vals$eodOrdered[vals$day, "F1"], vals$eodOrdered[vals$day, "F2"], vals$eodOrdered[vals$day, "F3"])
+            vals$flowers_exp <- c(vals$flowersInventory[vals$day+1, "F1e"], vals$flowersInventory[vals$day+1, "F2e"], vals$flowersInventory[vals$day+1, "F3e"])
             print("eodOrdered")
-            print(eodOrdered)
+            print(vals$eodOrdered)
             print("flowers Inventory")
-            print(flowersInventory)
+            print(vals$flowersInventory)
             # Close the modal after saving
             removeModal()
             showModal(startgameModal())

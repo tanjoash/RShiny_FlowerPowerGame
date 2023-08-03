@@ -7,8 +7,8 @@
 # bouquetsInventory
 # ordersFulfilled
 # ordersUnfulfilled 
-createInventory <- function() {
-  # Create the eodOrdered dataframe
+
+createEodOrdered <- function() {
   eodOrdered <- data.frame(
     day = 0:31,
     F1 = rep(0, 32),
@@ -16,9 +16,10 @@ createInventory <- function() {
     F3 = rep(0, 32),
     manpower = rep(0,32)
   )
-  assign("eodOrdered", eodOrdered, envir = .GlobalEnv)
-  
-  # Create the flowersInventory dataframe
+  eodOrdered
+}
+
+createFlowersInventory <- function() {
   flowersInventory <- data.frame(
     day = 0:31,
     F1 = rep(0, 32),
@@ -28,9 +29,10 @@ createInventory <- function() {
     F2e = rep(0, 32),
     F3e = rep(0, 32)
   )
-  assign("flowersInventory", flowersInventory, envir = .GlobalEnv)
-  
-  # Create the bouquetsInventory dataframe
+  flowersInventory
+}
+
+createBouquetsInventory <- function() {
   bouquetsInventory <- data.frame(
     day = 0:31,
     B1 = rep(0, 32),
@@ -40,9 +42,10 @@ createInventory <- function() {
     B5 = rep(0, 32),
     B6 = rep(0, 32)
   )
-  assign("bouquetsInventory", bouquetsInventory, envir = .GlobalEnv)
-  
-  # Create the ordersFulfilled dataframe
+  bouquetsInventory
+}
+
+createOrdersFulfilled <- function() {
   ordersFulfilled <- data.frame(
     day = 0:31,
     B1 = rep(0, 32),
@@ -52,9 +55,10 @@ createInventory <- function() {
     B5 = rep(0, 32),
     B6 = rep(0, 32)
   )
-  assign("ordersFulfilled", ordersFulfilled, envir = .GlobalEnv)
-  
-  # Create the ordersUnfulfilled dataframe
+  ordersFulfilled
+}
+
+createOrdersUnfulfilled <- function() {
   ordersUnfulfilled <- data.frame(
     day = 0:31,
     B1 = rep(0, 32),
@@ -64,7 +68,7 @@ createInventory <- function() {
     B5 = rep(0, 32),
     B6 = rep(0, 32)
   )
-  assign("ordersUnfulfilled", ordersUnfulfilled, envir = .GlobalEnv)
+  ordersUnfulfilled
 }
 
 # # Call the function to initialize the dataframes
