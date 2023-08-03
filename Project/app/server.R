@@ -8,7 +8,9 @@ server <- function(input, output, session){
   source("logic/endDayCalculations.R")
   
   # reactiveValues objects for storing items like the user password
-  vals <- reactiveValues(playerid = NULL,
+  vals <- reactiveValues(userid = NULL,
+                         username = NULL,
+                         playerid = NULL,
                          day = 0,
                          cost = 0,
                          profit = 0,
@@ -31,6 +33,19 @@ server <- function(input, output, session){
                          flowersInventory = NULL,
                          ordersFulfilled = NULL
                          )
+  
+  ## Login logic ##
+  #observeEvent()
+  
+  
+  output$username <- renderText({
+    #if(is.null(vals$username)){
+    #  paste("Please Login or Register")
+    #} else {
+    #  paste("Welcome", vals$username)
+    #}
+    paste("Hello world")
+  })
   
   #placeholder list
   nextdaydemand <- c(1,2,3,4,5,6)

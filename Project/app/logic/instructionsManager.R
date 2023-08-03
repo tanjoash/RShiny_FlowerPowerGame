@@ -11,6 +11,41 @@ instructionsModal <- function() {
   )
 }
 
+## Modal for register ##
+registerModal <- function(repetition = FALSE, validatepw = FALSE) {
+  modalDialog(
+    title = "Create a user",
+    textInput("username", "Enter a username:"),
+    passwordInput("password1", "Enter a new password:"),
+    passwordInput("password2", "Confirm new password:"),
+    "If successful #do something.",
+    if (repetition){
+      div(tags$b("Username is taken already", style = "color: red;"))
+    },
+    if (validatepw){
+      div(tags$b("Please double check your password", style = "color: red;"))
+    },
+    footer = tagList(
+      modalButton("Cancel"),
+      actionButton("registerok", "Register")
+    )
+  )
+}
+
+loginModal <- function(failed = FALSE) {
+  modalDialog(
+    title = "Login",
+    textInput("playername", "Enter your assigned Player Name", "FrostyFuzzyPickle"),
+    passwordInput("password3", "Enter your password:"),
+    if (failed)
+      div(tags$b("There is no registered player with that name and password. Try again or re-register.", style = "color: red;")),
+    footer = tagList(
+      modalButton("Cancel"),
+      actionButton("loginok", "Login")
+    )
+  )
+}
+
 errorModal <- function(text){
   modalDialog(
     title = "Error!",

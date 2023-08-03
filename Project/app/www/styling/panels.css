@@ -6,6 +6,11 @@
   height: auto;
 }
 
+
+#username{
+  z-index: 10;
+}
+
 #gameLogo {
   position: relative;
   z-index: 2;
@@ -130,6 +135,8 @@
   transform: translate(-50%, -57%);
   width: 15%;
 }
+
+  
 .name-text-class {
   position: absolute;
   z-index: 2;
