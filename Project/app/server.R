@@ -41,6 +41,11 @@ server <- function(input, output, session){
   
   # Observe button that starts game
   shinyjs::onclick("resetGame", updateTabsetPanel(session, "flowerPages", "StartingPage"))
+  
+  #date output
+  output$dateofmay <- renderText({
+    vals$day
+  })
 
   #instruction Modal stuff
   instructPage <- reactiveVal(1)
@@ -197,6 +202,9 @@ server <- function(input, output, session){
     })
   
   observeEvent(input$startday_btn, {
+    if (vals$day == 0) {
+      vals$day <- 1
+    }
     # Get the values from the textInputs
     B1_make <- as.integer(input$B1choice)
     B2_make <- as.integer(input$B2choice)
@@ -397,35 +405,40 @@ server <- function(input, output, session){
   })
   
   observeEvent(input$endday_btn, {
-    r_order <- as.integer(input$r_order)
-    c_order <- as.integer(input$c_order)
-    b_order <- as.integer(input$b_order)
-    staff_hire <- as.integer(input$staff_hire)
-    staff_fire <- as.integer(input$staff_fire)
-    
-    if(is.numeric(r_order) && is.numeric(c_order) && is.numeric(b_order) && is.numeric(staff_fire) && is.numeric(staff_hire)){ #need fix
-      if(min(staff_fire, staff_hire) == 0){
-        if((as.numeric(vals$manpower + staff_hire - staff_fire) >= 0)){
-          staff_total <- as.numeric(vals$manpower) + staff_hire - staff_fire
-          enddaycost <- r_order*1 + c_order*0.5 + b_order*0.1 + staff_total*10
-          if(enddaycost > as.numeric(vals$cashbal)){
-            showModal(errorModal("Not enough money to do purchase."))
-          } else {
-            vals$manpower <- as.numeric(vals$manpower) + staff_hire - staff_fire
-            vals$capacity <- as.numeric(vals$manpower)*5 + 5
-            vals$eodOrdered <- updateEodOrdered(vals$day, vals$eodOrdered, r_order, c_order, b_order, vals$manpower)
-            vals$flowersInventory <- updateFlowersInvStart(vals$day, vals$flowersInventory, vals$eodOrdered)
-            vals$cost <- calculateCost(vals$day, vals$eodOrdered)
-            vals$day <- vals$day+1
-            actdemand <- getDemandEachDay(vals$day, vals$playerid)
-            vals$actual_demand <- c(actdemand[[1]], actdemand[[2]], actdemand[[3]], actdemand[[4]], actdemand[[5]], actdemand[[6]])
-            vals$total_orders <- sum(as.numeric(vals$actual_demand))
-            vals$flowers_left <- c(vals$eodOrdered[vals$day, "F1"], vals$eodOrdered[vals$day, "F2"], vals$eodOrdered[vals$day, "F3"])
-            vals$flowers_exp <- c(vals$flowersInventory[vals$day+1, "F1e"], vals$flowersInventory[vals$day+1, "F2e"], vals$flowersInventory[vals$day+1, "F3e"])
-            #print("eodOrdered")
-            #print(vals$eodOrdered)
-            #print("flowers Inventory")
-            #print(vals$flowersInventory)
+    if (vals$day == 31) {
+      vals$day <- 0
+      updateTabsetPanel(session, "flowerPages", "StartingPage")
+      removeModal()
+    } else {
+      r_order <- as.integer(input$r_order)
+      c_order <- as.integer(input$c_order)
+      b_order <- as.integer(input$b_order)
+      staff_hire <- as.integer(input$staff_hire)
+      staff_fire <- as.integer(input$staff_fire)
+      
+      if(is.numeric(r_order) && is.numeric(c_order) && is.numeric(b_order) && is.numeric(staff_fire) && is.numeric(staff_hire)){ #need fix
+        if(min(staff_fire, staff_hire) == 0){
+          if((as.numeric(vals$manpower + staff_hire - staff_fire) >= 0)){
+            staff_total <- as.numeric(vals$manpower) + staff_hire - staff_fire
+            enddaycost <- r_order*1 + c_order*0.5 + b_order*0.1 + staff_total*10
+            if(enddaycost > as.numeric(vals$cashbal)){
+              showModal(errorModal("Not enough money to do purchase."))
+            } else {
+              vals$manpower <- as.numeric(vals$manpower) + staff_hire - staff_fire
+              vals$capacity <- as.numeric(vals$manpower)*5 + 5
+              vals$eodOrdered <- updateEodOrdered(vals$day, vals$eodOrdered, r_order, c_order, b_order, vals$manpower)
+              vals$flowersInventory <- updateFlowersInvStart(vals$day, vals$flowersInventory, vals$eodOrdered)
+              vals$cost <- calculateCost(vals$day, vals$eodOrdered)
+              vals$day <- vals$day+1
+              actdemand <- getDemandEachDay(vals$day, vals$playerid)
+              vals$actual_demand <- c(actdemand[[1]], actdemand[[2]], actdemand[[3]], actdemand[[4]], actdemand[[5]], actdemand[[6]])
+              vals$total_orders <- sum(as.numeric(vals$actual_demand))
+              vals$flowers_left <- c(vals$eodOrdered[vals$day, "F1"], vals$eodOrdered[vals$day, "F2"], vals$eodOrdered[vals$day, "F3"])
+              vals$flowers_exp <- c(vals$flowersInventory[vals$day+1, "F1e"], vals$flowersInventory[vals$day+1, "F2e"], vals$flowersInventory[vals$day+1, "F3e"])
+              #print("eodOrdered")
+              #print(vals$eodOrdered)
+              #print("flowers Inventory")
+              #print(vals$flowersInventory)
             # Close the modal after saving
             removeModal()
             showModal(startgameModal())
@@ -438,9 +451,10 @@ server <- function(input, output, session){
       }
     } else {
       showModal(errorModal("Please input integers only")) #need render?
-    }
-    
-  })
+          print("You cannot fire and hire at the same time") #need render?
+        }
+      } 
+    })
   
   # Render the table output
   output$flowExpOutput <- renderTable({
@@ -513,5 +527,4 @@ server <- function(input, output, session){
   output$cashBal <- renderText({
     paste(vals$cashbal)
   })
-  
 }

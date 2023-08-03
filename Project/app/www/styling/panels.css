@@ -56,6 +56,15 @@
   height: auto;
   cursor: pointer;
 }
+#dateofmay {
+  position: absolute;
+  top: 15px;
+  left: 94.5%;
+  z-index: 5;
+  font-size: 30px;
+  font-weight: bold;
+  font-family: "Avenir", sans-serif;
+}
 
 #resetGame {
   height: auto;
