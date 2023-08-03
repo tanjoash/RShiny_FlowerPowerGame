@@ -39,18 +39,82 @@ server <- function(input, output, session){
   
   
   output$username <- renderText({
-    #if(is.null(vals$username)){
-    #  paste("Please Login or Register")
-    #} else {
-    #  paste("Welcome", vals$username)
-    #}
-    paste("Hello world")
+    if(is.null(vals$username)){
+      paste("Please Login or Register")
+    } else {
+      paste("Welcome", vals$username)
+    }
+  })
+  
+  observeEvent(input$gotoregister, {
+    showModal(registerModal())
+  })
+  
+  observeEvent(input$login, {
+    showModal(loginModal())
+  })
+  
+  observeEvent(input$loginok, {
+    if(is.na(input$usernameInput) || input$usernameInput == '' || is.na(input$password3) || input$password3 == ''){
+      showModal(loginModal(empty = TRUE, failed = FALSE))
+    } else {
+      userid <- getuserid(input$usernameInput, input$password3)
+      print(userid)
+      if(userid>0){
+        vals$userid <- userid
+        vals$username <- input$usernameInput
+        showModal(successModal("Login Successful!"))
+      } else {
+        showModal(loginModal(empty = FALSE, failed = TRUE))
+      }
+    }
+    
+  })
+
+  
+  observeEvent(input$register, {
+    showModal(registerModal())
+  })
+  
+  observeEvent(input$registerok, {
+    users <- uniqueUsers()
+    if (is.na(input$usernameInput) || input$usernameInput == ''){
+      showModal(registerModal(empty = TRUE, repetition = FALSE, validatepw = FALSE))
+    } else {
+      users <- uniqueUsers()
+      if(input$usernameInput %in% users$username){
+        showModal(registerModal(empty = FALSE, repetition = TRUE, validatepw = FALSE))
+      } else {
+        if(is.na(input$password1) || is.na(input$password2) || input$password1 == '' || input$password2 == '' || (input$password1 != input$password2)){
+          showModal(registerModal(empty = FALSE, repetition = FALSE, validatepw = TRUE))
+        } else {
+          registerPlayer(input$usernameInput, input$password1)
+          showModal(successModal("Successfully registered! You may proceed to Login."))
+        }
+      }
+    }
+  })
+  
+  output$loginPlaceholder <- renderUI({
+    if(is.null(vals$userid)){
+      actionButton("login", "Login")
+    } else {
+      actionButton("logout", "Logout")
+    }
+  })
+  
+  observeEvent(input$logout, {
+    vals$userid <- NULL
+    vals$username <- NULL
+  })
+  
+  output$playButtonPlaceholder <- renderUI({
+    if(vals$userid > 0){
+      actionButton("playButton", "Play")
+    }
   })
   
   #placeholder list
-  nextdaydemand <- c(1,2,3,4,5,6)
-  actual_demand <- (c(6,5,4,3,2,1))
-  bouquets_made <- c(8,7,6,5,4,3)
   player_name <- c("Penis0", "Penis1", "Penis2", "Penis3", "Penis4", "Penis5")   
   player_score <- c("0", "1", "2", "3", "4", "5") 
   
@@ -118,12 +182,12 @@ server <- function(input, output, session){
   # Get Seed
   observeEvent(input$playButton, {
     vals$playerid <- playerID() # need to change and get latest playerid
-    print(vals$playerid)
     vals$demand_forecast <- c(forecastB1[vals$day+1], forecastB2[vals$day+1], forecastB3[vals$day+1], forecastB4[vals$day+1], forecastB5[vals$day+1], forecastB6[vals$day+1])
     vals$eodOrdered <- createEodOrdered()
     vals$bouquetsInventory <- createBouquetsInventory()
     vals$flowersInventory <- createFlowersInventory()
     vals$ordersFulfilled <- createOrdersFulfilled()
+<<<<<<< Updated upstream
     #if (!is.null(input$playername) && input$playername != "") {
     # regexNumber <- "^[0-9]+$"
     # if (grepl(regexNumber, input$seedNumber)) { 
@@ -131,18 +195,22 @@ server <- function(input, output, session){
     updateTabsetPanel(session, "flowerPages", "SecondPage")
     if (vals$day == 0){
       showModal(startgameModal())
+=======
+    regexNumber <- "^[0-9]+$"
+    if (grepl(regexNumber, input$seedNumber)) { 
+      setSeed(vals$username, as.integer(vals$userid), as.integer(input$seedNumber))
+      updateTabsetPanel(session, "flowerPages", "SecondPage")
+      showModal(enddayModal())
+    } else if (is.na(input$seedNumber) || input$seedNumber == '') {
+      setSeed(vals$username, as.integer(vals$userid))
+      updateTabsetPanel(session, "flowerPages", "SecondPage")
+      showModal(enddayModal())
+    } else {
+      # DO SOMETHING IF NOT MET
+      showModal(errorModal("Not a Positive Integer."))
+>>>>>>> Stashed changes
     }
-    # } else if (!is.null(input$seedNumber)) {
-    #   setSeed(input$playerName)
-    #   updateTabsetPanel(session, "flowerPages", "SecondPage")
-    # } else {
-    #   # DO SOMETHING IF NOT MET
-    #   showModal(errorModal("Not a Positive Integer."))
-    # }
-    #} else {
-    # showModal(errorModal("Player name is empty!"))
-    #}
-    #showModal(startgameModal())
+
     
     ### Number Output for Start Game Modal ###
     #Inventory for Start Game Modal 

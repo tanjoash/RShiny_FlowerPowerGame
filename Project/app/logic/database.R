@@ -16,7 +16,7 @@ getAWSConnection <- function(){
   conn
 }
 
-uploadDemand <- function(d1,d2,d3,d4,d5,d6, playerName, seed){
+uploadDemand <- function(d1,d2,d3,d4,d5,d6, playerName, seed, userid){
   conn <- getAWSConnection()
   initialiseTable(conn)
   uploadB1(conn,d1)
@@ -25,7 +25,7 @@ uploadDemand <- function(d1,d2,d3,d4,d5,d6, playerName, seed){
   uploadB4(conn,d4)
   uploadB5(conn,d5)
   uploadB6(conn,d6)
-  initialiseNameSeed(conn, playerName, seed)
+  initialiseNameSeed(conn, playerName, userid, seed)
   dbDisconnect(conn)
 }
 
@@ -63,5 +63,25 @@ playerID <- function(){
 getLeaderBoard <- function(){
   conn <- getAWSConnection()
   # DO SQL FN TO GET TOP 10
+  dbDisconnect(conn)
+}
+
+uniqueUsers <- function(){
+  conn <- getAWSConnection()
+  result <- getUniqueUsers(conn)
+  dbDisconnect(conn)
+  result
+}
+
+getuserid <- function(username, password){
+  conn <- getAWSConnection()
+  result <- getuseridfromdb(conn, username, password)
+  dbDisconnect(conn)
+  result
+}
+
+registerPlayer <- function(username, password){
+  conn <- getAWSConnection()
+  register(conn, username, password)
   dbDisconnect(conn)
 }

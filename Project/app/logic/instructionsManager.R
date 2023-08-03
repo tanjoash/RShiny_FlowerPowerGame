@@ -12,18 +12,20 @@ instructionsModal <- function() {
 }
 
 ## Modal for register ##
-registerModal <- function(repetition = FALSE, validatepw = FALSE) {
+registerModal <- function(empty = FALSE, repetition = FALSE, validatepw = FALSE) {
   modalDialog(
     title = "Create a user",
-    textInput("username", "Enter a username:"),
+    textInput("usernameInput", "Enter a username:"),
     passwordInput("password1", "Enter a new password:"),
     passwordInput("password2", "Confirm new password:"),
-    "If successful #do something.",
     if (repetition){
       div(tags$b("Username is taken already", style = "color: red;"))
     },
     if (validatepw){
       div(tags$b("Please double check your password", style = "color: red;"))
+    },
+    if(empty){
+      div(tags$b("Username is empty", style = "color: red;"))
     },
     footer = tagList(
       modalButton("Cancel"),
@@ -32,15 +34,19 @@ registerModal <- function(repetition = FALSE, validatepw = FALSE) {
   )
 }
 
-loginModal <- function(failed = FALSE) {
+loginModal <- function(empty = FALSE, failed = FALSE) {
   modalDialog(
     title = "Login",
-    textInput("playername", "Enter your assigned Player Name", "FrostyFuzzyPickle"),
+    textInput("usernameInput", "Enter your assigned username:"),
     passwordInput("password3", "Enter your password:"),
+    if(empty){
+      div(tags$b("One of the inputs may be empty, please check again."))
+    },
     if (failed)
-      div(tags$b("There is no registered player with that name and password. Try again or re-register.", style = "color: red;")),
+      div(tags$b("There is no registered player with that name and password. Try again or register using the Register button below.", style = "color: red;")),
     footer = tagList(
       modalButton("Cancel"),
+      actionButton("gotoregister", "Register"),
       actionButton("loginok", "Login")
     )
   )
@@ -49,6 +55,13 @@ loginModal <- function(failed = FALSE) {
 errorModal <- function(text){
   modalDialog(
     title = "Error!",
+    text
+  )
+}
+
+successModal <- function(text){
+  modalDialog(
+    title = "Success!",
     text
   )
 }

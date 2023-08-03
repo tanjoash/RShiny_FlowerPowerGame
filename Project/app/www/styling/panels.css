@@ -10,6 +10,23 @@
 #username{
   position: absolute;
   z-index: 5;
+  top: 10px;
+  right: 2%;
+  font-size: 20px;
+}
+
+#login, #logout{
+  position: absolute;
+  z-index: 3;
+  top: 40px;
+  right: 10%;
+}
+
+#register{
+  position: absolute;
+  z-index: 3;
+  top: 40px;
+  right: 2%;
 }
 
 #gameLogo {

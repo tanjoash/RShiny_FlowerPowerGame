@@ -12,11 +12,14 @@ ui <- shinyUI(fillPage(
       img(id="startScreen", src="assets/startScreen.png"),
       img(id="gameLogo", src="assets/gameLogo.png"),
       textOutput("username"),
+      uiOutput("loginPlaceholder"),
+      #actionButton("login", "Login"),
+      actionButton("register", "Register"),
       actionButton("instructions", "Instructions"),
-      actionButton("playButton", "Play"),
-      textInput("playerName", ""),
-      textInput("seedNumber", ""),
-      tags$p("Name:", class = "name-text-class"),
+      uiOutput("playButtonPlaceholder"),
+      #textInput("playerName", ""),
+      textInput("seedNumber", "", placeholder="Optional"),
+      #tags$p("Name:", class = "name-text-class"),
       tags$p("Seed:", class = "seed-text-class")
       ),
     tabPanelBody(
