@@ -1,7 +1,7 @@
 # RShiny_FlowerPowerGame by Team 04
 
 ## About
-Welcome to the captivating world of Flower Power, a mesmerizing simulation game that puts you in charge of managing your very own floral empire. Prepare to embark on an exciting journey where you'll immerse yourself in the art of nurturing beautiful blooms while mastering the delicate balance of supply and demand.
+Welcome to the captivating world of Flower Power, a mesmerizing simulation game that puts you in charge of managing your very own floral empire. Prepare to embark on an exciting journey where you'll immerse yourself in the art of nurturing beautiful blooms while mastering the delicate balance of supply and demand. This project/game if for the modules 40.014 Engineering Systems Architecture and 40.012 Manufacturing and Service Operations for the year 2023.
 
 ### Background information
 You have just opened a small floral business and have to make strategic decisions amidst changing demand and sudden surges on special occasions to maximise your profits. From choosing your reorder quantity of flowers and manpower to deciding which bouquets to make, you will have to juggle between inventory management and manpower, while being mindful that your flowers perish in just two days upon arrival. While you can strategize using the demand forecast, the randomly generated demand ensures a unique experience each time and challenges your ability to think fast and adapt. Compete with your friends to claim your place at the top of the leaderboard with the highest cash balance left at the end of the game!
