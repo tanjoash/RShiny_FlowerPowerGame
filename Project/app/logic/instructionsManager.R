@@ -89,7 +89,7 @@ month_fcModal <- function(){
   modalDialog(
     id = "month-fc-modal",
     plotlyOutput("line_chart"),
-    title = "Montly Forecast",
+    title = "Monthly Forecast",
     actionButton("fc_B1", "Bouquet 1"),
     actionButton("fc_B2", "Bouquet 2"),
     actionButton("fc_B3", "Bouquet 3"),

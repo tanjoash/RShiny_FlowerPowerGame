@@ -31,7 +31,7 @@ ui <- shinyUI(fillPage(
       textOutput("cashBal"),
       textOutput("dateofmay"),
       img(id="dayButton", src="assets/DayButton 2.png"),
-      img(id="leaderboard_btn", src="assets/reset button.png"),
+      img(id="leaderboard_btn", src="assets/Leaderboard button.png"),
       img(id="endDay", src="assets/End of day button.png")
       )
   )

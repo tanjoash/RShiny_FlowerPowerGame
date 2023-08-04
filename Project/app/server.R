@@ -191,13 +191,12 @@ server <- function(input, output, session){
   updatePageContent <- function() {
     output$page_content <- renderUI({
       switch(instructPage(),
-             "1" = img(id="instruct_1", src="assets/Instructions pg1.png", width = "570px"),
-             "2" = img(id="instruct_2", src="assets/Instructions pg2.png", width = "570px"),
-             "3" = img(id="instruct_3", src="assets/Instructions pg3.png", width = "570px"),
-             # "4" = img(id="instruct_4", src=""),
-             "4" = p("hi"),
-             "5" = img(id="instruct_5", src="assets/Instructions pg5.png", width = "570px"),
-             "6" = img(id="instruct_6", src="assets/Instructions pg6.png", width = "570px")
+             "1" = img(id="instruct_1", src="assets/instructions 1.png", width = "570px"),
+             "2" = img(id="instruct_2", src="assets/instructions 2.png", width = "570px"),
+             "3" = img(id="instruct_3", src="assets/instructions 3.png", width = "570px"),
+             "4" = img(id="instruct_4", src="assets/instructions 4.png", width = "570px"),
+             "5" = img(id="instruct_5", src="assets/instructions 5.png", width = "570px"),
+             "6" = img(id="instruct_6", src="assets/instructions 6.png", width = "570px")
       )
     })
   }
@@ -705,17 +704,19 @@ server <- function(input, output, session){
   })
   
   # Create matrix for leaderboard    
-  matrix_leaderboard <- reactive({
-    paste_vals <- paste(vals$leaderboardName, ":", vals$leaderboardScore)
-    matrix(paste_vals, nrow = length(vals$leaderboardName), byrow = TRUE)
-  })
-    
-  # Render Leaderboard Table   
+  rank_prefix <- c("👑","2️⃣","3️⃣","4️⃣","5️⃣")
+  leaderboard_data <- reactive({
+    data.frame(
+      Rank = rank_prefix,
+      Name = vals$leaderboardName[1:5],
+      Score = vals$leaderboardScore[1:5]
+    ) 
+  })  
+  # Render Leaderboard Table    
   output$score_leaderboardTitle <- renderText({
-    paste("Leaderboard")
-  })
-  output$scoreLeaderboard <- renderTable({
-    matrix_leaderboard()}, include.rownames = FALSE, include.colnames = FALSE)
+    paste("LeaderBoard 🎉 ") }) 
+  output$scoreLeaderboard <- renderTable({   
+    leaderboard_data()}, include.rownames = FALSE, include.colnames = TRUE) 
   
   output$cashBal <- renderText({
     round(vals$cashbal, digits = 2)
@@ -735,9 +736,9 @@ server <- function(input, output, session){
   output$flowLeftfinish <- renderTable({
     matrix_fleft()
   }, include.rownames = FALSE, include.colnames = FALSE)
-  output$final_leaderboard_title <- renderText({"Leaderboard"})
+  output$final_leaderboard_title <- renderText({"Leaderboard 🎉"})
   output$final_leaderboard <- renderTable({
-    matrix_leaderboard()}, include.rownames = FALSE, include.colnames = FALSE)
+    leaderboard_data()}, include.rownames = FALSE, include.colnames = TRUE)
   output$thanks <-renderText({"Thank You For Playing!"})
   
   #button to close/refresh the game
