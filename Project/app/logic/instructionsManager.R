@@ -40,7 +40,7 @@ loginModal <- function(empty = FALSE, failed = FALSE) {
     textInput("usernameInput", "Enter your assigned username:"),
     passwordInput("password3", "Enter your password:"),
     if(empty){
-      div(tags$b("One of the inputs may be empty, please check again."))
+      div(tags$b("One of the inputs may be empty, please check again.", style = "color: red;"))
     },
     if (failed)
       div(tags$b("There is no registered player with that name and password. Try again or register using the Register button below.", style = "color: red;")),
@@ -59,6 +59,8 @@ errorModal <- function(text, startday = FALSE){
     footer = tagList(
       if(startday){
         actionButton("startdayagain", "Try Again")
+      } else {
+        actionButton("btn_close", "Dismiss")
       }
     )
   )
@@ -390,6 +392,25 @@ revenueModal <- function(){
     )
   )
 }
+
+gameoverModal <- function(){
+  modalDialog(
+    id = "gameover-modal",
+    div(
+      textOutput("gameover_title"),
+      textOutput("gameover_text"),
+      tableOutput("flowLeftfinish"),
+      textOutput("final_leaderboard_title"),
+      tableOutput("final_leaderboard"),
+      textOutput("thanks")
+    ),
+    footer = tagList(
+      actionButton("restartGame", "Play Again"),
+      actionButton("byebye", "Close Game")
+    )
+  )
+}
+
 gamefinishModal <- function(){
   modalDialog(
     id = "finish-game-modal",

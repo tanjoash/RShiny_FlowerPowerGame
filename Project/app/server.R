@@ -36,7 +36,8 @@ server <- function(input, output, session){
                          leaderboardScore = c(0, 0, 0, 0, 0),
                          df_revenue = NULL,
                          df_cost = NULL,
-                         df_cashbal = NULL
+                         df_cashbal = NULL,
+                         order_price = 0
                          )
   
   ## Login logic ##
@@ -64,7 +65,6 @@ server <- function(input, output, session){
       showModal(loginModal(empty = TRUE, failed = FALSE))
     } else {
       userid <- getuserid(input$usernameInput, input$password3)
-      print(userid)
       if(userid>0){
         vals$userid <- userid
         vals$username <- input$usernameInput
@@ -124,10 +124,6 @@ server <- function(input, output, session){
     vals$df_revenue <- result[1,2:33]
     vals$df_cost <- result[1,35:66]
     vals$df_cashbal <- result[1,68:99]
-    print(vals$df_revenue)
-    print(vals$df_cost)
-    print(vals$df_cashbal)
-    print(length(vals$df_revenue))
     showModal(cash_balmenuModal())
     })
   shinyjs::onclick("cash_bal", showModal(cash_balModal()))
@@ -277,13 +273,20 @@ server <- function(input, output, session){
   shinyjs::onclick("dayButton", showModal(cal_menuModal()))
   shinyjs::onclick("inventoryButton", showModal(inventoryModal()))
   shinyjs::onclick("endDay", {
-    if(vals$day != 31){
-      showModal(enddayModal())
-    } else {
+    if(vals$cashbal < 0.50 && vals$flowers_left[1] < 3 && vals$flowers_left[2] < 3 && vals$flowers_left[3] < 5){
       result <- displayLeaderboard()
       vals$leaderboardName <- c(result[,1])
       vals$leaderboardScore <- c(result[,2])
-      showModal(gamefinishModal())
+      showModal(gameoverModal())
+    } else {
+      if(vals$day != 31){
+        showModal(enddayModal())
+      } else {
+        result <- displayLeaderboard()
+        vals$leaderboardName <- c(result[,1])
+        vals$leaderboardScore <- c(result[,2])
+        showModal(gamefinishModal())
+      }
     }
   })
   shinyjs::onclick("orderButton", showModal(order_fulfilmentModal()))
@@ -327,18 +330,18 @@ server <- function(input, output, session){
     B6_make <- as.integer(input$B6choice)
     if(is.numeric(B1_make) && is.numeric(B2_make) && is.numeric(B3_make) && is.numeric(B4_make) && is.numeric(B5_make) && is.numeric(B6_make)){
       total_f1 <- as.numeric(vals$flowers_left[1]) + as.numeric(vals$flowers_exp[1])
-      print(paste("total_f1", total_f1))
+      #print(paste("total_f1", total_f1))
       total_f2 <- as.numeric(vals$flowers_left[2]) + as.numeric(vals$flowers_exp[2])
-      print(paste("total_f2", total_f2))
+      #print(paste("total_f2", total_f2))
       total_f3 <- as.numeric(vals$flowers_left[3]) + as.numeric(vals$flowers_exp[3])
-      print(paste("total_f3", total_f3))
+      #print(paste("total_f3", total_f3))
       
       used_f1 <- 3*as.numeric(B1_make) + 3*as.numeric(B2_make) + 5*as.numeric(B4_make)
-      print(paste("used_f1", used_f1))
+      #print(paste("used_f1", used_f1))
       used_f2 <- 3*as.numeric(B1_make) + 3*as.numeric(B3_make) + 5*as.numeric(B5_make)
-      print(paste("used_f2", used_f2))
+      #print(paste("used_f2", used_f2))
       used_f3 <- 5*as.numeric(B2_make) + 5*as.numeric(B3_make) + 10*as.numeric(B6_make)
-      print(paste("used_f3", used_f3))
+      #print(paste("used_f3", used_f3))
       
       total_bouquets_made <- B1_make + B2_make + B3_make + B4_make + B5_make + B6_make
       
@@ -400,17 +403,16 @@ server <- function(input, output, session){
                                                         as.numeric(vals$orders_fulfilled[5]),
                                                         as.numeric(vals$orders_fulfilled[6]),
                                                         vals$ordersFulfilled)
-          print("orders fulfilled")
-          print(vals$ordersFulfilled)
           
           vals$revenue <- calculateRevenue(vals$day, vals$ordersFulfilled)
           vals$cashbal <- calculateCashBal(vals$cost, vals$revenue, vals$cashbal)
           uploadValues(vals$day, vals$cashbal, vals$cost, vals$revenue, vals$playerid)
           vals$profit <- vals$revenue - vals$cost
           
+          
           # Update demand forecast for next day
           vals$demand_forecast <- c(forecastB1[vals$day+1], forecastB2[vals$day+1], forecastB3[vals$day+1], forecastB4[vals$day+1], forecastB5[vals$day+1], forecastB6[vals$day+1])
-          
+            
           # Close the modal after saving
           removeModal()
         } else {
@@ -576,7 +578,9 @@ server <- function(input, output, session){
           if((as.numeric(vals$manpower + staff_hire - staff_fire) >= 0)){
             staff_total <- as.numeric(vals$manpower) + staff_hire - staff_fire
             enddaycost <- r_order*1 + c_order*0.5 + b_order*0.1 + staff_total*10
-            if(enddaycost > as.numeric(vals$cashbal)){
+            print(enddaycost)
+            print(vals$cashbal)
+            if(enddaycost > (vals$cashbal+0.01)){
               showModal(errorModal("Not enough money to do purchase."))
             } else {
               vals$manpower <- as.numeric(vals$manpower) + staff_hire - staff_fire
@@ -607,7 +611,7 @@ server <- function(input, output, session){
     } else {
       showModal(errorModal("Please input integers only"))
         }
-    })
+  })
   
   # Render the table output
   output$flowExpOutput <- renderTable({
@@ -663,7 +667,16 @@ server <- function(input, output, session){
     paste("B6:", vals$demand_forecast[6])
   })
   output$staffno <- renderText({vals$manpower})
-  output$pricecalc <- renderText({paste("Price: $", vals$calculator_vals[1]+vals$calculator_vals[2]*0.5+vals$calculator_vals[3]*0.1)})
+  
+  observeEvent({input$r_order
+    input$c_order
+    input$b_order
+    input$staff_hire
+    input$staff_fire}, {
+    vals$order_price <- as.numeric(input$r_order)+as.numeric(input$c_order)*0.5+as.numeric(input$b_order)*0.1+as.numeric(vals$manpower)*10+as.numeric(input$staff_hire)*10-as.numeric(input$staff_fire)*10
+  })
+  
+  output$pricecalc <- renderText({paste("Price: $", vals$order_price)})
   
   ### Number Output for Order Fulfilment Modal ###      
   output$order_fulfilmentTitle <- renderText({paste("Order Fulfilment")})   
@@ -705,11 +718,15 @@ server <- function(input, output, session){
     matrix_leaderboard()}, include.rownames = FALSE, include.colnames = FALSE)
   
   output$cashBal <- renderText({
-    paste(vals$cashbal)
+    round(vals$cashbal, digits = 2)
   })
   
+  #game over modal
+  output$gameover_title <- renderText({"Game Over!"})
+  output$gameover_text <- renderText({"You have not enough money and flowers to continue playing. Good luck next time!"})
+  
   #finish game modal
-  output$finish_title <- renderText({"GAME OVER"})
+  output$finish_title <- renderText({"Congratulations!"})
   output$finalstat_title <- renderText({"Final day stats:"})
   output$final_cashbal <- renderText({ paste("Cash Balance & Final Score: ", vals$cashbal)})
   output$final_manpower <-renderText({paste("Number of Staff: ", vals$manpower)})
