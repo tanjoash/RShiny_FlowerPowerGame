@@ -42,3 +42,5 @@ Instructions can be found within the game at the starting menu.
    - CSS
    - Frontend logic
 
+## Acknowledgements
+We would like to thank Professor Peter Jackson, Professor Lingjie Duan and Professor Francisco Benita for their guidance teaching us MSO and ESA concepts. Without their guidance and support, this project and game would not have been possible.
