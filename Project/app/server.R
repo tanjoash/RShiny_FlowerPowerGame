@@ -33,7 +33,10 @@ server <- function(input, output, session){
                          flowersInventory = NULL,
                          ordersFulfilled = NULL,
                          leaderboardName = c("", "", "", "", ""),
-                         leaderboardScore = c(0, 0, 0, 0, 0)
+                         leaderboardScore = c(0, 0, 0, 0, 0),
+                         df_revenue = NULL,
+                         df_cost = NULL,
+                         df_cashbal = NULL
                          )
   
   ## Login logic ##
@@ -116,11 +119,34 @@ server <- function(input, output, session){
     }
   })
   
-  shinyjs::onclick("cashbal_btn", showModal(cash_balmenuModal()))
+  shinyjs::onclick("cashbal_btn", {
+    result <- RevCostCash(as.numeric(vals$playerid))
+    vals$df_revenue <- result[1,2:33]
+    vals$df_cost <- result[1,35:66]
+    vals$df_cashbal <- result[1,68:99]
+    print(vals$df_revenue)
+    print(vals$df_cost)
+    print(vals$df_cashbal)
+    print(length(vals$df_revenue))
+    showModal(cash_balmenuModal())
+    })
   shinyjs::onclick("cash_bal", showModal(cash_balModal()))
   shinyjs::onclick("cost", showModal(costModal()))
   shinyjs::onclick("revenue", showModal(revenueModal()))
   shinyjs::onclick("back_btn_cb", {showModal(cash_balmenuModal())})
+  
+  output$cashbal_plot <- renderPlotly({
+    plot_ly(x = seq(0,vals$day,1), y = unlist(vals$df_cashbal[,1:(vals$day+1)]), type = "scatter", mode = "lines") %>%
+      layout(xaxis = list(title = "Day", tickvals = seq(0,vals$day,1), tickmode="array", ticktext=as.character(seq(0,vals$day,1))), yaxis = list(title = "Cash Balance"))
+  })
+  output$revenue_plot <- renderPlotly({
+    plot_ly(x = seq(0,vals$day,1), y = unlist(vals$df_revenue[,1:(vals$day+1)]), type = "scatter", mode = "lines") %>%
+      layout(xaxis = list(title = "Day", tickvals = seq(0,vals$day,1), tickmode="array", ticktext=as.character(seq(0,vals$day,1))), yaxis = list(title = "Revenue"))
+  })
+  output$cost_plot <- renderPlotly({
+    plot_ly(x = seq(0,vals$day,1), y = unlist(vals$df_cost[,1:(vals$day+1)]), type = "scatter", mode = "lines") %>%
+      layout(xaxis = list(title = "Day", tickvals = seq(0,vals$day,1), tickmode="array", ticktext=as.character(seq(0,vals$day,1))), yaxis = list(title = "Cost"))
+  })
   
   #date output
   output$dateofmay <- renderText({
@@ -196,9 +222,8 @@ server <- function(input, output, session){
     } else if (is.na(input$seedNumber) || input$seedNumber == '') {
       setSeed(vals$username, as.integer(vals$userid))
       updateTabsetPanel(session, "flowerPages", "SecondPage")
-      showModal(startgameModal())
+      showModal(enddayModal())
     } else {
-      # DO SOMETHING IF NOT MET
       showModal(errorModal("Not a Positive Integer."))
     }
 
@@ -251,7 +276,16 @@ server <- function(input, output, session){
   
   shinyjs::onclick("dayButton", showModal(cal_menuModal()))
   shinyjs::onclick("inventoryButton", showModal(inventoryModal()))
-  shinyjs::onclick("endDay", showModal(enddayModal()))
+  shinyjs::onclick("endDay", {
+    if(vals$day != 31){
+      showModal(enddayModal())
+    } else {
+      result <- displayLeaderboard()
+      vals$leaderboardName <- c(result[,1])
+      vals$leaderboardScore <- c(result[,2])
+      showModal(gamefinishModal())
+    }
+  })
   shinyjs::onclick("orderButton", showModal(order_fulfilmentModal()))
   shinyjs::onclick("leaderboard_btn", {
     result <- displayLeaderboard()
@@ -281,9 +315,9 @@ server <- function(input, output, session){
     })
   
   observeEvent(input$startday_btn, {
-    if (vals$day == 0) {
-      vals$day <- 1
-    }
+    #if (vals$day == 0) {
+    #  vals$day <- 1
+    #}
     # Get the values from the textInputs
     B1_make <- as.integer(input$B1choice)
     B2_make <- as.integer(input$B2choice)
@@ -380,13 +414,13 @@ server <- function(input, output, session){
           # Close the modal after saving
           removeModal()
         } else {
-          showModal(errorModal("Not enough flowers to make bouquets."))
+          showModal(errorModal("Not enough flowers to make bouquets.", startday = TRUE))
         }
       } else {
-        showModal(errorModal("Not enough manpower to make bouquets."))
+        showModal(errorModal("Not enough manpower to make bouquets.", startday = TRUE))
       }
     } else {
-      showModal(errorModal("Input was not an integer value."))
+      showModal(errorModal("Input was not an integer value.", startday = TRUE))
     }
     #values$makeB1 <- ifelse(input$B1choice == "", 0, input$B1choice)
     #values$makeB2 <- ifelse(input$B2choice == "", 0, input$B2choice)
@@ -397,6 +431,11 @@ server <- function(input, output, session){
     
    
 
+  })
+  
+  observeEvent(input$startdayagain, {
+    removeModal()
+    showModal(startgameModal())
   })
   
   #calendar menu prompt
@@ -425,6 +464,48 @@ server <- function(input, output, session){
   output$nextday_modal_title <- renderText({
     paste("Tomorrow's Demand")
   })
+  
+  output$line_chart <- renderPlotly({
+    plot_ly(x = forecastday, y = forecastB1, type = "scatter", mode = "lines") %>%
+      layout(xaxis = list(title = "Forecast Day"), yaxis = list(title = "Forecast B1"))
+  })
+  observeEvent(input$fc_B1, {
+    output$line_chart <- renderPlotly({
+      plot_ly(x = forecastday, y = forecastB1, type = "scatter", mode = "lines") %>%
+        layout(xaxis = list(title = "Forecast Day"), yaxis = list(title = "Forecast B1"))
+    })
+  })
+  observeEvent(input$fc_B2, {
+    output$line_chart <- renderPlotly({
+      plot_ly(x = forecastday, y = forecastB2, type = "scatter", mode = "lines") %>%
+        layout(xaxis = list(title = "Forecast Day"), yaxis = list(title = "Forecast B2"))
+    })
+  })
+  observeEvent(input$fc_B3, {
+    output$line_chart <- renderPlotly({
+      plot_ly(x = forecastday, y = forecastB3, type = "scatter", mode = "lines") %>%
+        layout(xaxis = list(title = "Forecast Day"), yaxis = list(title = "Forecast B3"))
+    })
+  })
+  observeEvent(input$fc_B4, {
+    output$line_chart <- renderPlotly({
+      plot_ly(x = forecastday, y = forecastB4, type = "scatter", mode = "lines") %>%
+        layout(xaxis = list(title = "Forecast Day"), yaxis = list(title = "Forecast B4"))
+    })
+  })
+  observeEvent(input$fc_B5, {
+    output$line_chart <- renderPlotly({
+      plot_ly(x = forecastday, y = forecastB5, type = "scatter", mode = "lines") %>%
+        layout(xaxis = list(title = "Forecast Day"), yaxis = list(title = "Forecast B5"))
+    })
+  })
+  observeEvent(input$fc_B6, {
+    output$line_chart <- renderPlotly({
+      plot_ly(x = forecastday, y = forecastB6, type = "scatter", mode = "lines") %>%
+        layout(xaxis = list(title = "Forecast Day"), yaxis = list(title = "Forecast B6"))
+    })
+  })
+  
   ### Number output for Inventory Modal ###
   #output text for the diff values
   output$B1Exp <- renderText({
@@ -484,10 +565,6 @@ server <- function(input, output, session){
   })
   
   observeEvent(input$endday_btn, {
-    if (vals$day == 31) {
-      vals$day <- 0
-      showModal(gamefinishModal())
-    } else {
       r_order <- as.integer(input$r_order)
       c_order <- as.integer(input$c_order)
       b_order <- as.integer(input$b_order)
@@ -525,13 +602,11 @@ server <- function(input, output, session){
           showModal(errorModal("You cannot fire more than the number of people you have"))
         }
       } else {
-        showModal(errorModal("You cannot fire and hire at the same time")) #need render?
+        showModal(errorModal("You cannot fire and hire at the same time"))
       }
     } else {
-      showModal(errorModal("Please input integers only")) #need render?
-          print("You cannot fire and hire at the same time") #need render?
+      showModal(errorModal("Please input integers only"))
         }
-      } 
     })
   
   # Render the table output
@@ -624,7 +699,7 @@ server <- function(input, output, session){
     
   # Render Leaderboard Table   
   output$score_leaderboardTitle <- renderText({
-    paste("LeaderBoard")
+    paste("Leaderboard")
   })
   output$scoreLeaderboard <- renderTable({
     matrix_leaderboard()}, include.rownames = FALSE, include.colnames = FALSE)
@@ -635,21 +710,25 @@ server <- function(input, output, session){
   
   #finish game modal
   output$finish_title <- renderText({"GAME OVER"})
-  output$finalstat_title <- renderText({"Final Stats:"})
-  output$final_cashbal <- renderText({ paste("Cash Balance: ", vals$cashbal)})
+  output$finalstat_title <- renderText({"Final day stats:"})
+  output$final_cashbal <- renderText({ paste("Cash Balance & Final Score: ", vals$cashbal)})
   output$final_manpower <-renderText({paste("Number of Staff: ", vals$manpower)})
   output$final_orders_fulfilled <- renderText({paste("Orders Fulfilled: ", sum(vals$order_fulfilled), "/", vals$total_orders)})
   output$final_fleft_title <- renderText({"Flowers Left:"})
   output$flowLeftfinish <- renderTable({
     matrix_fleft()
   }, include.rownames = FALSE, include.colnames = FALSE)
-  output$final_leaderboard_title <- renderText({"LeaderBoard"})
+  output$final_leaderboard_title <- renderText({"Leaderboard"})
   output$final_leaderboard <- renderTable({
     matrix_leaderboard()}, include.rownames = FALSE, include.colnames = FALSE)
   output$thanks <-renderText({"Thank You For Playing!"})
   
   #button to close/refresh the game
-  observeEvent(input$byebye, {
+  observeEvent(input$restartGame, {
     session$reload()
+  })
+  
+  observeEvent(input$byebye, {
+    stopApp()
   })
 }

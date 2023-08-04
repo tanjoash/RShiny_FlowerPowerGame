@@ -92,3 +92,10 @@ displayLeaderboard <- function(){
   dbDisconnect(conn)
   result
 }
+
+RevCostCash <- function(playerid){
+  conn <- getAWSConnection()
+  result <- getRevCostCash(conn, playerid)
+  dbDisconnect(conn)
+  result
+}

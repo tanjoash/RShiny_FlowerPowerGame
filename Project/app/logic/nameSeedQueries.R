@@ -54,3 +54,12 @@ getLeaderboard <- function(conn){
   result <- dbGetQuery(conn, query)
   result
 }
+
+getRevCostCash <- function(conn, playerid){
+  querytemplate <- "SELECT * FROM Revenue INNER JOIN Cost
+    ON Revenue.revenueid = Cost.costid INNER JOIN CashBal
+    ON Cost.costid = CashBal.finalcashbalid WHERE CashBal.finalcashbalid = ?playerid"
+  query <- sqlInterpolate(conn, querytemplate, playerid=playerid)
+  result <- dbGetQuery(conn, query)
+  result
+}

@@ -52,10 +52,15 @@ loginModal <- function(empty = FALSE, failed = FALSE) {
   )
 }
 
-errorModal <- function(text){
+errorModal <- function(text, startday = FALSE){
   modalDialog(
     title = "Error!",
-    text
+    text,
+    footer = tagList(
+      if(startday){
+        actionButton("startdayagain", "Try Again")
+      }
+    )
   )
 }
 
@@ -81,7 +86,14 @@ cal_menuModal <- function() {
 month_fcModal <- function(){
   modalDialog(
     id = "month-fc-modal",
-    # img(src = "insert graph here")
+    plotlyOutput("line_chart"),
+    title = "Montly Forecast",
+    actionButton("fc_B1", "Bouquet 1"),
+    actionButton("fc_B2", "Bouquet 2"),
+    actionButton("fc_B3", "Bouquet 3"),
+    actionButton("fc_B4", "Bouquet 4"),
+    actionButton("fc_B5", "Bouquet 5"),
+    actionButton("fc_B6", "Bouquet 6"),
     footer = tagList(
       actionButton("back_btn", "Back"),
       actionButton("btn_close", "Dismiss")
@@ -330,6 +342,7 @@ score_leaderboardModal <- function(){
     )   
   ) 
 }
+
 cash_balmenuModal <- function() {
   modalDialog(
     div(
@@ -345,7 +358,8 @@ cash_balmenuModal <- function() {
 cash_balModal <- function(){
   modalDialog(
     id = "cash-bal-modal",
-    # img(src = "insert graph here")
+    plotlyOutput("cashbal_plot"),
+    title = "Cash Balance",
     footer = tagList(
       actionButton("back_btn_cb", "Back"),
       actionButton("btn_close", "Dismiss")
@@ -356,7 +370,8 @@ cash_balModal <- function(){
 costModal <- function(){
   modalDialog(
     id = "cost-modal",
-    # img(src = "insert graph here")
+    plotlyOutput("cost_plot"),
+    title = "Cost",
     footer = tagList(
       actionButton("back_btn_cb", "Back"),
       actionButton("btn_close", "Dismiss")
@@ -367,7 +382,8 @@ costModal <- function(){
 revenueModal <- function(){
   modalDialog(
     id = "revenue-modal",
-    # img(src = "insert graph here")
+    plotlyOutput("revenue_plot"),
+    title = "Revenue",
     footer = tagList(
       actionButton("back_btn_cb", "Back"),
       actionButton("btn_close", "Dismiss")
@@ -390,6 +406,7 @@ gamefinishModal <- function(){
       textOutput("thanks")
     ),
     footer = tagList(
+      actionButton("restartGame", "Play Again"),
       actionButton("byebye", "Close Game")
     )
     
