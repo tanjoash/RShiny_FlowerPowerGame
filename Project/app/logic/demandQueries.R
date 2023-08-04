@@ -1,3 +1,5 @@
+# Emily handled all of these
+
 ## Demand SQL Queries ##
 ## Upload Bouquet 1 query ##
 createNewB1 <- function(conn,demand){

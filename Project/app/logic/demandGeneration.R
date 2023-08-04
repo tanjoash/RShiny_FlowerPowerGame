@@ -1,3 +1,5 @@
+#Jeanelle and Joash created the random demand generations based on the seed
+
 ## demand list ##
 b1 <- list()
 b2 <- list()

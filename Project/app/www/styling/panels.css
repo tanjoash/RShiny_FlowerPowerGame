@@ -1,3 +1,5 @@
+/*Marc and Bing Zhe handled all stylings*/
+
 #startScreen {
   position: absolute;
   z-index: 0;
@@ -5,8 +7,6 @@
   width: 100%;
   height: auto;
 }
-
-
 #username{
   position: absolute;
   z-index: 5;

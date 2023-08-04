@@ -1,3 +1,5 @@
+# Emily did this
+
 initialiseTable <- function(conn){
   querytemplate <- "INSERT INTO CashBal (day0) VALUES (?vals);"
   query <- sqlInterpolate(conn, querytemplate, vals=500)

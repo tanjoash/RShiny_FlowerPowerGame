@@ -1,13 +1,13 @@
 ## Server logic ##
 server <- function(input, output, session){
   
-  ## First page logic ##
+  ## First page logic ## #Joash
   source("logic/instructionsManager.R")
   source("logic/demandGeneration.R")
   source("logic/createInventory.R")
   source("logic/endDayCalculations.R")
   
-  # reactiveValues objects for storing items like the user password
+  # Reactive Values objects for storing objects and values #Joash
   vals <- reactiveValues(userid = NULL,
                          username = NULL,
                          playerid = NULL,
@@ -40,10 +40,7 @@ server <- function(input, output, session){
                          order_price = 0
                          )
   
-  ## Login logic ##
-  #observeEvent()
-  
-  
+  ## Login logic ## #Joash
   output$username <- renderText({
     if(is.null(vals$username)){
       paste("Please Login or Register")
@@ -52,14 +49,17 @@ server <- function(input, output, session){
     }
   })
   
+  #Joash
   observeEvent(input$gotoregister, {
     showModal(registerModal())
   })
   
+  #Joash
   observeEvent(input$login, {
     showModal(loginModal())
   })
   
+  # Login Modal #Joash
   observeEvent(input$loginok, {
     if(is.na(input$usernameInput) || input$usernameInput == '' || is.na(input$password3) || input$password3 == ''){
       showModal(loginModal(empty = TRUE, failed = FALSE))
@@ -75,12 +75,13 @@ server <- function(input, output, session){
     }
     
   })
-
   
+  ## Register Logic ## #Joash
   observeEvent(input$register, {
     showModal(registerModal())
   })
   
+  # Register Modal #Joash
   observeEvent(input$registerok, {
     users <- uniqueUsers()
     if (is.na(input$usernameInput) || input$usernameInput == ''){
@@ -100,6 +101,7 @@ server <- function(input, output, session){
     }
   })
   
+  # Render Logout if logged in #Joash
   output$loginPlaceholder <- renderUI({
     if(is.null(vals$userid)){
       actionButton("login", "Login")
@@ -108,17 +110,20 @@ server <- function(input, output, session){
     }
   })
   
+  # logout #Joash
   observeEvent(input$logout, {
     vals$userid <- NULL
     vals$username <- NULL
   })
   
+  # Play button appears if logged in #Joash
   output$playButtonPlaceholder <- renderUI({
     if(vals$userid > 0){
       actionButton("playButton", "Play")
     }
   })
   
+  # Click image in second page logics #Bing Zhe and Marc
   shinyjs::onclick("cashbal_btn", {
     result <- RevCostCash(as.numeric(vals$playerid))
     vals$df_revenue <- result[1,2:33]
@@ -131,6 +136,7 @@ server <- function(input, output, session){
   shinyjs::onclick("revenue", showModal(revenueModal()))
   shinyjs::onclick("back_btn_cb", {showModal(cash_balmenuModal())})
   
+  # Render plots #Jeanelle
   output$cashbal_plot <- renderPlotly({
     plot_ly(x = seq(0,vals$day,1), y = unlist(vals$df_cashbal[,1:(vals$day+1)]), type = "scatter", mode = "lines") %>%
       layout(xaxis = list(title = "Day", tickvals = seq(0,vals$day,1), tickmode="array", ticktext=as.character(seq(0,vals$day,1))), yaxis = list(title = "Cash Balance"))
@@ -144,24 +150,23 @@ server <- function(input, output, session){
       layout(xaxis = list(title = "Day", tickvals = seq(0,vals$day,1), tickmode="array", ticktext=as.character(seq(0,vals$day,1))), yaxis = list(title = "Cost"))
   })
   
-  #date output
+  # Date output #Bing Zhe
   output$dateofmay <- renderText({
     vals$day
   })
 
-  #instruction Modal stuff
+  ## Instructions ##
+  # Instruction Modal #Bing Zhe
   instructPage <- reactiveVal(1)
   # Observe button that opens instructions modal
   observeEvent(input$instructions, {
     showModal(instructionsModal())
     instructPage(1)
   })
-  
   observeEvent(input$btn_previous, {
     instructPage(max(1, instructPage() - 1))
     updatePageContent()
   })
-  
   observeEvent(input$btn_next, {
     instructPage(min(7, instructPage() + 1))
     updatePageContent()
@@ -188,6 +193,7 @@ server <- function(input, output, session){
     removeModal()
   })
   
+  # Render instructions images #Bing Zhe
   updatePageContent <- function() {
     output$page_content <- renderUI({
       switch(instructPage(),
@@ -201,7 +207,7 @@ server <- function(input, output, session){
     })
   }
   
-  # Get Seed
+  # Get Seed #Joash and Jeanelle
   observeEvent(input$playButton, {
     vals$playerid <- playerID() # need to change and get latest playerid
     vals$demand_forecast <- c(forecastB1[vals$day+1], forecastB2[vals$day+1], forecastB3[vals$day+1], forecastB4[vals$day+1], forecastB5[vals$day+1], forecastB6[vals$day+1])
@@ -222,40 +228,30 @@ server <- function(input, output, session){
       showModal(errorModal("Not a Positive Integer."))
     }
 
-    
     ### Number Output for Start Game Modal ###
-    #Inventory for Start Game Modal 
-    output$numberofstaff <- renderText({vals$capacity}) ### actual is reference manpower value below
-
-    #output$B1Exp_start <- renderText({vals$bouquet_exp[[1]]})
-    #output$B2Exp_start <- renderText({vals$bouquet_exp[[2]]})
-    #output$B3Exp_start <- renderText({vals$bouquet_exp[[3]]})
-    #output$B4Exp_start <- renderText({vals$bouquet_exp[[4]]})
-    #output$B5Exp_start <- renderText({vals$bouquet_exp[[5]]})
-    #output$B6Exp_start <- renderText({vals$bouquet_exp[[6]]})
-
+    # Render Inventory for Start Game Modal #Marc
+    output$numberofstaff <- renderText({vals$capacity})
+    
+    # Render Bouquet left #Marc
     output$B1Left_start <- renderText({vals$bouquet_left[[1]]})
     output$B2Left_start <- renderText({vals$bouquet_left[[2]]})
     output$B3Left_start <- renderText({vals$bouquet_left[[3]]})
     output$B4Left_start <- renderText({vals$bouquet_left[[4]]})
     output$B5Left_start <- renderText({vals$bouquet_left[[5]]})
     output$B6Left_start <- renderText({vals$bouquet_left[[6]]})
-    #output$B1Exp_start <- renderText({vals$bouquet_exp[[1]]})
-    #output$B2Exp_start <- renderText({vals$bouquet_exp[[2]]})
-    #output$B3Exp_start <- renderText({vals$bouquet_exp[[3]]})
-    #output$B4Exp_start <- renderText({vals$bouquet_exp[[4]]})
-    #output$B5Exp_start <- renderText({vals$bouquet_exp[[5]]})
-    #output$B6Exp_start <- renderText({vals$bouquet_exp[[6]]})
+
+    # Render Flowers left #Marc
     output$roseLeft_start <- renderText({vals$flowers_left[[1]]})
     output$carnLeft_start <- renderText({vals$flowers_left[[2]]})
     output$babyLeft_start <- renderText({vals$flowers_left[[3]]})
 
+    # Render Flowers expiring #Marc
     output$roseExp_start <- renderText({vals$flowers_exp[[1]]})
     output$carnExp_start <- renderText({vals$flowers_exp[[2]]})
     output$babyExp_start <- renderText({vals$flowers_exp[[3]]})
 
     
-    #Demand Forecast for Start Game Modal 
+    # Render Demand Forecast for Start Game Modal #Marc
     output$B1demandforecast_start <- renderText({vals$demand_forecast[[1]]})
     output$B2demandforecast_start <- renderText({vals$demand_forecast[[2]]})
     output$B3demandforecast_start <- renderText({vals$demand_forecast[[3]]})
@@ -263,12 +259,14 @@ server <- function(input, output, session){
     output$B5demandforecast_start <- renderText({vals$demand_forecast[[5]]})
     output$B6demandforecast_start <- renderText({vals$demand_forecast[[6]]})
     
+    # Render Calculator #Bing Zhe
     output$R <- renderText({paste("Roses Required:", vals$calculator_vals[1])})
     output$C <- renderText({paste("Carnations Required:",vals$calculator_vals[2])})
     output$B <- renderText({paste("Baby Breaths Required:", vals$calculator_vals[3])})
       
   })
   
+  # 2nd set of Buttons logic #Bing Zhe
   shinyjs::onclick("dayButton", showModal(cal_menuModal()))
   shinyjs::onclick("inventoryButton", showModal(inventoryModal()))
   shinyjs::onclick("endDay", {
@@ -296,14 +294,7 @@ server <- function(input, output, session){
     showModal(score_leaderboardModal())
   })
   
-  ## Calculator Reactive Value 
-  flower_requirements <- reactiveValues(
-    R = 0,
-    B = 0,
-    C = 0
-  )
-  
-  ## Calculator Observe Event 
+  # Calculator Observe Event #Bing Zhe
   observeEvent({input$B1calc
     input$B2calc
     input$B3calc
@@ -316,10 +307,8 @@ server <- function(input, output, session){
       vals$calculator_vals <- c(calculator_R, calculator_C, calculator_B)
     })
   
+  # Start day button logic and math #Joash
   observeEvent(input$startday_btn, {
-    #if (vals$day == 0) {
-    #  vals$day <- 1
-    #}
     # Get the values from the textInputs
     B1_make <- as.integer(input$B1choice)
     B2_make <- as.integer(input$B2choice)
@@ -327,60 +316,63 @@ server <- function(input, output, session){
     B4_make <- as.integer(input$B4choice)
     B5_make <- as.integer(input$B5choice)
     B6_make <- as.integer(input$B6choice)
+    
+    # check if numeric #Joash
     if(is.numeric(B1_make) && is.numeric(B2_make) && is.numeric(B3_make) && is.numeric(B4_make) && is.numeric(B5_make) && is.numeric(B6_make)){
+      
+      # Calculate total flowers available #Joash
       total_f1 <- as.numeric(vals$flowers_left[1]) + as.numeric(vals$flowers_exp[1])
-      #print(paste("total_f1", total_f1))
       total_f2 <- as.numeric(vals$flowers_left[2]) + as.numeric(vals$flowers_exp[2])
-      #print(paste("total_f2", total_f2))
       total_f3 <- as.numeric(vals$flowers_left[3]) + as.numeric(vals$flowers_exp[3])
-      #print(paste("total_f3", total_f3))
       
+      # Calculate required flowers to make bouquets #Joash
       used_f1 <- 3*as.numeric(B1_make) + 3*as.numeric(B2_make) + 5*as.numeric(B4_make)
-      #print(paste("used_f1", used_f1))
       used_f2 <- 3*as.numeric(B1_make) + 3*as.numeric(B3_make) + 5*as.numeric(B5_make)
-      #print(paste("used_f2", used_f2))
       used_f3 <- 5*as.numeric(B2_make) + 5*as.numeric(B3_make) + 10*as.numeric(B6_make)
-      #print(paste("used_f3", used_f3))
       
+      # Calculate total bouquets made #Joash
       total_bouquets_made <- B1_make + B2_make + B3_make + B4_make + B5_make + B6_make
       
+      # Ensure that total bouquest is less than the capacity to maek the bouquets #Joash
       if(total_bouquets_made <= as.numeric(vals$capacity)){
+        # Ensure that the flowers used are less than or equal to the total flower available #Joash
         if(used_f1 <= total_f1 && used_f2 <= total_f2 && used_f3 <= total_f3){
-          if(used_f1 <= as.numeric(vals$flowers_exp[1])){ # if used flowers is less than the expiring ones to throw today
+          # if used flowers is less than the expiring ones to throw today #Joash
+          if(used_f1 <= as.numeric(vals$flowers_exp[1])){ 
             vals$flowers_exp[1] <- as.numeric(vals$flowers_exp[1]) - used_f1 #to throw away today
           } else { 
             vals$flowers_left[1] <- as.numeric(vals$flowers_left[1]) - (used_f1 - as.numeric(vals$flowers_exp[1]))
             vals$flowers_exp[1] <- 0
           }
           
-          if(used_f2 <= as.numeric(vals$flowers_exp[2])){ # if used flowers is less than the expiring ones to throw today
+          # if used flowers is less than the expiring ones to throw today
+          if(used_f2 <= as.numeric(vals$flowers_exp[2])){ 
             vals$flowers_exp[2] <- as.numeric(vals$flowers_exp[2]) - used_f2 #to throw away today
           } else { 
             vals$flowers_left[2] <- as.numeric(vals$flowers_left[2]) - (used_f2 - as.numeric(vals$flowers_exp[2]))
             vals$flowers_exp[2] <- 0
           }
           
-          if(used_f3 <= as.numeric(vals$flowers_exp[3])){ # if used flowers is less than the expiring ones to throw today
+          # if used flowers is less than the expiring ones to throw today
+          if(used_f3 <= as.numeric(vals$flowers_exp[3])){ 
             vals$flowers_exp[3] <- as.numeric(vals$flowers_exp[3]) - used_f3 #to throw away today
           } else { 
             vals$flowers_left[3] <- as.numeric(vals$flowers_left[3]) - (used_f3 - as.numeric(vals$flowers_exp[3]))
             vals$flowers_exp[3] <- 0
           }
           
+          # Reset calculator values #Joash
           vals$calculator_vals <- c(0, 0, 0)
+          # Update local dataframe #Jeanelle
           vals$bouquetsInventory <- updateBouquetsMade(vals$day, vals$bouquetsInventory, B1_make, B2_make, B3_make, B4_make, B5_make, B6_make)
-          #print("bouquet Inventory")
-          #print(vals$bouquetsInventory)
           vals$flowersInventory <- updateFlowersUsed(vals$day, vals$flowersInventory, as.numeric(vals$flowers_left[1]),
                                                      as.numeric(vals$flowers_left[2]),
                                                      as.numeric(vals$flowers_left[3]),
                                                      as.numeric(vals$flowers_exp[1]),
                                                      as.numeric(vals$flowers_exp[2]),
                                                      as.numeric(vals$flowers_exp[3]))
-          #print("flower Inventory")
-          #print(vals$flowersInventory)
           
-          # Calculate orders fulfilled
+          # Calculate orders fulfilled #Jeanelle
           vals$orders_fulfilled <- c(min(B1_make, as.numeric(vals$actual_demand[1])),
                                      min(B2_make, as.numeric(vals$actual_demand[2])),
                                      min(B3_make, as.numeric(vals$actual_demand[3])),
@@ -388,6 +380,7 @@ server <- function(input, output, session){
                                      min(B5_make, as.numeric(vals$actual_demand[5])),
                                      min(B6_make, as.numeric(vals$actual_demand[6])))
           
+          # Bouquets that were thrown away #Jeanelle
           vals$bouquet_exp <- c((B1_make - as.numeric(vals$orders_fulfilled[1])),
                                 (B2_make - as.numeric(vals$orders_fulfilled[2])),
                                 (B3_make - as.numeric(vals$orders_fulfilled[3])),
@@ -395,6 +388,7 @@ server <- function(input, output, session){
                                 (B5_make - as.numeric(vals$orders_fulfilled[5])),
                                 (B6_make - as.numeric(vals$orders_fulfilled[6])))
           
+          # Update local data #Jeanelle
           vals$ordersFulfilled <- updateOrdersFulfilled(vals$day, vals$actual_demand, as.numeric(vals$orders_fulfilled[1]),
                                                         as.numeric(vals$orders_fulfilled[2]),
                                                         as.numeric(vals$orders_fulfilled[3]),
@@ -402,14 +396,14 @@ server <- function(input, output, session){
                                                         as.numeric(vals$orders_fulfilled[5]),
                                                         as.numeric(vals$orders_fulfilled[6]),
                                                         vals$ordersFulfilled)
-          
+          # Update reactive values #Joash
           vals$revenue <- calculateRevenue(vals$day, vals$ordersFulfilled)
           vals$cashbal <- calculateCashBal(vals$cost, vals$revenue, vals$cashbal)
           uploadValues(vals$day, vals$cashbal, vals$cost, vals$revenue, vals$playerid)
           vals$profit <- vals$revenue - vals$cost
           
           
-          # Update demand forecast for next day
+          # Update demand forecast for next day #Joash
           vals$demand_forecast <- c(forecastB1[vals$day+1], forecastB2[vals$day+1], forecastB3[vals$day+1], forecastB4[vals$day+1], forecastB5[vals$day+1], forecastB6[vals$day+1])
             
           # Close the modal after saving
@@ -423,23 +417,15 @@ server <- function(input, output, session){
     } else {
       showModal(errorModal("Input was not an integer value.", startday = TRUE))
     }
-    #values$makeB1 <- ifelse(input$B1choice == "", 0, input$B1choice)
-    #values$makeB2 <- ifelse(input$B2choice == "", 0, input$B2choice)
-    #values$makeB3 <- ifelse(input$B3choice == "", 0, input$B3choice)
-    #values$makeB4 <- ifelse(input$B4choice == "", 0, input$B4choice)
-    #values$makeB5 <- ifelse(input$B5choice == "", 0, input$B5choice)
-    #values$makeB6 <- ifelse(input$B6choice == "", 0, input$B6choice)
-    
-   
-
   })
   
+  # Open Startday modal again to prevent soft locking of the game #Joash
   observeEvent(input$startdayagain, {
     removeModal()
     showModal(startgameModal())
   })
   
-  #calendar menu prompt
+  # Render Calendar menu and Logic prompt #Marc and Bing Zhe
   shinyjs::onclick("month_fc", showModal(month_fcModal()))
   shinyjs::onclick("next_fc", showModal(next_fcModal()))
   shinyjs::onclick("cal_button", showModal(calendarModal()))
@@ -466,6 +452,7 @@ server <- function(input, output, session){
     paste("Tomorrow's Demand")
   })
   
+  # Render the forecasted demand #Jeanelle
   output$line_chart <- renderPlotly({
     plot_ly(x = forecastday, y = forecastB1, type = "scatter", mode = "lines") %>%
       layout(xaxis = list(title = "Forecast Day"), yaxis = list(title = "Forecast B1"))
@@ -507,8 +494,7 @@ server <- function(input, output, session){
     })
   })
   
-  ### Number output for Inventory Modal ###
-  #output text for the diff values
+  # Render text for Inventory Modal #Marc
   output$B1Exp <- renderText({
     vals$bouquet_exp[1]
   })
@@ -548,7 +534,7 @@ server <- function(input, output, session){
   })
 
   
-  ### Table output for End Game Modal ###
+  # Table output for End Game Modal #Bing Zhe
   output$fulfilledOutput <- renderText({
     paste(sum(vals$orders_fulfilled), "/", vals$total_orders)
   })
@@ -565,23 +551,30 @@ server <- function(input, output, session){
     matrix(paste_vals, nrow = 1, byrow = TRUE)
   })
   
+  # Logic of end day button #Joash
   observeEvent(input$endday_btn, {
-      r_order <- as.integer(input$r_order)
-      c_order <- as.integer(input$c_order)
-      b_order <- as.integer(input$b_order)
-      staff_hire <- as.integer(input$staff_hire)
-      staff_fire <- as.integer(input$staff_fire)
-      
-      if(is.numeric(r_order) && is.numeric(c_order) && is.numeric(b_order) && is.numeric(staff_fire) && is.numeric(staff_hire)){ #need fix
+    # Get input values #Joash
+    r_order <- as.integer(input$r_order)
+    c_order <- as.integer(input$c_order)
+    b_order <- as.integer(input$b_order)
+    staff_hire <- as.integer(input$staff_hire)
+    staff_fire <- as.integer(input$staff_fire)
+      # Check if numeric #Joash
+      if(is.numeric(r_order) && is.numeric(c_order) && is.numeric(b_order) && is.numeric(staff_fire) && is.numeric(staff_hire)){
+        # Check if fire and hire at same time #Josah
         if(min(staff_fire, staff_hire) == 0){
+          # Ensure that manpower does not go negative #Joash
           if((as.numeric(vals$manpower + staff_hire - staff_fire) >= 0)){
+            # Update vals #Joash
             staff_total <- as.numeric(vals$manpower) + staff_hire - staff_fire
             enddaycost <- r_order*1 + c_order*0.5 + b_order*0.1 + staff_total*10
-            print(enddaycost)
-            print(vals$cashbal)
+            
+            # Fixed some bug of not being able to purchase and ensures that you cannot buy when
+            # you dont have enough money #Joash
             if(enddaycost > (vals$cashbal+0.01)){
               showModal(errorModal("Not enough money to do purchase."))
             } else {
+              # Updating of values #Jeanelle
               vals$manpower <- as.numeric(vals$manpower) + staff_hire - staff_fire
               vals$capacity <- as.numeric(vals$manpower)*5 + 5
               vals$eodOrdered <- updateEodOrdered(vals$day, vals$eodOrdered, r_order, c_order, b_order, vals$manpower)
@@ -612,7 +605,7 @@ server <- function(input, output, session){
         }
   })
   
-  # Render the table output
+  # Render the table output #Bing Zhe
   output$flowExpOutput <- renderTable({
     matrix_fexp()
   }, include.rownames = FALSE, include.colnames = FALSE)
@@ -667,6 +660,7 @@ server <- function(input, output, session){
   })
   output$staffno <- renderText({vals$manpower})
   
+  # Reactive price calculator #Bing Zhe
   observeEvent({input$r_order
     input$c_order
     input$b_order
@@ -677,7 +671,7 @@ server <- function(input, output, session){
   
   output$pricecalc <- renderText({paste("Price: $", vals$order_price)})
   
-  ### Number Output for Order Fulfilment Modal ###      
+  # Number Output for Order Fulfilment Modal #Bing Zhe     
   output$order_fulfilmentTitle <- renderText({paste("Order Fulfilment")})   
   output$bouquet1fulfilled <- renderText({
     paste("Bouquet 1:", vals$orders_fulfilled[1], "/", vals$actual_demand[1])
@@ -697,13 +691,12 @@ server <- function(input, output, session){
   output$bouquet6fulfilled <- renderText({
     paste("Bouquet 6:", vals$orders_fulfilled[6], "/", vals$actual_demand[6])
     })
-  
   matrix_fleft <- reactive({
     paste_vals <- paste(flower_prefix, ":", vals$flowers_left)
     matrix(paste_vals, nrow = 1, byrow = TRUE)
   })
   
-  # Create matrix for leaderboard    
+  # Create matrix for leaderboard #Marc  
   rank_prefix <- c("👑","2️⃣","3️⃣","4️⃣","5️⃣")
   leaderboard_data <- reactive({
     data.frame(
@@ -712,21 +705,22 @@ server <- function(input, output, session){
       Score = vals$leaderboardScore[1:5]
     ) 
   })  
-  # Render Leaderboard Table    
+  # Render Leaderboard Table #Bing Zhe
   output$score_leaderboardTitle <- renderText({
     paste("LeaderBoard 🎉 ") }) 
   output$scoreLeaderboard <- renderTable({   
     leaderboard_data()}, include.rownames = FALSE, include.colnames = TRUE) 
   
+  # Render Cash Balance #Bing Zhe
   output$cashBal <- renderText({
     round(vals$cashbal, digits = 2)
   })
   
-  #game over modal
+  #Game over modal #Joash
   output$gameover_title <- renderText({"Game Over!"})
   output$gameover_text <- renderText({"You have not enough money and flowers to continue playing. Good luck next time!"})
   
-  #finish game modal
+  #Finish game modal #Bing Zhe
   output$finish_title <- renderText({"Congratulations!"})
   output$finalstat_title <- renderText({"Final day stats:"})
   output$final_cashbal <- renderText({ paste("Cash Balance & Final Score: ", vals$cashbal)})
@@ -741,11 +735,12 @@ server <- function(input, output, session){
     leaderboard_data()}, include.rownames = FALSE, include.colnames = TRUE)
   output$thanks <-renderText({"Thank You For Playing!"})
   
-  #button to close/refresh the game
+  #button to close/refresh the game #Bing Zhe
   observeEvent(input$restartGame, {
     session$reload()
   })
   
+  #Close app #Joash
   observeEvent(input$byebye, {
     stopApp()
   })

@@ -1,12 +1,14 @@
-## UI for the app ##
+## UI for the app ## #Marc and Bing Zhe
 ui <- shinyUI(fillPage(
   tags$head(
+    # Link to CSS
     tags$link(rel = "stylesheet", type="text/css", href="styling/panels.css")
   ),
   useShinyjs(),
   tabsetPanel(
     id = "flowerPages",
     type = "hidden",
+    # First Page
     tabPanelBody(
       "StartingPage",
       img(id="startScreen", src="assets/startScreen.png"),
@@ -22,6 +24,7 @@ ui <- shinyUI(fillPage(
       #tags$p("Name:", class = "name-text-class"),
       tags$p("Seed:", class = "seed-text-class")
       ),
+    # Second Page
     tabPanelBody(
       "SecondPage",
       img(id="mainGame", src="assets/mainGame.png"),

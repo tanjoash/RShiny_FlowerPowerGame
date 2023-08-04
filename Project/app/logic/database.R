@@ -1,3 +1,5 @@
+# Emily did all the SQL functions while Joash linked these functions to the app
+
 ## Execute demand generation and upload demand to DBeaver ##
 #source("logic/setAWSPassword.R")
 source("logic/demandQueries.R")

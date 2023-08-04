@@ -1,3 +1,4 @@
+# Emily did these
 uploadCashBal <- function(conn, day, balance, playerid){
   querytemplate <- "UPDATE CashBal SET day?day = ?balance WHERE finalcashbalid = ?playerid"
   query <- sqlInterpolate(conn, querytemplate, day=day, balance=balance, playerid=playerid)

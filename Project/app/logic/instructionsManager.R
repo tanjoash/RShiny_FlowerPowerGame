@@ -1,3 +1,5 @@
+#Marc and Bing Zhe did these
+
 ## Modal for instructions ##
 instructionsModal <- function() {
   modalDialog(
@@ -313,7 +315,7 @@ enddayModal <- function(){
       textOutput("pricecalc"),
     ),
     footer = tagList(
-      actionButton("endday_btn", "End Day !"),
+      actionButton("endday_btn", "End Day!"),
       actionButton("btn_close", "Dismiss")
     )
   )

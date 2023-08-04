@@ -1,5 +1,4 @@
-# need to add in createInventory() at the start in server.R
-# i think we should create a currentDay counter cuz easier to use local than database day
+# Jeanelle did all the dataframes updating and mathematics
 
 # creates the following dataframes
 # eodOrdered: day, F1, F2, F3, manpower
@@ -57,13 +56,3 @@ createOrdersFulfilled <- function() {
   )
   ordersFulfilled
 }
-# # Call the function to initialize the dataframes
-# createInventory()
-# 
-# # Now you can directly access the dataframes by their names
-# # Example:
-# flowersBought
-# flowersInventory
-# manpower
-# bouquetsSold
-# bouquetsInventory

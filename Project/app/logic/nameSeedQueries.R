@@ -1,3 +1,5 @@
+#Emily and Joash did these
+
 initialiseNameSeed <- function(conn, playerName, userid, seedNumber){
   querytemplate <- "INSERT INTO FlowerPower (name, seed) VALUES (?playerName, ?seedNumber)"
   query <- sqlInterpolate(conn, querytemplate, playerName=playerName, seedNumber=seedNumber)
